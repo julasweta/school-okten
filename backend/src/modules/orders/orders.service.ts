@@ -6,11 +6,15 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class OrdersService {
-  constructor(@InjectModel(Order.name) private userModel: Model<Order>) {}
+  constructor(@InjectModel(Order.name) private orderModel: Model<Order>) {}
 
   async create(body: CreateOrderDto) {
-    console.log(body);
-    const createOrder = await this.userModel.create(body);
+    const createOrder = await this.orderModel.create(body);
     return createOrder;
+  }
+
+  async getAllOrders() {
+    const allOrders = await this.orderModel.find();
+    return allOrders;
   }
 }
