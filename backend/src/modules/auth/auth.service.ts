@@ -30,12 +30,12 @@ export class AuthService {
     }
 
     const accessToken = await this.createToken({
-      id: user._id.toString(),
+      email: user.email,
       type: 'access',
     });
 
     const refreshToken = await this.createToken({
-      id: user._id.toString(),
+      email: user.email,
       type: 'refresh',
     });
 
@@ -52,7 +52,7 @@ export class AuthService {
 
   async validateUser(data: ITokenPayload): Promise<UserBaseDto> {
     const user = await this.userModel.findOne({
-      id: data.id,
+      email: data.email,
     });
     if (!user) {
       throw new UnauthorizedException();
@@ -65,7 +65,7 @@ export class AuthService {
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const user = await this.verifyRefreshToken(refreshToken);
     const newAccessToken = await this.createToken({
-      id: user._id.toString(),
+      email: user.email,
       type: 'access',
     });
 
@@ -73,13 +73,11 @@ export class AuthService {
     return { accessToken: newAccessToken, refreshToken };
   }
 
-  public async verifyRefreshToken(refreshToken: string): Promise<UserBaseDto> {
+  public async verifyRefreshToken(refreshToken: string): Promise<any> {
     try {
       const decodedToken =
         await this.verificationService.verifyToken(refreshToken);
-      const user = await this.userService.userFindOneId(decodedToken.id);
-
-      console.log('user', user);
+      const user = await this.userService.userFindOneEmail(decodedToken.email);
       return user;
     } catch (error) {
       throw new HttpException(
