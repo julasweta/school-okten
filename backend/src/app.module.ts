@@ -6,14 +6,17 @@ import { UsersModule } from './modules/users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './modules/auth/auth.module';
 import { OrdersModule } from './modules/orders/orders.module';
+import { CustomConfigService } from './config/config.service';
 
 @Module({
   imports: [
     CustomConfigModule,
     MongooseModule.forRootAsync({
-      useFactory: () => ({
-        uri: 'mongodb+srv://julasweta:19731971@cluster0.p7h90ut.mongodb.net/school',
+      imports: [CustomConfigModule],
+      useFactory: (customConfigService: CustomConfigService) => ({
+        uri: customConfigService.db_host,
       }),
+      inject: [CustomConfigService],
     }),
     UsersModule,
     AuthModule,

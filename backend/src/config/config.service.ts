@@ -13,6 +13,6 @@ export class CustomConfigService {
   }
 
   get db_host(): string {
-    return this.configs.get<string>('POSTGRES_HOST');
+    return this.configs.get<string>('APP_MONGOOSE_HOST');
   }
 }
