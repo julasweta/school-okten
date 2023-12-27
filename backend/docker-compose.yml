@@ -1,0 +1,13 @@
+version: '3.5'
+
+services:
+  backend-school-redis:
+    image: redis
+    ports:
+      - '6379:6379'
+    command: >
+      --user user on allcommands allkeys >pass
+    restart: unless-stopped
+
+volumes:
+  backend-school:
