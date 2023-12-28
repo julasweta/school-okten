@@ -1,6 +1,7 @@
-import { Body, Controller, Post, Get } from '@nestjs/common';
+import { Body, Controller, Post, Get, Query } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { OrderListQuerytDto } from './dto/orders-params.dto';
 
 @Controller('orders')
 export class OrdersController {
@@ -14,5 +15,11 @@ export class OrdersController {
   @Get('getAll')
   getAllOrders() {
     return this.ordersService.getAllOrders();
+  }
+
+  @Get('allQuery')
+  async getdAll(@Query() query: OrderListQuerytDto): Promise<Partial<any>> {
+    const result = await this.ordersService.getdAll(query);
+    return result;
   }
 }
