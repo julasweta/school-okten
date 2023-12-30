@@ -8,6 +8,7 @@ import { VerificationService } from '../verification/verification.service';
 import { VerificationModule } from '../verification/verification.module';
 import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from '../users/users.module';
+import { GroupsModule } from '../groups/groups.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { UsersModule } from '../users/users.module';
       }),
     }),
     VerificationModule,
+    GroupsModule,
   ],
   controllers: [OrdersController],
   providers: [OrdersService, OrderRepository, VerificationService],

@@ -13,7 +13,9 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderListQuerytDto } from './dto/orders-params.dto';
 import { IPaginationResponse } from '../../common/interfaces/IListRes';
 import { Order } from './schema/order.chema.';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Orders')
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
@@ -38,9 +40,10 @@ export class OrdersController {
 
   //тільки залогінений manager і тільки якщо це заявка яка вже значиться за даним менеджером, або завка ще без менеджера, має записатись статус In Work якщо до
   // того там був статус null або New
+  @ApiBearerAuth()
   @Put('update/:id')
   public async updateOrder(
-    @Body() body: Partial<CreateOrderDto>,
+    @Body() body: CreateOrderDto,
     @Param('id') id: string,
     @Headers('authorization') accessToken: string,
   ): Promise<Partial<CreateOrderDto>> {

@@ -7,7 +7,7 @@ import {
   IsPhoneNumber,
 } from 'class-validator';
 import { Course, CourseFormat, CourseType } from '../interfaces/orders.types';
-import { ObjectId } from 'mongoose';
+import { Types } from 'mongoose';
 
 export class CreateOrderDto {
   @IsString()
@@ -55,5 +55,8 @@ export class CreateOrderDto {
 
   @IsString()
   @IsOptional()
-  userId?: string | null | ObjectId;
+  userId?: string | null | Types.ObjectId;
+
+  @IsString()
+  groupName?: string | null;
 }

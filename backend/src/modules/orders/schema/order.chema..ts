@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import {
   Course,
   CourseFormat,
@@ -53,8 +53,11 @@ export class Order extends Document {
   @Prop({ type: Date, default: Date.now })
   created_at: Date;
 
+  @Prop({ type: Types.ObjectId, ref: 'Group', default: null }) // вказати тип як Types.ObjectId
+  userId: Types.ObjectId;
+
   @Prop({ default: null })
-  userId: string | null;
+  groupName: string | null;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
