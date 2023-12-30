@@ -28,10 +28,13 @@ export class AuthService {
   ) {}
 
   async createUser(@Body() body: CreateUserReqDto): Promise<CreateUserResType> {
-    const token = await this.verificationService.createToken({
-      email: body.email,
-      type: 'access',
-    });
+    const token = await this.verificationService.createToken(
+      {
+        email: body.email,
+        type: 'access',
+      },
+      '30m',
+    );
     return this.userService.createUser({ ...body, token });
   }
 
@@ -56,15 +59,21 @@ export class AuthService {
     if (user?.email !== body.email) {
       throw new UnauthorizedException();
     }
-    const accessToken = await this.verificationService.createToken({
-      email: body.email,
-      type: 'access',
-    });
+    const accessToken = await this.verificationService.createToken(
+      {
+        email: body.email,
+        type: 'access',
+      },
+      '30m',
+    );
 
-    const refreshToken = await this.verificationService.createToken({
-      email: user.email,
-      type: 'refresh',
-    });
+    const refreshToken = await this.verificationService.createToken(
+      {
+        email: user.email,
+        type: 'refresh',
+      },
+      '60m',
+    );
 
     await this.redisClient.setEx(accessToken, 10000, accessToken);
     await this.redisClient.setEx(refreshToken, 50000, refreshToken);
@@ -85,10 +94,13 @@ export class AuthService {
     refreshToken: string,
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const user = await this.verifyRefreshToken(refreshToken);
-    const newAccessToken = await this.verificationService.createToken({
-      email: user.email,
-      type: 'access',
-    });
+    const newAccessToken = await this.verificationService.createToken(
+      {
+        email: user.email,
+        type: 'access',
+      },
+      '60m',
+    );
 
     await this.redisClient.setEx(newAccessToken, 10000, newAccessToken);
     return { accessToken: newAccessToken, refreshToken };

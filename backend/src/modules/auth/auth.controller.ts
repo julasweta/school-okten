@@ -1,4 +1,11 @@
-import { Body, Controller, Headers, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Headers,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { extractTokenFromHeader } from '../../common/utils/extract-token';
@@ -6,6 +13,10 @@ import { LoginRequestDto } from './dto/login.req.dto';
 import { CreateUserReqDto } from '../users/dto/req/create-user-req-dto';
 import { UserResponseMapper } from '../users/dto/res/user-resp-mapper';
 import { UserBaseDto } from '../users/dto/user.base.dto';
+import { RoleDecorator } from '../../common/decorators/role.decorator';
+import { UserRole } from '../users/interfaces/users.types';
+import { AuthGuard } from '@nestjs/passport';
+import { RoleGuard } from '../../common/guards/role.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -18,7 +29,8 @@ export class AuthController {
     return await this.authService.login(body);
   }
 
-  //додати можливість тільки для адміна
+  @RoleDecorator(UserRole.ADMIN)
+  @UseGuards(AuthGuard(), RoleGuard)
   @ApiOperation({ summary: 'Create User' })
   @Post('create/user')
   async createUser(@Body() body: CreateUserReqDto) {

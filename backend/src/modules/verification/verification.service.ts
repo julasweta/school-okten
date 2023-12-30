@@ -16,16 +16,16 @@ export class VerificationService {
     }
   }
 
-  async signToken(payload: ITokenPayload): Promise<any> {
+  async signToken(payload: ITokenPayload, time: string): Promise<any> {
     try {
-      return this.jwtService.sign(payload);
+      return this.jwtService.sign(payload, { expiresIn: time });
     } catch (err) {
       throw new BadRequestException(' error decoder ');
     }
   }
 
-  async createToken(payload: ITokenPayload): Promise<string> {
-    const token = this.signToken(payload);
+  async createToken(payload: ITokenPayload, time: string): Promise<string> {
+    const token = this.signToken(payload, time);
 
     return token;
   }
