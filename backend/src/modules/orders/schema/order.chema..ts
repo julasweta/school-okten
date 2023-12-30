@@ -53,7 +53,7 @@ export class Order extends Document {
   @Prop({ type: Date, default: Date.now })
   created_at: Date;
 
-  @Prop({ type: Types.ObjectId, ref: 'Group', default: null }) // вказати тип як Types.ObjectId
+  @Prop({ type: Types.ObjectId, ref: 'User', default: null })
   userId: Types.ObjectId;
 
   @Prop({ default: null })

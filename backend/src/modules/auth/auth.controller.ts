@@ -19,6 +19,7 @@ export class AuthController {
   }
 
   //додати можливість тільки для адміна
+  @ApiOperation({ summary: 'Create User' })
   @Post('create/user')
   async createUser(@Body() body: CreateUserReqDto) {
     const user = await this.authService.createUser(body);

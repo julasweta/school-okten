@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Order } from './schema/order.chema.';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { OrderListQuerytDto } from './dto/orders-params.dto';
 import { OrderRepository } from './orders.repository';
 import { IPaginationResponse } from '../../common/interfaces/IListRes';
@@ -36,6 +36,11 @@ export class OrdersService {
     query: OrderListQuerytDto,
   ): Promise<IPaginationResponse<Order>> {
     return await this.orderRepository.getAll(query);
+  }
+
+  public async getOneOrder(id: Types.ObjectId) {
+    const order = await this.orderModel.findOne({ _id: id });
+    return order;
   }
 
   public async updateOrder(

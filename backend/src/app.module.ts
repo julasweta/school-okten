@@ -9,6 +9,7 @@ import { GroupsModule } from './modules/groups/groups.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { UsersModule } from './modules/users/users.module';
 import { VerificationModule } from './modules/verification/verification.module';
+import { MessagesModule } from './modules/messages/messages.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { VerificationModule } from './modules/verification/verification.module';
     AuthModule,
     OrdersModule,
     GroupsModule,
+    MessagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
