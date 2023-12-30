@@ -1,4 +1,5 @@
 import {
+  Body,
   HttpException,
   HttpStatus,
   Injectable,
@@ -9,10 +10,13 @@ import { ITokenPayload } from '../../common/interfaces/ITOkenPayload';
 import { VerificationService } from '../verification/verification.service';
 import { UsersService } from '../users/users.service';
 import { LoginRequestDto } from './dto/login.req.dto';
-import { UserBaseDto } from '../users/dto/user.base.dto';
+import { UserBaseDto, UserBaseType } from '../users/dto/user.base.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '../users/schema/user.schema';
+import { CreateUserReqDto } from '../users/dto/req/create-user-req-dto';
+import { CreateUserResType } from '../users/dto/res/create-user-res-dto.';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -23,18 +27,41 @@ export class AuthService {
     @InjectRedisClient() private redisClient: RedisClient,
   ) {}
 
+  async createUser(@Body() body: CreateUserReqDto): Promise<CreateUserResType> {
+    const token = await this.verificationService.createToken({
+      email: body.email,
+      type: 'access',
+    });
+    return this.userService.createUser({ ...body, token });
+  }
+
+  async activateUser(accessToken: string, pass: any): Promise<UserBaseType> {
+    const extractUserEmail =
+      await this.verificationService.decodeToken(accessToken);
+    if (!pass.password) {
+      throw new Error('password wrong');
+    }
+    const password = await bcrypt.hash(pass.password, 5);
+    const updatedUser = await this.userModel.findOneAndUpdate(
+      { email: (await extractUserEmail).email },
+      { $set: { status: 'activate', password: password, token: null } },
+      { new: true }, // Опція new повертає оновлений документ
+    );
+
+    return updatedUser;
+  }
+
   async login(body: LoginRequestDto): Promise<any> {
     const user = await this.userService.userFindOneEmail(body.email);
     if (user?.email !== body.email) {
       throw new UnauthorizedException();
     }
-
-    const accessToken = await this.createToken({
-      email: user.email,
+    const accessToken = await this.verificationService.createToken({
+      email: body.email,
       type: 'access',
     });
 
-    const refreshToken = await this.createToken({
+    const refreshToken = await this.verificationService.createToken({
       email: user.email,
       type: 'refresh',
     });
@@ -42,12 +69,6 @@ export class AuthService {
     await this.redisClient.setEx(accessToken, 10000, accessToken);
     await this.redisClient.setEx(refreshToken, 50000, refreshToken);
     return { accessToken, refreshToken };
-  }
-
-  async createToken(payload: ITokenPayload): Promise<string> {
-    const token = this.verificationService.signToken(payload);
-
-    return token;
   }
 
   async validateUser(data: ITokenPayload): Promise<UserBaseDto> {
@@ -64,7 +85,7 @@ export class AuthService {
     refreshToken: string,
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const user = await this.verifyRefreshToken(refreshToken);
-    const newAccessToken = await this.createToken({
+    const newAccessToken = await this.verificationService.createToken({
       email: user.email,
       type: 'access',
     });

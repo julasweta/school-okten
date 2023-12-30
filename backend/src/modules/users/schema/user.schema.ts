@@ -1,12 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
+import { StatusUser } from '../interfaces/users.types';
 
 export type UserDocument = HydratedDocument<User>;
 
 @Schema()
 export class User {
   @Prop()
-  login: string;
+  name: string;
+
+  @Prop()
+  surName: string;
 
   @Prop()
   email: string;
@@ -16,6 +20,12 @@ export class User {
 
   @Prop({ default: 'manager' })
   role: string;
+
+  @Prop()
+  token?: string;
+
+  @Prop({ enum: StatusUser, default: StatusUser.INACTIVE })
+  status: StatusUser;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

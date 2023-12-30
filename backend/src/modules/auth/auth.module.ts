@@ -45,6 +45,6 @@ import { RedisModule } from '@webeleon/nestjs-redis';
     VerificationService,
     BearerStrategy,
   ],
-  exports: [PassportModule, AuthService],
+  exports: [PassportModule, AuthService, VerificationService],
 })
 export class AuthModule {}

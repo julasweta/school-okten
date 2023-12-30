@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ITokenPayload } from '../../common/interfaces/ITOkenPayload';
+import { extractTokenFromHeader } from '../../common/utils/extract-token';
 
 @Injectable()
 export class VerificationService {
@@ -8,7 +9,8 @@ export class VerificationService {
 
   async decodeToken(token: string): Promise<ITokenPayload> {
     try {
-      return this.jwtService.decode(token);
+      const extractToken = extractTokenFromHeader(token);
+      return this.jwtService.decode(extractToken);
     } catch (err) {
       throw new BadRequestException(' error decoder ');
     }
@@ -20,6 +22,12 @@ export class VerificationService {
     } catch (err) {
       throw new BadRequestException(' error decoder ');
     }
+  }
+
+  async createToken(payload: ITokenPayload): Promise<string> {
+    const token = this.signToken(payload);
+
+    return token;
   }
 
   async verifyToken(refreshToken: string): Promise<ITokenPayload> {

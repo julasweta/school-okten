@@ -1,8 +1,11 @@
-import { Body, Controller, Headers, Post } from '@nestjs/common';
+import { Body, Controller, Headers, Post, Put } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { extractTokenFromHeader } from '../../common/utils/extract-token';
 import { LoginRequestDto } from './dto/login.req.dto';
+import { CreateUserReqDto } from '../users/dto/req/create-user-req-dto';
+import { UserResponseMapper } from '../users/dto/res/user-resp-mapper';
+import { UserBaseDto } from '../users/dto/user.base.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -13,6 +16,23 @@ export class AuthController {
   @Post('login')
   async login(@Body() body: LoginRequestDto): Promise<any> {
     return await this.authService.login(body);
+  }
+
+  //додати можливість тільки для адміна
+  @Post('create/user')
+  async createUser(@Body() body: CreateUserReqDto) {
+    const user = await this.authService.createUser(body);
+    return UserResponseMapper.toResUserMapper(user);
+  }
+
+  @ApiOperation({ summary: 'Activate user, add password' })
+  @Put('activate')
+  async activateUser(
+    @Headers('authorization') accessToken: string,
+    @Body() pass: object,
+  ): Promise<Partial<UserBaseDto>> {
+    const user = await this.authService.activateUser(accessToken, pass);
+    return user;
   }
 
   @Post('/refresh')

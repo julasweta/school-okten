@@ -1,8 +1,14 @@
-import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsEmail, IsOptional, IsString } from 'class-validator';
+import { StatusUser } from '../interfaces/users.types';
+
 export class UserBaseDto {
   @IsOptional()
   @IsString()
-  login?: string;
+  name?: string;
+
+  @IsOptional()
+  @IsString()
+  surName?: string;
 
   @IsOptional()
   @IsEmail()
@@ -12,12 +18,18 @@ export class UserBaseDto {
   @IsString()
   password?: string;
 
-  @IsOptional()
   @IsString()
   role: string = 'manager';
 
+  @IsEnum(StatusUser)
+  status?: StatusUser;
+
   @IsOptional()
   _id?: object;
+
+  @IsString()
+  @IsOptional()
+  token?: string;
 }
 
 export type UserBaseType = {
@@ -26,4 +38,5 @@ export type UserBaseType = {
   password?: string;
   role: string;
   _id?: object;
+  status?: StatusUser;
 };

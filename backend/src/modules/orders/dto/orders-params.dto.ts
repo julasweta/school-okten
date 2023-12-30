@@ -9,13 +9,13 @@ export abstract class ParamsQueryDto {
   @Min(0)
   @Max(50)
   @IsOptional()
-  readonly limit?: number = 20;
+  readonly limit?: number = 25;
 
   @Type(() => Number)
   @IsInt()
   @Min(0)
   @IsOptional()
-  readonly offset?: number = 0;
+  readonly page?: number = 1;
 }
 
 export enum OrderEnum {

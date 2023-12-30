@@ -1,4 +1,13 @@
-import { IsString, IsEmail, IsOptional, IsNumber } from 'class-validator';
+import {
+  IsString,
+  IsEmail,
+  IsOptional,
+  IsNumber,
+  IsEnum,
+  IsPhoneNumber,
+} from 'class-validator';
+import { Course, CourseFormat, CourseType } from '../interfaces/orders.types';
+import { ObjectId } from 'mongoose';
 
 export class CreateOrderDto {
   @IsString()
@@ -10,20 +19,20 @@ export class CreateOrderDto {
   @IsEmail()
   email: string;
 
-  @IsString()
+  @IsPhoneNumber()
   phone: string;
 
   @IsNumber()
   age: number;
 
-  @IsString()
-  course: string;
+  @IsEnum(Course)
+  course: Course;
 
-  @IsString()
-  course_format: string;
+  @IsEnum(CourseFormat)
+  course_format: CourseFormat;
 
-  @IsString()
-  course_type: string;
+  @IsEnum(CourseType)
+  course_type: CourseType;
 
   @IsOptional()
   @IsNumber()
@@ -43,4 +52,8 @@ export class CreateOrderDto {
   @IsOptional()
   @IsString()
   status?: string;
+
+  @IsString()
+  @IsOptional()
+  userId?: string | null | ObjectId;
 }

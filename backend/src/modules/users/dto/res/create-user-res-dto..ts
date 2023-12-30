@@ -1,5 +1,3 @@
-export type CreateUserResType = {
-  login?: string;
-  email?: string;
-  role: string;
-};
+import { UserBaseDto } from '../user.base.dto';
+
+export type CreateUserResType = Partial<UserBaseDto>;

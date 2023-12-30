@@ -7,6 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './modules/auth/auth.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { CustomConfigService } from './config/config.service';
+import { VerificationModule } from './modules/verification/verification.module';
 
 @Module({
   imports: [
@@ -18,6 +19,8 @@ import { CustomConfigService } from './config/config.service';
       }),
       inject: [CustomConfigService],
     }),
+
+    VerificationModule,
     UsersModule,
     AuthModule,
     OrdersModule,

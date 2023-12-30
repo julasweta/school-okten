@@ -1,5 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import {
+  Course,
+  CourseFormat,
+  CourseType,
+  StatusWork,
+} from '../interfaces/orders.types';
+import { IsPhoneNumber } from 'class-validator';
 
 @Schema()
 export class Order extends Document {
@@ -10,6 +17,7 @@ export class Order extends Document {
   surname: string;
 
   @Prop()
+  @IsPhoneNumber()
   email: string;
 
   @Prop()
@@ -18,14 +26,14 @@ export class Order extends Document {
   @Prop()
   age: number;
 
-  @Prop()
-  course: string;
+  @Prop({ enum: Course, default: null })
+  course: Course;
 
-  @Prop()
-  course_format: string;
+  @Prop({ enum: CourseType, default: null })
+  course_type: CourseType;
 
-  @Prop()
-  course_type: string;
+  @Prop({ enum: CourseFormat, default: null })
+  course_format: CourseFormat;
 
   @Prop()
   sum: number;
@@ -39,11 +47,14 @@ export class Order extends Document {
   @Prop()
   msg: string;
 
-  @Prop()
-  status: string;
+  @Prop({ enum: StatusWork, default: null })
+  status: StatusWork;
 
-  @Prop({ default: Date.now })
+  @Prop({ type: Date, default: Date.now })
   created_at: Date;
+
+  @Prop({ default: null })
+  userId: string | null;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
