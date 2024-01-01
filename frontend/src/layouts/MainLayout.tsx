@@ -1,18 +1,16 @@
-import React from "react";
-import { FC,  } from "react";
+import { FC, } from "react";
 import { Outlet, } from "react-router-dom";
 import { Header } from "../components/header/Header";
-import Home from "../components/home/Home";
+import './../App.css';
 
 const MainLayout: FC = () => {
 
 
   return (
-    <>
+    <div className="main">
       <Header />
-      <Home />
       <Outlet />
-    </>
+    </div>
   );
 };
 

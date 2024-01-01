@@ -5,12 +5,15 @@ import { AppModule } from './app.module';
 import { CustomConfigService } from './config/config.service';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as passport from 'passport';
+import * as cors from 'cors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const appConfig: CustomConfigService =
     app.get<CustomConfigService>(CustomConfigService);
+
+  app.use(cors());
 
   app.useGlobalPipes(
     new ValidationPipe({

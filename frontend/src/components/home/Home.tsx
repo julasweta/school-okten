@@ -1,4 +1,5 @@
 import React from "react";
+import { OrdersPage } from "../../pages";
 
 const Home = () => {
 
@@ -10,8 +11,8 @@ const Home = () => {
 
         </div>
         <div className="home-info">
-          <p>JuliDes</p>
-          <h1>Dream Design by Julianna</h1>
+          <h1>Home</h1>
+          
         </div>
       </div>
 

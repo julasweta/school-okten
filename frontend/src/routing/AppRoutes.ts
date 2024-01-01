@@ -1,5 +1,5 @@
 export const AppRoutes = {
   HOME: "/",
-  ORDERS: "/orders",
+  ORDERS: "orders",
   ORDER: "/order",
 };

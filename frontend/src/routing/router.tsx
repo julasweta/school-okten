@@ -1,15 +1,19 @@
 import React from "react";
-import { createHashRouter } from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 import { AppRoutes } from "./AppRoutes";
 import { OrdersPage } from "../pages/OrdersPage";
 import { OrderPage } from "../pages";
 import { MainLayout } from "../layouts/MainLayout";
 
-export const router = createHashRouter([
+export const router = createBrowserRouter([
   {
-    path: AppRoutes.HOME || "julides/",
+    path: '/' ,
     element: <MainLayout />,
     children: [
+      {
+        index: true,
+        element: <Navigate to={'orders'} />,
+      },
       {
         path: AppRoutes.ORDERS,
         element: <OrdersPage />,
@@ -18,7 +22,7 @@ export const router = createHashRouter([
         path: AppRoutes.ORDER,
         element: <OrderPage />,
       },
-    
+
     ],
   },
 ]);
