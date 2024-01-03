@@ -1,9 +1,8 @@
 // OrderTable.tsx
-import React, { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
-import { RootState } from '../../redux/store';
-import { ordersActions } from '../../redux/slices/OrderSlices';
-
+import React, { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { RootState } from "../../redux/store";
+import { ordersActions } from "../../redux/slices/OrderSlices";
 
 const OrderTable: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -11,7 +10,7 @@ const OrderTable: React.FC = () => {
   const { orders } = useAppSelector((state: RootState) => state.orders);
 
   useEffect(() => {
-    dispatch(ordersActions.getOrders({limit:2, page:5}));
+    dispatch(ordersActions.getOrders({ limit: 5, page: 5 }));
   }, [dispatch]);
 
   return (
@@ -35,8 +34,8 @@ const OrderTable: React.FC = () => {
         </tr>
       </thead>
       <tbody>
-        {orders.map((order) => (
-          <tr key={order.id}>
+        {orders.map((order, index) => (
+          <tr key={index}>
             <td>{order.id}</td>
             <td>{order.name}</td>
             <td>{order.surname}</td>
@@ -48,7 +47,7 @@ const OrderTable: React.FC = () => {
             <td>{order.course_type}</td>
             <td>{order.status}</td>
             <td>{order.sum}</td>
-            <td>{order.alreadyPaid ? 'Yes' : 'No'}</td>
+            <td>{order.alreadyPaid ? "Yes" : "No"}</td>
             <td>{order.created_at}</td>
             {/* ДодаТи інші стовпці за потребою */}
           </tr>
@@ -59,4 +58,3 @@ const OrderTable: React.FC = () => {
 };
 
 export default OrderTable;
-

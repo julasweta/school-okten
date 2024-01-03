@@ -4,6 +4,7 @@ import {
   Headers,
   Post,
   Put,
+  Get,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -17,6 +18,7 @@ import { RoleDecorator } from '../../common/decorators/role.decorator';
 import { UserRole } from '../users/interfaces/users.types';
 import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from '../../common/guards/role.guard';
+import { LogoutGuard } from '../../common/guards/logout.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -58,5 +60,21 @@ export class AuthController {
     }
     const tokens = await this.authService.refreshTokens(token);
     return tokens;
+  }
+
+  @Get('/me')
+  async me(@Headers('authorization') refreshToken: string): Promise<any> {
+    const token = extractTokenFromHeader(refreshToken);
+    if (!token) {
+      throw new Error('error');
+    }
+    const user = await this.authService.verifyRefreshToken(token);
+    return user;
+  }
+
+  @Post('logout')
+  @UseGuards(AuthGuard(), LogoutGuard)
+  async logoutUser() {
+    return 'Exit user from API :)';
   }
 }

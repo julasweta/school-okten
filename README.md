@@ -1,6 +1,7 @@
 # School Okten Project
 
 ## Table of Contents
+
 - [Overview](#overview)
 - [Getting Started](#getting-started)
 - [Usage](#usage)
@@ -31,10 +32,11 @@ The School Okten Project is a comprehensive educational platform designed to [pr
    docker-compose up --build
    ```
 
- ## Usage:
-   - **Frontend:** [http://localhost/](http://localhost/)
-   - **Backend:** [http://localhost:3000](http://localhost:3000)
-   - **Swagger API documentation:** [http://localhost:3000/api](http://localhost:3000/api)
+## Usage:
+
+- **Frontend:** [http://localhost/](http://localhost/)
+- **Backend:** [http://localhost:3000](http://localhost:3000)
+- **Swagger API documentation:** [http://localhost:3000/api](http://localhost:3000/api)
 
 ## Technologies Used
 
@@ -48,9 +50,3 @@ The School Okten Project is a comprehensive educational platform designed to [pr
 - **frontend/**: Frontend source code.
 - **backend/**: Backend source code.
 - **docker-compose.yml**: Docker configuration file.
-
-
-
-
-
-

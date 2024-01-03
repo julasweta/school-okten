@@ -4,15 +4,18 @@ import { AppRoutes } from "./AppRoutes";
 import { OrdersPage } from "../pages/OrdersPage";
 import { OrderPage } from "../pages";
 import { MainLayout } from "../layouts/MainLayout";
+import { urls } from "../constants/urls";
+import { LoginForm } from "../components/auth/LoginForm";
+import { RegisterForm } from "../components/auth/RegisterForm";
 
 export const router = createBrowserRouter([
   {
-    path: '/' ,
+    path: "/",
     element: <MainLayout />,
     children: [
       {
         index: true,
-        element: <Navigate to={'orders'} />,
+        element: <Navigate to={AppRoutes.LOGIN} />,
       },
       {
         path: AppRoutes.ORDERS,
@@ -22,7 +25,14 @@ export const router = createBrowserRouter([
         path: AppRoutes.ORDER,
         element: <OrderPage />,
       },
-
+      {
+        path: AppRoutes.LOGIN,
+        element: <LoginForm />,
+      },
+      {
+        path: AppRoutes.REGISTER,
+        element: <RegisterForm />,
+      },
     ],
   },
 ]);

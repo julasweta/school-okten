@@ -5,7 +5,6 @@ export interface IPageInterface<DATA> {
   data: DATA[];
 }
 
-
 //тимчасова
 export interface IPageData<DATA> {
   data: DATA[];
