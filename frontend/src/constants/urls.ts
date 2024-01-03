@@ -13,6 +13,7 @@ const urls = {
     refresh: `${auth}/refresh`,
     register: `auth/create/user`,
     me: `${auth}/me`,
+    logout: `auth/logout`
   },
 };
 

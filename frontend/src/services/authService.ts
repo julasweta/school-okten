@@ -18,6 +18,11 @@ const authService = {
     return me;
   },
 
+  async logout(): Promise<any> {
+    const  res = await apiService.post(urls.auth.logout);
+    return res;
+  },
+
   async refresh(): Promise<void> {
     const refresh = this.getRefreshToken();
     const { data } = await apiService.post<ITokens>(urls.auth.refresh, {
@@ -25,8 +30,6 @@ const authService = {
     });
     this.setTokens(data);
   },
-
- 
 
   //тут лише отримання данних з авторизованого користувача, після оновлення сторінки і при наявності токена
   me(): IRes<IUser> {

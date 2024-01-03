@@ -15,10 +15,17 @@ const Header = () => {
     }
   }, []);
 
+  const onLogout = () => {
+    authService.logout();
+  }
+
   return (
     <div className="header">
       {me !== null ? (
-        <div className="userGreeting">Welcome, {me.login}!</div>
+        <div>
+          <div className="userGreeting">Welcome, {me.login}!</div>
+          <button onClick={onLogout}>Logout</button>
+        </div>
       ) : (
         <div className="login-btn">
           <Link to={urls.auth.login}>
