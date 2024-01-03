@@ -19,7 +19,9 @@ const authService = {
   },
 
   async logout(): Promise<any> {
-    const  res = await apiService.post(urls.auth.logout);
+    const res = await apiService.post(urls.auth.logout);
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     return res;
   },
 

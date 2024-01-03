@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { urls } from "../../constants/urls";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { authActions } from "../../redux/slices/AuthSlice";
@@ -8,6 +8,7 @@ import { authService } from "../../services/authService";
 const Header = () => {
   const { me } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (authService.getAccessToken() && !me) {
@@ -17,6 +18,7 @@ const Header = () => {
 
   const onLogout = () => {
     authService.logout();
+    navigate(urls.auth.login);
   }
 
   return (

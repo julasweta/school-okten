@@ -57,7 +57,10 @@ export class AuthService {
   async login(body: LoginRequestDto): Promise<any> {
     const user = await this.userService.userFindOneEmail(body.email);
     if (user?.email !== body.email) {
-      throw new UnauthorizedException('This email is not registered');
+      throw new UnauthorizedException(
+        'This email is not registered',
+        'This email is not registered',
+      );
     }
     const accessToken = await this.verificationService.createToken(
       {

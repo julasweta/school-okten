@@ -23,7 +23,7 @@ import { RedisModule } from '@webeleon/nestjs-redis';
       property: 'user',
     }),
     RedisModule.forRoot({
-      url: 'redis://redis:6379',
+      url: 'redis://localhost:6379',
     }),
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
     JwtModule.registerAsync({
