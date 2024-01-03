@@ -47,8 +47,10 @@ tbody td {
     box-shadow 0.3s;
 }
 
-.button:hover {
+.active-btn {
   background-color: #2980b9;
   color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
+
