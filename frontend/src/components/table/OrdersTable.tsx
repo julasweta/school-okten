@@ -4,10 +4,12 @@ import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { RootState } from "../../redux/store";
 import { ordersActions } from "../../redux/slices/OrderSlices";
 import { Pagin } from "../pagination/Pagin";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { urls } from "../../constants/urls";
 
 const OrdersTable: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const { orders, activePage } = useAppSelector((state: RootState) => state.orders);
 
@@ -18,6 +20,11 @@ const OrdersTable: React.FC = () => {
   useEffect(() => {
     dispatch(ordersActions.setActivePage(+pageNumber))
   }, [dispatch, pageNumber]);
+
+  useEffect(() => {
+    const isAccess = localStorage.getItem("accessToken");
+    if (!isAccess) { navigate(urls.auth.login) }
+  }, [])
 
 
   useEffect(() => {
@@ -48,7 +55,7 @@ const OrdersTable: React.FC = () => {
         <tbody>
           {orders.map((order, index) => (
             <tr key={index}>
-              <td>{order.id}</td>
+              <td>{order._id}</td>
               <td>{order.name}</td>
               <td>{order.surname}</td>
               <td>{order.email}</td>

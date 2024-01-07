@@ -1,5 +1,5 @@
 export interface Order {
-  id: number;
+  _id: number;
   name: string;
   surname: string;
   email: string;

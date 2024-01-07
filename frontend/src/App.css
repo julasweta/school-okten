@@ -10,14 +10,17 @@ table {
   width: 100%;
   margin: 20px 0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  table-layout: fixed;
+  /* Фіксовані розміри для стовпців */
 }
 
 thead th {
-  background-color: #2c3e50;
+  background-color: #af4927;
   color: #ecf0f1;
   padding: 15px;
   border: 1px solid #34495e;
   text-align: left;
+  height: 20px;
 }
 
 tbody tr:nth-child(even) {
@@ -25,8 +28,12 @@ tbody tr:nth-child(even) {
 }
 
 tbody td {
-  padding: 15px;
+  padding: 5px;
   border: 1px solid #34495e;
+  height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* BUTTON */
@@ -53,4 +60,19 @@ tbody td {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* PAGINATION */
+.pagination {
+  display: flex;
+}
 
+ul li {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+}
+
+.disabled {
+  opacity: 0.5; 
+  cursor: not-allowed; 
+}
