@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { authActions } from "../../redux/slices/AuthSlice";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,13 @@ const LoginForm: React.FC = () => {
   const { errors } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const getRefreshToken = localStorage.getItem("refreshToken");
+
+  useEffect(() => {
+    if (getRefreshToken) {
+      navigate("/orders?page=1");
+    }
+  }, [getRefreshToken, navigate]);
 
   const login: SubmitHandler<IAuth> = async (user) => {
     try {
@@ -18,7 +25,7 @@ const LoginForm: React.FC = () => {
 
       if (requestStatus === "fulfilled") {
         reset();
-        navigate("/orders");
+        navigate("/orders?page=1");
       }
     } catch (error) {
       console.error("An error occurred during login:", error);
@@ -34,7 +41,6 @@ const LoginForm: React.FC = () => {
         <input type="text" placeholder={"username"} {...register("email")} />
         <input type="text" placeholder={"password"} {...register("password")} />
         <button className="button">login</button>
-        {/* Render error message only if it exists */}
         {errorMessage && <span>{errorMessage}</span>}
       </form>
     </div>

@@ -51,31 +51,30 @@ export class OrdersService {
     const { email } = await this.verificationService.decodeToken(accessToken);
     const order = await this.orderModel.findOne({ _id: id });
     const { _id } = await this.userService.userFindOneEmail(email);
-    if (order.userId.toString() !== _id.toString() || !order.userId) {
-      throw new HttpException(
-        'You is`nt manager this order',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-    const groupName = await this.groupService.findNameGroup(body.groupName);
-    if (!groupName) {
-      throw new HttpException('This group not found', HttpStatus.BAD_REQUEST);
-    }
-    if (order.status === StatusWork.New || order.status === null) {
-      order.status = StatusWork.InWork;
-    }
-    const updatedOrder = await this.orderModel.findOneAndUpdate(
-      { _id: id },
-      {
-        $set: {
-          ...body,
-          userId: _id,
-          status: order.status,
-          groupName: body.groupName,
+    console.log(order.userId);
+    if (order.userId === null || order.userId.toString() === _id.toString()) {
+      const groupName = await this.groupService.findNameGroup(body.groupName);
+      if (!groupName) {
+        throw new HttpException('This group not found', HttpStatus.BAD_REQUEST);
+      }
+      if (order.status === StatusWork.New || order.status === null) {
+        order.status = StatusWork.InWork;
+      }
+      const updatedOrder = await this.orderModel.findOneAndUpdate(
+        { _id: id },
+        {
+          $set: {
+            ...body,
+            userId: _id,
+            status: order.status,
+            groupName: body.groupName,
+          },
         },
-      },
-      { new: true },
-    );
-    return updatedOrder;
+        { new: true },
+      );
+      return updatedOrder;
+    } else {
+      throw new Error('you don`t` change this order');
+    }
   }
 }

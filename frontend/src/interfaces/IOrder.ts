@@ -12,4 +12,5 @@ export interface Order {
   sum: number;
   alreadyPaid: boolean;
   created_at: string;
+  userId: object;
 }

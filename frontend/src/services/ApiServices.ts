@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
-import { authService } from "./authService";
 import { urls } from "../constants/urls";
+import { authService } from "./authService";
 
 type IRes<DATA> = Promise<AxiosResponse<DATA>>;
 
@@ -10,7 +10,6 @@ const apiService: AxiosInstance = axios.create({ baseURL });
 // записуємо токен у всі запити в header
 apiService.interceptors.request.use((req) => {
   const access = authService.getAccessToken();
-  console.log(access);
   if (access) {
     req.headers.Authorization = `Bearer ${access}`;
   }

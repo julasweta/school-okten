@@ -56,7 +56,7 @@ const Pagin: React.FC = () => {
 
 
   const onHead = () => {
-    if (activePage > 1) {
+    if (activePage > 2) {
       dispatch(ordersActions.setActivePage(activePage - 1));
     }
   };

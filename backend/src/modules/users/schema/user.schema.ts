@@ -16,7 +16,7 @@ export class User {
   email: string;
 
   @Prop()
-  password: string;
+  password: string | null = null;
 
   @Prop({ default: 'manager' })
   role: string;

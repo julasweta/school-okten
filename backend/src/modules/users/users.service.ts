@@ -34,9 +34,11 @@ export class UsersService {
     return user;
   }
 
-  async userFindOneId(id: string): Promise<CreateUserResType> {
-    const user = await this.userModel.findById({ _id: id });
-    return user;
+  async userFindOneId(id: string): Promise<UserBaseType> {
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+      const user = await this.userModel.findOne({ _id: id });
+      return user;
+    }
   }
 
   async updateUser(
@@ -46,7 +48,7 @@ export class UsersService {
     const updatedUser = await this.userModel.findOneAndUpdate(
       { _id: id },
       { $set: { status: body.status } },
-      { new: true }, // Опція new повертає оновлений документ
+      { new: true },
     );
 
     return updatedUser;

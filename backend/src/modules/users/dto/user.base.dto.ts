@@ -1,5 +1,6 @@
 import { IsEnum, IsEmail, IsOptional, IsString } from 'class-validator';
 import { StatusUser } from '../interfaces/users.types';
+import { Types } from 'mongoose';
 
 export class UserBaseDto {
   @IsOptional()
@@ -25,7 +26,7 @@ export class UserBaseDto {
   status?: StatusUser;
 
   @IsOptional()
-  _id?: object;
+  _id?: string | number | Types.ObjectId;
 
   @IsString()
   @IsOptional()
@@ -37,6 +38,6 @@ export type UserBaseType = {
   email?: string;
   password?: string;
   role: string;
-  _id?: object;
+  _id?: Types.ObjectId;
   status?: StatusUser;
 };

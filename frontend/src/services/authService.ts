@@ -27,10 +27,12 @@ const authService = {
 
   async refresh(): Promise<void> {
     const refresh = this.getRefreshToken();
-    const { data } = await apiService.post<ITokens>(urls.auth.refresh, {
-      refresh,
-    });
-    this.setTokens(data);
+    if (refresh) {
+      const { data } = await apiService.post<ITokens>(urls.auth.refresh, {
+        refresh,
+      });
+      this.setTokens(data);
+    }
   },
 
   //тут лише отримання данних з авторизованого користувача, після оновлення сторінки і при наявності токена

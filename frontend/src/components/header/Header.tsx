@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { urls } from "../../constants/urls";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { authActions } from "../../redux/slices/AuthSlice";
+import { urls } from "../../constants/urls";
 import { authService } from "../../services/authService";
 
 const Header = () => {
@@ -14,11 +14,15 @@ const Header = () => {
     if (authService.getAccessToken() && !me) {
       dispatch(authActions.me());
     }
-  }, []);
+  }, [dispatch, me]);
 
-  const onLogout = () => {
-    authService.logout();
-    navigate(urls.auth.login);
+ 
+
+
+
+  const onLogout =async () => {
+   await authService.logout();
+    navigate('auth/login');
   }
 
   return (

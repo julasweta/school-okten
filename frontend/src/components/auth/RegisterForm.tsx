@@ -15,7 +15,7 @@ const RegisterForm = () => {
     const {
       meta: { requestStatus },
     } = await dispatch(authActions.register({ user }));
-    if (requestStatus == "fulfilled") {
+    if (requestStatus === "fulfilled") {
       navigate("/orders");
     }
   };
@@ -30,7 +30,7 @@ const RegisterForm = () => {
         <input type="text" placeholder={"role"} {...register("role")} />
         <button>register</button>
         <p></p>
-        {errors?.response.data.username ==
+        {errors?.response.data.username ===
         "user model with this username already exists." ? (
           <p> Імя вже зареєстровано</p>
         ) : (

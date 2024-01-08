@@ -25,8 +25,14 @@ const getOrders = createAsyncThunk<
   "ordersSlice/getOrders",
   async ({ sort, limit, page }, { rejectWithValue }) => {
     try {
-      const { data } = await orderService.getOrders(sort, limit, page);
-      return data;
+      if (page === 0) {
+        page = 1;
+        const { data } = await orderService.getOrders(sort, limit, page);
+        return data;
+      } else {
+        const { data } = await orderService.getOrders(sort, limit, page);
+        return data;
+      }
     } catch (e) {
       const err = e as AxiosError;
       return rejectWithValue(err);

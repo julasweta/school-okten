@@ -6,6 +6,7 @@ import { ordersActions } from "../../redux/slices/OrderSlices";
 import { Pagin } from "../pagination/Pagin";
 import { useLocation, useNavigate } from "react-router-dom";
 import { urls } from "../../constants/urls";
+import { UserName } from "../users/UserName";
 
 const OrdersTable: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -24,12 +25,15 @@ const OrdersTable: React.FC = () => {
   useEffect(() => {
     const isAccess = localStorage.getItem("accessToken");
     if (!isAccess) { navigate(urls.auth.login) }
-  }, [])
+  }, [navigate])
 
 
   useEffect(() => {
     dispatch(ordersActions.getOrders({ sort: 'DESC', limit: 5, page: activePage }));
   }, [activePage, dispatch]);
+
+
+
 
   return (
     <div>
@@ -49,12 +53,13 @@ const OrdersTable: React.FC = () => {
             <th>Sum</th>
             <th>Already Paid</th>
             <th>Created At</th>
+            <th>Manager Id</th>
             {/* Додати інші стовпці за потребою */}
           </tr>
         </thead>
         <tbody>
           {orders.map((order, index) => (
-            <tr key={index}>
+            <tr key={index} >
               <td>{order._id}</td>
               <td>{order.name}</td>
               <td>{order.surname}</td>
@@ -68,6 +73,7 @@ const OrdersTable: React.FC = () => {
               <td>{order.sum}</td>
               <td>{order.alreadyPaid ? "Yes" : "No"}</td>
               <td>{order.created_at}</td>
+              <td><UserName id={order.userId && order.userId.toString()}></UserName></td>
               {/* ДодаТи інші стовпці за потребою */}
             </tr>
           ))}

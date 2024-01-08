@@ -4,7 +4,6 @@ import { AppRoutes } from "./AppRoutes";
 import { OrdersPage } from "../pages/OrdersPage";
 import { OrderPage } from "../pages";
 import { MainLayout } from "../layouts/MainLayout";
-import { urls } from "../constants/urls";
 import { LoginForm } from "../components/auth/LoginForm";
 import { RegisterForm } from "../components/auth/RegisterForm";
 

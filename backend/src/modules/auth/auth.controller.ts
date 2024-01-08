@@ -56,7 +56,8 @@ export class AuthController {
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const token = extractTokenFromHeader(refreshToken);
     if (!token) {
-      throw new Error('error');
+      console.error('Invalid token');
+      throw new Error('Invalid token');
     }
     const tokens = await this.authService.refreshTokens(token);
     return tokens;

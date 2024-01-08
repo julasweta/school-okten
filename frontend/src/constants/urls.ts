@@ -13,7 +13,10 @@ const urls = {
     refresh: `${auth}/refresh`,
     register: `auth/create/user`,
     me: `${auth}/me`,
-    logout: `auth/logout`
+    logout: `auth/logout`,
+  },
+  users: {
+    byId: (id: string): string => `${users}/${id}`,
   },
 };
 

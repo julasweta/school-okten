@@ -51,7 +51,6 @@ const me = createAsyncThunk<IUser>(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       const { data } = await authService.me();
-      console.log(data);
       return data;
     } catch (e) {
       const err = e as AxiosError;
