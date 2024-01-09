@@ -6,12 +6,16 @@ import { IPageInterface } from "../../interfaces/IPaginationOrder";
 
 interface OrderState {
   orders: Order[];
+  orderActive: Order;
+  updateOrderTriger: boolean;
   itemsFound: number;
   activePage: number;
 }
 
 const initialState: OrderState = {
   orders: [],
+  orderActive: null,
+  updateOrderTriger: true,
   itemsFound: 0,
   activePage: 1,
 };
@@ -40,6 +44,22 @@ const getOrders = createAsyncThunk<
   }
 );
 
+
+
+const getOrderActive = createAsyncThunk<
+  Order,
+  string,
+  { rejectValue: AxiosError }
+>("ordersSlice/getOrderActives", async (id, { rejectWithValue }) => {
+  try {
+    const { data } = await orderService.getOrder(id);
+    return data;
+  } catch (e) {
+    const err = e as AxiosError;
+    return rejectWithValue(err);
+  }
+});
+
 /*--------------------- SLICE--------------------  */
 
 export const OrdersSlice = createSlice({
@@ -49,13 +69,20 @@ export const OrdersSlice = createSlice({
     setActivePage: (state, action) => {
       state.activePage = action.payload;
     },
+    setUpdateOrderTriger: (state) => {
+      state.updateOrderTriger = !state.updateOrderTriger;
+    }
   },
 
   extraReducers: (builder) =>
-    builder.addCase(getOrders.fulfilled, (state, action) => {
-      state.orders = action.payload.data;
-      state.itemsFound = action.payload.itemsFound;
-    }),
+    builder
+      .addCase(getOrders.fulfilled, (state, action) => {
+        state.orders = action.payload.data;
+        state.itemsFound = action.payload.itemsFound;
+      })
+      .addCase(getOrderActive.fulfilled, (state, action) => {
+        state.orderActive = action.payload;
+      }),
 });
 
 const { reducer: ordersReducer, actions } = OrdersSlice;
@@ -63,6 +90,7 @@ const { reducer: ordersReducer, actions } = OrdersSlice;
 const ordersActions = {
   ...actions,
   getOrders,
+  getOrderActive,
 };
 
 export { ordersActions, ordersReducer };

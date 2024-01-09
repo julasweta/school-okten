@@ -22,7 +22,6 @@ export class GroupsService {
   }
 
   async findNameGroup(groupName: string) {
-    console.log('grname', groupName);
     const res = await this.groupModel.findOne({ title: groupName });
     return res;
   }

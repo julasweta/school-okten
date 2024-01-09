@@ -27,6 +27,8 @@ const getUserById = createAsyncThunk<
   }
 });
 
+
+
 /*--------------------- SLICE--------------------  */
 
 export const UsersSlice = createSlice({

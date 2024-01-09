@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Order } from './schema/order.chema.';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { OrderListQuerytDto } from './dto/orders-params.dto';
 import { OrderRepository } from './orders.repository';
 import { IPaginationResponse } from '../../common/interfaces/IListRes';
@@ -38,21 +38,22 @@ export class OrdersService {
     return await this.orderRepository.getAll(query);
   }
 
-  public async getOneOrder(id: Types.ObjectId) {
-    const order = await this.orderModel.findOne({ _id: id });
-    return order;
+  public async getOneOrder(id: string) {
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+      const order = await this.orderModel.findOne({ _id: id });
+      return order;
+    }
   }
 
   public async updateOrder(
     body: Partial<CreateOrderDto>,
     id: string,
     accessToken: string,
-  ): Promise<Partial<CreateOrderDto>> {
+  ): Promise<string | HttpException> {
     const { email } = await this.verificationService.decodeToken(accessToken);
     const order = await this.orderModel.findOne({ _id: id });
-    const { _id } = await this.userService.userFindOneEmail(email);
-    console.log(order.userId);
-    if (order.userId === null || order.userId.toString() === _id.toString()) {
+    const { _id } = await this.userService.userFindOneEmail(email); //user
+    if (order.userId == null || order.userId.toString() === _id.toString()) {
       const groupName = await this.groupService.findNameGroup(body.groupName);
       if (!groupName) {
         throw new HttpException('This group not found', HttpStatus.BAD_REQUEST);
@@ -60,7 +61,7 @@ export class OrdersService {
       if (order.status === StatusWork.New || order.status === null) {
         order.status = StatusWork.InWork;
       }
-      const updatedOrder = await this.orderModel.findOneAndUpdate(
+      await this.orderModel.findOneAndUpdate(
         { _id: id },
         {
           $set: {
@@ -72,9 +73,12 @@ export class OrdersService {
         },
         { new: true },
       );
-      return updatedOrder;
+      return 'updated Order';
     } else {
-      throw new Error('you don`t` change this order');
+      return new HttpException(
+        'You are not allowed to change this order',
+        HttpStatus.FORBIDDEN,
+      );
     }
   }
 }

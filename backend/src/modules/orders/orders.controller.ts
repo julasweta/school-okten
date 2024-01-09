@@ -7,6 +7,7 @@ import {
   Put,
   Param,
   Headers,
+  HttpException,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -49,8 +50,18 @@ export class OrdersController {
     @Body() body: CreateOrderDto,
     @Param('id') id: string,
     @Headers('authorization') accessToken: string,
+  ): Promise<string | HttpException> {
+    const res = await this.ordersService.updateOrder(body, id, accessToken);
+    return res;
+  }
+
+  @ApiOperation({ summary: 'Update order' })
+  @ApiBearerAuth()
+  @Get(':id')
+  public async getOrderById(
+    @Param('id') id: string,
   ): Promise<Partial<CreateOrderDto>> {
-    const order = await this.ordersService.updateOrder(body, id, accessToken);
+    const order = await this.ordersService.getOneOrder(id);
     return order;
   }
 }

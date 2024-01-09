@@ -15,7 +15,7 @@ const UserName: React.FC<UserNameProps> = ({ id }) => {
     if (id) {
       dispatch(usersActions.getUserById(id))
         .then((resultAction) => {
-          // Перевірте, чи успішно викликано getUserById
+          
           if (usersActions.getUserById.fulfilled.match(resultAction)) {
             const user: IUser = resultAction.payload;
             setName(user.name);

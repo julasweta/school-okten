@@ -57,7 +57,6 @@ export class AuthService {
   async login(body: LoginRequestDto): Promise<any> {
     const user = await this.userService.userFindOneEmail(body.email);
     const hashPassw = await bcrypt.compare(body.password, user.password);
-    console.log('a=hashpaass', hashPassw);
     if (user?.email !== body.email || hashPassw === false) {
       throw new UnauthorizedException(
         'This email or password is wrong',

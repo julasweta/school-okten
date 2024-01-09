@@ -18,7 +18,9 @@ export class MessagesService {
 
   async createMessage(body: MessageBaseDto, accessToken: string) {
     const { email } = await this.verificationService.decodeToken(accessToken);
-    const orderId = await this.orderService.getOneOrder(body.orderId);
+    const orderId = await this.orderService.getOneOrder(
+      body.orderId.toString(),
+    );
     const { _id } = await this.userService.userFindOneEmail(email);
 
     if (_id.toString() !== orderId.userId.toString()) {
