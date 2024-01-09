@@ -1,6 +1,6 @@
 import { urls } from "../constants/urls";
-import { EditOrderFormData, Order } from "../interfaces";
-import {  IPageInterface } from "../interfaces/IPaginationOrder";
+import { EditOrderFormData, IMessages, Message, Order } from "../interfaces";
+import { IPageInterface } from "../interfaces/IPaginationOrder";
 import { IRes, apiService } from "./ApiServices";
 
 const orderService = {
@@ -15,7 +15,10 @@ const orderService = {
   getOrder: (id: string): IRes<any> => apiService.get(urls.orders.byId(id)),
   updateOrder: (id: string, data: EditOrderFormData): IRes<any> =>
     apiService.put(urls.orders.update(id), data),
-  createMessage: (data: object): IRes<any>=> apiService.post(urls.orders.messages, data)
+  createMessage: (data: object): IRes<any> =>
+    apiService.post(urls.orders.messages, data),
+  getAllMessages: (orderId: string): Promise<IMessages> =>
+    apiService.get(urls.orders.messagesAll, { params: { orderId } }),
 };
 
 export { orderService };

@@ -76,3 +76,22 @@ ul li {
   opacity: 0.5; 
   cursor: not-allowed; 
 }
+
+/* ORDER FORM */
+.order-form{
+  width: 100%;
+}
+ol{
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  margin-left: auto;
+}
+ol li{
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid gray;
+  width: 100%;
+  background-color: #fafeff;
+  font-size: 0.9rem;
+}

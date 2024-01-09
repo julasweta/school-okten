@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { Order } from "../../interfaces";
+import { IMessages, Message, Order } from "../../interfaces";
 import { orderService } from "../../services/OrdersServices";
 import { AxiosError } from "axios";
 import { IPageInterface } from "../../interfaces/IPaginationOrder";
@@ -7,7 +7,9 @@ import { IPageInterface } from "../../interfaces/IPaginationOrder";
 interface OrderState {
   orders: Order[];
   orderActive: Order;
+  messages: Message[];
   updateOrderTriger: boolean;
+  createMessagTriger: boolean;
   itemsFound: number;
   activePage: number;
 }
@@ -15,7 +17,9 @@ interface OrderState {
 const initialState: OrderState = {
   orders: [],
   orderActive: null,
+  messages: null,
   updateOrderTriger: true,
+  createMessagTriger: true,
   itemsFound: 0,
   activePage: 1,
 };
@@ -44,8 +48,6 @@ const getOrders = createAsyncThunk<
   }
 );
 
-
-
 const getOrderActive = createAsyncThunk<
   Order,
   string,
@@ -60,6 +62,27 @@ const getOrderActive = createAsyncThunk<
   }
 });
 
+const getMessagesAll = createAsyncThunk(
+  "ordersSlice/getMessagesAll",
+  async (orderId: string, { rejectWithValue }) => {
+    try {
+      const response = await orderService.getAllMessages(orderId);
+      const data = response.data; 
+
+      const dataFilter = data.filter((item) => item.orderId === orderId);
+
+      return dataFilter;
+    } catch (e) {
+      const err = e as AxiosError;
+      return rejectWithValue(err);
+    }
+  }
+);
+
+
+
+
+
 /*--------------------- SLICE--------------------  */
 
 export const OrdersSlice = createSlice({
@@ -71,7 +94,10 @@ export const OrdersSlice = createSlice({
     },
     setUpdateOrderTriger: (state) => {
       state.updateOrderTriger = !state.updateOrderTriger;
-    }
+    },
+    setCreateMessagTriger: (state) => {
+      state.createMessagTriger = !state.createMessagTriger;
+    },
   },
 
   extraReducers: (builder) =>
@@ -82,6 +108,9 @@ export const OrdersSlice = createSlice({
       })
       .addCase(getOrderActive.fulfilled, (state, action) => {
         state.orderActive = action.payload;
+      })
+      .addCase(getMessagesAll.fulfilled, (state, action) => {
+        state.messages = action.payload;
       }),
 });
 
@@ -91,6 +120,7 @@ const ordersActions = {
   ...actions,
   getOrders,
   getOrderActive,
+  getMessagesAll,
 };
 
 export { ordersActions, ordersReducer };

@@ -10,6 +10,7 @@ const urls = {
     byId: (id: string): string => `${orders}/${id}`,
     update: (id: string): string => `${orders}/update/${id}`,
     messages: messages,
+    messagesAll: `${messages}/all`,
   },
   auth: {
     login: "auth/login",

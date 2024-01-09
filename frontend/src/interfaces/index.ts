@@ -5,3 +5,4 @@ export * from "./IRegister";
 export * from "./IUser";
 export * from "./Itokens";
 export * from "./IModal";
+export * from "./IMessage";

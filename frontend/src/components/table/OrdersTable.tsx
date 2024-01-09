@@ -1,5 +1,5 @@
 // OrderTable.tsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { RootState } from "../../redux/store";
 import { ordersActions } from "../../redux/slices/OrderSlices";
@@ -8,6 +8,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { urls } from "../../constants/urls";
 import { UserName } from "../users/UserName";
 import { OrderForm } from "../forms/OrderForm";
+
+
 
 
 const OrdersTable: React.FC = () => {
@@ -26,10 +28,9 @@ const OrdersTable: React.FC = () => {
     setActiveOrder(orderId === activeOrder ? null : orderId);
   }
 
-
   useEffect(() => {
     dispatch(ordersActions.getOrders({ sort: 'DESC', limit: 5, page: activePage }));
-  }, [activePage, updateOrderTriger,  dispatch]);
+  }, [activePage, updateOrderTriger, dispatch]);
 
   useEffect(() => {
     dispatch(ordersActions.setActivePage(+pageNumber));
@@ -39,8 +40,6 @@ const OrdersTable: React.FC = () => {
     const isAccess = localStorage.getItem("accessToken");
     if (!isAccess) { navigate(urls.auth.login) }
   }, [navigate]);
-
-  console.log(updateOrderTriger);
 
   return (
     <div>
@@ -84,7 +83,15 @@ const OrdersTable: React.FC = () => {
                 <td><UserName id={order.userId && order.userId.toString()}></UserName></td>
                 {/* Додати інші стовпці за потребою */}
               </tr>
-              {activeOrder === order._id && <tr><td colSpan={4}><OrderForm /></td></tr>}
+              {activeOrder === order._id && (
+                <tr>
+                  <td colSpan={14}>
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <OrderForm />
+                    </Suspense>
+                  </td>
+                </tr>
+              )}
             </React.Fragment>
           ))}
         </tbody>
@@ -95,3 +102,4 @@ const OrdersTable: React.FC = () => {
 };
 
 export { OrdersTable };
+
