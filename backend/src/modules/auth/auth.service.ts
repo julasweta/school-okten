@@ -17,6 +17,7 @@ import { User } from '../users/schema/user.schema';
 import { CreateUserReqDto } from '../users/dto/req/create-user-req-dto';
 import { CreateUserResType } from '../users/dto/res/create-user-res-dto.';
 import * as bcrypt from 'bcrypt';
+import { ActivateUser } from '../../common/interfaces/IListRes';
 
 @Injectable()
 export class AuthService {
@@ -38,15 +39,21 @@ export class AuthService {
     return this.userService.createUser({ ...body, token });
   }
 
-  async activateUser(accessToken: string, pass: any): Promise<UserBaseType> {
+  async activateUser(
+    accessToken: string,
+    pass: ActivateUser,
+  ): Promise<UserBaseType> {
     const extractUserEmail =
       await this.verificationService.decodeToken(accessToken);
-    if (!pass.password) {
-      throw new Error('password wrong');
+
+    if (!pass) {
+      throw new Error('Password is wrong');
     }
-    const password = await bcrypt.hash(pass.password, 5);
+
+    const password = await bcrypt.hash(pass.password.toLowerCase().trim(), 5);
+
     const updatedUser = await this.userModel.findOneAndUpdate(
-      { email: (await extractUserEmail).email },
+      { email: extractUserEmail.email },
       { $set: { status: 'activate', password: password, token: null } },
       { new: true }, // Опція new повертає оновлений документ
     );
@@ -56,13 +63,30 @@ export class AuthService {
 
   async login(body: LoginRequestDto): Promise<any> {
     const user = await this.userService.userFindOneEmail(body.email);
-    const hashPassw = await bcrypt.compare(body.password, user.password);
-    if (user?.email !== body.email || hashPassw === false) {
+
+    if (!user) {
       throw new UnauthorizedException(
         'This email or password is wrong',
         'This email or password is wrong',
       );
     }
+
+    console.log('body', body.password);
+    console.log('user', user.password.trim());
+    const hashPassw = await bcrypt.compare(
+      body.password.toLowerCase().trim(),
+      user.password,
+    );
+
+    console.log('passhash', hashPassw);
+
+    if (!hashPassw) {
+      throw new UnauthorizedException(
+        'This email or password is wrong',
+        'This email or password is wrong',
+      );
+    }
+
     const accessToken = await this.verificationService.createToken(
       {
         email: body.email,
@@ -81,6 +105,7 @@ export class AuthService {
 
     await this.redisClient.setEx(accessToken, 10000, accessToken);
     await this.redisClient.setEx(refreshToken, 50000, refreshToken);
+
     return { accessToken, refreshToken };
   }
 

@@ -1,5 +1,5 @@
 // OrderTable.tsx
-import React, { useEffect, useState, Suspense } from "react";
+import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { RootState } from "../../redux/store";
 import { ordersActions } from "../../redux/slices/OrderSlices";
@@ -11,35 +11,35 @@ import { OrderForm } from "../forms/OrderForm";
 
 
 
-
 const OrdersTable: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [activeOrder, setActiveOrder] = useState<string | null>(null);
-  const { orders, activePage, updateOrderTriger } = useAppSelector((state: RootState) => state.orders);
+  const { orders, updateOrderTriger, orderActive, activePage } = useAppSelector((state: RootState) => state.orders);
 
   const searchParams = new URLSearchParams(location.search);
-  const pageNumber = searchParams.get('page');
+  const pageNumber = +searchParams.get('page');
 
-  const onShowOrder = (orderId: string) => {
-    dispatch(ordersActions.getOrderActive(orderId))
-    setActiveOrder(orderId === activeOrder ? null : orderId);
-  }
-
-  useEffect(() => {
-    dispatch(ordersActions.getOrders({ sort: 'DESC', limit: 5, page: activePage }));
-  }, [activePage, updateOrderTriger, dispatch]);
-
-  useEffect(() => {
-    dispatch(ordersActions.setActivePage(+pageNumber));
-  }, [dispatch, pageNumber]);
+  const onSetOrderActive = (orderId: string) => {
+    dispatch(ordersActions.getOrderActive(orderId));
+  };
 
   useEffect(() => {
     const isAccess = localStorage.getItem("accessToken");
-    if (!isAccess) { navigate(urls.auth.login) }
+    if (!isAccess) {
+      navigate(urls.auth.login);
+    }
   }, [navigate]);
+
+  useEffect(() => {
+    dispatch(ordersActions.setActivePage(pageNumber));
+    dispatch(ordersActions.getOrderActive(null));
+  }, [dispatch, pageNumber]);
+
+  useEffect(() => {
+    activePage && dispatch(ordersActions.getOrders({ sort: 'DESC', limit: 5, page: activePage }));
+  }, [activePage, updateOrderTriger, dispatch]);
 
   return (
     <div>
@@ -64,9 +64,9 @@ const OrdersTable: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {orders.map((order, index) => (
-            <React.Fragment key={index}>
-              <tr onClick={() => onShowOrder(order._id)}>
+          {orders.map((order) => (
+            <React.Fragment key={order._id}>
+              <tr onClick={() => onSetOrderActive(order._id)} className={orderActive?._id === order._id && 'focus'}>
                 <td>{order._id}</td>
                 <td>{order.name}</td>
                 <td>{order.surname}</td>
@@ -80,15 +80,13 @@ const OrdersTable: React.FC = () => {
                 <td>{order.sum}</td>
                 <td>{order.alreadyPaid ? "Yes" : "No"}</td>
                 <td>{order.created_at}</td>
-                <td><UserName id={order.userId && order.userId.toString()}></UserName></td>
+                <td><UserName id={order.userId?.toString()} /></td>
                 {/* Додати інші стовпці за потребою */}
               </tr>
-              {activeOrder === order._id && (
-                <tr>
+              {orderActive?._id === order._id && (
+                <tr key={`${order._id}-details`}>
                   <td colSpan={14}>
-                    <Suspense fallback={<div>Loading...</div>}>
-                      <OrderForm />
-                    </Suspense>
+                    <OrderForm />
                   </td>
                 </tr>
               )}
@@ -102,4 +100,6 @@ const OrdersTable: React.FC = () => {
 };
 
 export { OrdersTable };
+
+
 

@@ -66,6 +66,9 @@ export const AuthSlice = createSlice({
     setDeleteTriger: (state) => {
       state.deleteTriger = !state.deleteTriger;
     },
+    deleteMe: (state) => {
+      state.me = null;
+    },
   },
 
   extraReducers: (builder) =>

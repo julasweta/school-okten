@@ -17,17 +17,19 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({ isOpen, onRequestClose 
   const { register, handleSubmit, setValue } = useForm<EditOrderFormData>();
 
   const onSubmit: SubmitHandler<EditOrderFormData> = async (data) => {
-    if (orderActive.userId.toString() && orderActive.userId.toString() === me._id && me._id) {
+    
+    if (orderActive.userId === null || orderActive.userId.toString() === me._id ) {
 
-      const dataFormat = { ...data, age: +data.age }
-      await orderService.updateOrder(orderActive._id, dataFormat);
-      dispatch(ordersActions.setUpdateOrderTriger());
-      onRequestClose();
-    }
-    else {
-      alert('You don`t change this order');
-    }
+      const dataFormat = { ...data, age: +data.age, already_paid: +data.alreadyPaid };
+        await orderService.updateOrder(orderActive._id, dataFormat);
+        dispatch(ordersActions.setUpdateOrderTriger());
+        onRequestClose();
+      } else {
+        alert("You don't change this order");
+      }
+    
   };
+
 
   useEffect(() => {
     if (orderActive) {

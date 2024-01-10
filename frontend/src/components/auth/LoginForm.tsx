@@ -4,19 +4,22 @@ import { authActions } from "../../redux/slices/AuthSlice";
 import { useNavigate } from "react-router-dom";
 import { IAuth } from "../../interfaces";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { RootState } from '../../redux/store';
 
 const LoginForm: React.FC = () => {
   const { register, reset, handleSubmit } = useForm<IAuth>();
   const { errors } = useAppSelector((state) => state.auth);
+  const { activePage } = useAppSelector((state: RootState) => state.orders);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const getRefreshToken = localStorage.getItem("refreshToken");
 
   useEffect(() => {
     if (getRefreshToken) {
-      navigate("/orders?page=1");
+      activePage ?
+        navigate(`/orders?page=${activePage}`) : navigate(`/orders?page=1`);
     }
-  }, [getRefreshToken, navigate]);
+  }, [getRefreshToken, navigate, activePage]);
 
   const login: SubmitHandler<IAuth> = async (user) => {
     try {
@@ -25,7 +28,8 @@ const LoginForm: React.FC = () => {
 
       if (requestStatus === "fulfilled") {
         reset();
-        navigate("/orders?page=1");
+        activePage ?
+          navigate(`/orders?page=${activePage}`): navigate(`/orders?page=1`);
       }
     } catch (error) {
       console.error("An error occurred during login:", error);

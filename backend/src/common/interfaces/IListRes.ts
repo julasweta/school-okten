@@ -4,3 +4,7 @@ export interface IPaginationResponse<T> {
   itemsFound: number;
   data: T[];
 }
+
+export interface ActivateUser {
+  password: string;
+}

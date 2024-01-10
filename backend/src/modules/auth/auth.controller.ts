@@ -19,6 +19,7 @@ import { UserRole } from '../users/interfaces/users.types';
 import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from '../../common/guards/role.guard';
 import { LogoutGuard } from '../../common/guards/logout.guard';
+import { ActivateUser } from '../../common/interfaces/IListRes';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -44,7 +45,7 @@ export class AuthController {
   @Put('activate')
   async activateUser(
     @Headers('authorization') accessToken: string,
-    @Body() pass: object,
+    @Body() pass: ActivateUser,
   ): Promise<Partial<UserBaseDto>> {
     const user = await this.authService.activateUser(accessToken, pass);
     return user;

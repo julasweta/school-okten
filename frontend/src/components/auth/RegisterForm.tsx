@@ -4,10 +4,12 @@ import { useAppSelector, useAppDispatch } from "../../hooks/hooks";
 import { authActions } from "../../redux/slices/AuthSlice";
 import { useNavigate } from "react-router-dom";
 import { IReg } from "../../interfaces/IRegister";
+import { RootState } from "../../redux/store";
 
 const RegisterForm = () => {
   const { register, handleSubmit } = useForm<IReg>();
   const { errors } = useAppSelector((state) => state.auth);
+  const { activePage } = useAppSelector((state: RootState) => state.orders);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -16,7 +18,8 @@ const RegisterForm = () => {
       meta: { requestStatus },
     } = await dispatch(authActions.register({ user }));
     if (requestStatus === "fulfilled") {
-      navigate("/orders");
+      activePage ?
+        navigate(`/orders?page=${activePage}`) : navigate(`/orders?page=1`);
     }
   };
 

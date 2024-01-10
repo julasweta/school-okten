@@ -1,40 +1,42 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useAppDispatch } from "../../hooks/hooks";
 import { usersActions } from "../../redux/slices/UserSlices";
 import { IUser } from "../../interfaces";
 
 interface UserNameProps {
-  id: string; // або використайте тип, який вам підходить
+  id: string; 
 }
+
 
 const UserName: React.FC<UserNameProps> = ({ id }) => {
   const [name, setName] = useState('');
   const dispatch = useAppDispatch();
 
+  const memoizedName = useMemo(() => name, [name]);
+
   useEffect(() => {
-    if (id) {
-      dispatch(usersActions.getUserById(id))
-        .then((resultAction) => {
-          
+    const fetchUserName = async () => {
+      try {
+        if (id) {
+          const resultAction = await dispatch(usersActions.getUserById(id));
           if (usersActions.getUserById.fulfilled.match(resultAction)) {
             const user: IUser = resultAction.payload;
             setName(user.name);
           }
-        })
-        .catch((error) => {
-          // Обробка помилок, якщо потрібно
-          console.error("Error fetching user:", error);
-        });
-    } else {
-      setName('');
-   }
+        } else {
+          setName('');
+        }
+      } catch (error) {
+        // Обробка помилок, якщо потрібно
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    fetchUserName();
   }, [dispatch, id]);
 
-  return (
-    <>
-     {name}
-    </>
-  );
+  return <>{memoizedName}</>;
 };
 
 export { UserName };
+

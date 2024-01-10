@@ -21,7 +21,7 @@ const initialState: OrderState = {
   updateOrderTriger: true,
   createMessagTriger: true,
   itemsFound: 0,
-  activePage: 1,
+  activePage: null,
 };
 
 /*-----------------AsyncThunk -------------------------------  */

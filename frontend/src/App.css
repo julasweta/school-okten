@@ -15,12 +15,26 @@ table {
 }
 
 thead th {
-  background-color: #af4927;
+  background: linear-gradient(90deg, #4c5699, #2980b9);
   color: #ecf0f1;
   padding: 15px;
   border: 1px solid #34495e;
   text-align: left;
   height: 20px;
+}
+
+tr {
+  transition: background 0.5s;
+  cursor: pointer;
+}
+
+tr:hover {
+  background: linear-gradient(90deg, #6587bb, #46a1dd);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.focus {
+  background: linear-gradient(90deg, #abc3e4, #96bfdb);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 tbody tr:nth-child(even) {
@@ -43,20 +57,23 @@ tbody td {
   font-size: 16px;
   text-align: center;
   text-decoration: none;
-  background-color: #3498db;
   color: #fff;
   border: 1px solid #3498db;
   border-radius: 5px;
   cursor: pointer;
-  transition:
-    background-color 0.3s,
-    color 0.3s,
-    box-shadow 0.3s;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(90deg, #3498db, #2980b9);
+  transition: background 0.5s, color 0.5s;
+}
+
+.button:hover {
+  background: linear-gradient(90deg, #fff, #3498db);
+  color: #0a314a;
 }
 
 .active-btn {
-  background-color: #2980b9;
-  color: #fff;
+  background: linear-gradient(90deg, #ef0707, #2980b9);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -73,25 +90,32 @@ ul li {
 }
 
 .disabled {
-  opacity: 0.5; 
-  cursor: not-allowed; 
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* ORDER FORM */
-.order-form{
+.order-form {
   width: 100%;
 }
-ol{
+
+ol {
   display: flex;
   flex-direction: column;
   width: 60%;
   margin-left: auto;
 }
-ol li{
+
+ol li {
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid gray;
   width: 100%;
   background-color: #fafeff;
   font-size: 0.9rem;
+}
+
+.comment-part {
+  width: 30%;
+  text-align: center;
 }

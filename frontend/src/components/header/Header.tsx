@@ -21,7 +21,8 @@ const Header = () => {
 
 
   const onLogout =async () => {
-   await authService.logout();
+    await authService.logout();
+    authActions.deleteMe();
     navigate('auth/login');
   }
 
@@ -29,7 +30,7 @@ const Header = () => {
     <div className="header">
       {me !== null ? (
         <div>
-          <div className="userGreeting">Welcome, {me.login}!</div>
+          <div className="userGreeting">Welcome, {me.name}!</div>
           <button onClick={onLogout}>Logout</button>
         </div>
       ) : (
