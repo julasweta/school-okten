@@ -49,7 +49,7 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({ isOpen, onRequestClose 
     }
 
     return Object.entries(orderActive).map(([key, value]) => (
-      <div key={key as string}>
+      <div key={key as string} className="modal-item">
         {(key !== "userId" && key !== "msg") && ( // Умова для ігнорування ключа "userId"
           <>
             <label htmlFor={key as string}>{key}:</label>
@@ -75,7 +75,7 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({ isOpen, onRequestClose 
     <div className="modal">
       <Modal isOpen={isOpen} onRequestClose={onRequestClose} contentLabel="Edit Order Modal">
         <h2>Edit Order</h2>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className="form-modal">
           {renderFormFields()}
           <button type="submit">Save Changes</button>
         </form>

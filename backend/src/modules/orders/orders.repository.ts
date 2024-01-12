@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { OrderListQuerytDto } from './dto/orders-params.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Order } from './schema/order.chema.';
 import { IPaginationResponse } from '../../common/interfaces/IListRes';
 
@@ -16,28 +16,32 @@ export class OrderRepository {
 
   public async getAll(
     query: OrderListQuerytDto,
-  ): Promise<Promise<IPaginationResponse<Order>>> {
-    let queryBuilder = this.orderModel.find();
-
-    if (query.search) {
-      queryBuilder = queryBuilder.regex('name', new RegExp(query.search, 'i'));
+  ): Promise<IPaginationResponse<Order>> {
+    const filter: any = {};
+    console.log(query);
+    if (query.search && query.nameSearchRow === '_id') {
+      const searchObjectId = new Types.ObjectId(query.search.trim());
+      filter._id = searchObjectId;
+    } else if (query.search) {
+      const searchRegex = new RegExp(query.search.trim(), 'i');
+      filter.$or = [{ [query.nameSearchRow]: searchRegex }];
     }
 
-    const orderSort = () => {
-      if (query.order === 'ASC') {
-        return { created_at: 1 } as const;
-      } else {
-        return { created_at: -1 } as const;
-      }
-    };
-
     const skip = query.limit * (query.page - 1);
-    queryBuilder = queryBuilder.limit(query.limit).skip(skip).sort(orderSort());
 
-    const [entities, itemsFound] = await Promise.all([
-      queryBuilder.exec(),
-      this.orderModel.countDocuments(),
-    ]);
+    const entitiesQuery = this.orderModel
+      .find(filter)
+      .limit(query.limit)
+      .skip(skip);
+
+    if (query.nameSortRow) {
+      entitiesQuery.sort({
+        [query.nameSortRow.trim()]: query.order === 'ASC' ? 1 : -1,
+      });
+    }
+
+    const entities = await entitiesQuery.exec();
+    const itemsFound = await this.orderModel.countDocuments(filter);
 
     const page = query.page;
     const data = entities;

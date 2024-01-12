@@ -19,12 +19,17 @@ thead th {
   color: #ecf0f1;
   padding: 15px;
   border: 1px solid #34495e;
-  text-align: left;
+  text-align: center;
   height: 20px;
 }
 
-tr {
-  transition: background 0.5s;
+th {
+  white-space: wrap;
+}
+
+th {
+  white-space: normal;
+  word-wrap: break-word;
   cursor: pointer;
 }
 
@@ -32,6 +37,7 @@ tr:hover {
   background: linear-gradient(90deg, #6587bb, #46a1dd);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
+
 .focus {
   background: linear-gradient(90deg, #abc3e4, #96bfdb);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -71,6 +77,7 @@ tbody td {
   background: linear-gradient(90deg, #fff, #3498db);
   color: #0a314a;
 }
+
 
 .active-btn {
   background: linear-gradient(90deg, #ef0707, #2980b9);
@@ -118,4 +125,92 @@ ol li {
 .comment-part {
   width: 30%;
   text-align: center;
+}
+
+/* MODAL  */
+.form-modal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.modal-item {
+  width: 45%;
+  display: flex;
+  text-align: left;
+}
+
+label {
+  margin-top: 10px;
+  font-weight: bold;
+  width: 25%;
+}
+
+select,
+input {
+  width: 75%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #3498db;
+  border-radius: 5px;
+}
+
+/* SEARCH FORM*/
+.search-form {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 18%;
+  height: 50px;
+  margin: 0 30px;
+}
+
+.search-input {
+  width: 100%;
+}
+
+.search-button {
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  font-size: 0.7rem;
+}
+
+select {
+  width: 90%;
+}
+
+.clean-button {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  border: 1px solid #e74c3c;
+  /* Червоний колір для рамки */
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(90deg, #e74c3c, #c0392b);
+  /* Червоний градієнт для фону */
+  transition: background 0.5s, color 0.5s;
+  width: 150px;
+  height: 40px;
+  margin-left: 20%;
+}
+
+.clean-button:hover {
+  background: linear-gradient(90deg, #c0392b, #e74c3c);
+  /* Зміна градієнту при наведенні */
+  color: #fff;
+  /* Зміна кольору тексту при наведенні */
 }

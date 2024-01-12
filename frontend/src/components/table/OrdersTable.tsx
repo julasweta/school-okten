@@ -1,5 +1,5 @@
 // OrderTable.tsx
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { RootState } from "../../redux/store";
 import { ordersActions } from "../../redux/slices/OrderSlices";
@@ -8,6 +8,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { urls } from "../../constants/urls";
 import { UserName } from "../users/UserName";
 import { OrderForm } from "../forms/OrderForm";
+import { columns } from "../../constants/list.table";
+import { SearchForm } from "../forms/SearshForm";
+
 
 
 
@@ -16,8 +19,9 @@ const OrdersTable: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { orders, updateOrderTriger, orderActive, activePage } = useAppSelector((state: RootState) => state.orders);
-
+  const { orders, updateOrderTriger, orderActive, activePage, searchValue, nameSearchRow } = useAppSelector((state: RootState) => state.orders);
+  const [sort, setSort] = useState('DESC');
+  const [nameSortRow, setNameRow] = useState('');
   const searchParams = new URLSearchParams(location.search);
   const pageNumber = +searchParams.get('page');
 
@@ -33,40 +37,52 @@ const OrdersTable: React.FC = () => {
   }, [navigate]);
 
   useEffect(() => {
-    dispatch(ordersActions.setActivePage(pageNumber));
+    if (pageNumber) {
+      dispatch(ordersActions.setActivePage(pageNumber))
+    }
+    else {
+      dispatch(ordersActions.setActivePage(1))
+    }
     dispatch(ordersActions.getOrderActive(null));
   }, [dispatch, pageNumber]);
 
   useEffect(() => {
-    activePage && dispatch(ordersActions.getOrders({ sort: 'DESC', limit: 5, page: activePage }));
-  }, [activePage, updateOrderTriger, dispatch]);
+    if (orders.length < 1) {
+      dispatch(ordersActions.setSearchValue(''));
+      activePage && dispatch(ordersActions.getOrders({ sort: sort, limit: 15, page: activePage, search: searchValue.trim(), nameSortRow: nameSortRow, nameSearchRow: nameSearchRow }));
+    }
+    else { activePage && dispatch(ordersActions.getOrders({ sort: sort, limit: 15, page: activePage, search: searchValue.trim(), nameSortRow: nameSortRow, nameSearchRow: nameSearchRow })); }
+  }, [activePage, updateOrderTriger, searchValue, nameSortRow, sort, nameSearchRow, dispatch]);
+
+  const onSortRow = (column: string) => {
+    setSort(sort === 'DESC' ? 'ASC' : 'DESC');
+    setNameRow(column);
+  }
+
+
+  const renderTableHeader = () => {
+    return columns.map((column) => (
+      <th key={column} onClick={() => onSortRow(column)} title={`sort ` + column}>
+        {column}
+      </th>
+    ));
+  };
+
 
   return (
     <div>
+      <SearchForm />
       <table>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Surname</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Age</th>
-            <th>Course</th>
-            <th>Course Format</th>
-            <th>Course Type</th>
-            <th>Status</th>
-            <th>Sum</th>
-            <th>Already Paid</th>
-            <th>Created At</th>
-            <th>Manager Id</th>
-            {/* Додати інші стовпці за потребою */}
+            {renderTableHeader()}
           </tr>
         </thead>
         <tbody>
           {orders.map((order) => (
             <React.Fragment key={order._id}>
-              <tr onClick={() => onSetOrderActive(order._id)} className={orderActive?._id === order._id && 'focus'}>
+              <tr onClick={() => onSetOrderActive(order._id)} className={orderActive?._id === order._id ? 'focus' : ''}>
+
                 <td>{order._id}</td>
                 <td>{order.name}</td>
                 <td>{order.surname}</td>

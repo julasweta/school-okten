@@ -51,4 +51,7 @@ export class OrderListQuerytDto extends ParamsQueryDto {
 
   @IsOptional()
   endDate?: string;
+
+  nameSortRow?: string;
+  nameSearchRow?: string;
 }

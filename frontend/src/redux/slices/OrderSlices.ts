@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { IMessages, Message, Order } from "../../interfaces";
+import { Message, Order } from "../../interfaces";
 import { orderService } from "../../services/OrdersServices";
 import { AxiosError } from "axios";
 import { IPageInterface } from "../../interfaces/IPaginationOrder";
@@ -12,6 +12,8 @@ interface OrderState {
   createMessagTriger: boolean;
   itemsFound: number;
   activePage: number;
+  searchValue: string;
+  nameSearchRow: string;
 }
 
 const initialState: OrderState = {
@@ -21,24 +23,50 @@ const initialState: OrderState = {
   updateOrderTriger: true,
   createMessagTriger: true,
   itemsFound: 0,
-  activePage: null,
+  activePage: 1,
+  searchValue: '',
+  nameSearchRow:'',
 };
 
 /*-----------------AsyncThunk -------------------------------  */
 const getOrders = createAsyncThunk<
   IPageInterface<Order>,
-  { sort: string; limit: number; page: number },
+  {
+    sort: string;
+    limit: number;
+    page: number;
+    search: string;
+    nameSortRow: string;
+    nameSearchRow: string;
+  },
   { rejectValue: AxiosError }
 >(
   "ordersSlice/getOrders",
-  async ({ sort, limit, page }, { rejectWithValue }) => {
+  async (
+    { sort, limit, page, search, nameSortRow, nameSearchRow },
+    { rejectWithValue }
+  ) => {
     try {
       if (page === 0) {
         page = 1;
-        const { data } = await orderService.getOrders(sort, limit, page);
+        const { data } = await orderService.getOrders(
+          sort,
+          limit,
+          page,
+          search.trim(),
+          nameSortRow,
+          nameSearchRow
+        );
         return data;
       } else {
-        const { data } = await orderService.getOrders(sort, limit, page);
+        const { data } = await orderService.getOrders(
+          sort,
+          limit,
+          page,
+          search.trim(),
+          nameSortRow,
+          nameSearchRow
+        );
         return data;
       }
     } catch (e) {
@@ -47,6 +75,7 @@ const getOrders = createAsyncThunk<
     }
   }
 );
+
 
 const getOrderActive = createAsyncThunk<
   Order,
@@ -97,6 +126,12 @@ export const OrdersSlice = createSlice({
     },
     setCreateMessagTriger: (state) => {
       state.createMessagTriger = !state.createMessagTriger;
+    },
+    setSearchValue: (state, action) => {
+      state.searchValue = action.payload;
+    },
+    setSearchNameRow: (state, action) => {
+      state.nameSearchRow = action.payload;
     },
   },
 
