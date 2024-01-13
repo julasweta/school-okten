@@ -37,6 +37,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Create User' })
   @Post('create/user')
   async createUser(@Body() body: CreateUserReqDto) {
+    console.log('control', body);
     const user = await this.authService.createUser(body);
     return UserResponseMapper.toResUserMapper(user);
   }

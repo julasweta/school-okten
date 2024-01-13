@@ -1,2 +1,2 @@
-export * from "./OrderPage";
+export * from "./Admin";
 export * from "./OrdersPage";

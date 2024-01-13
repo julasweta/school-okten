@@ -2,10 +2,10 @@ import React from "react";
 import { Navigate, createBrowserRouter } from "react-router-dom";
 import { AppRoutes } from "./AppRoutes";
 import { OrdersPage } from "../pages/OrdersPage";
-import { OrderPage } from "../pages";
 import { MainLayout } from "../layouts/MainLayout";
 import { LoginForm } from "../components/auth/LoginForm";
 import { RegisterForm } from "../components/auth/RegisterForm";
+import { Admin } from "../pages";
 
 export const router = createBrowserRouter([
   {
@@ -21,8 +21,8 @@ export const router = createBrowserRouter([
         element: <OrdersPage />,
       },
       {
-        path: AppRoutes.ORDER,
-        element: <OrderPage />,
+        path: AppRoutes.ADMIN,
+        element: <Admin/>,
       },
       {
         path: AppRoutes.LOGIN,

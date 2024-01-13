@@ -6,11 +6,21 @@ import { AxiosError } from "axios";
 interface UserState {
   users: IUser[];
   userById: IUser;
+  createdUser: IUser;
 }
 
 const initialState: UserState = {
   users: [],
   userById: null,
+  createdUser: {
+    _id: "",
+    email: "",
+    role: "",
+    name: "",
+    status: "",
+    token:
+      "",
+  },
 };
 
 const getUserById = createAsyncThunk<
@@ -27,6 +37,20 @@ const getUserById = createAsyncThunk<
   }
 });
 
+const createUser = createAsyncThunk<IUser, IUser, { rejectValue: AxiosError }>(
+  "usersSlice/createUser",
+  async (data, { rejectWithValue }) => {
+    try {
+      console.log('slice', data);
+      const response = await userService.createUser(data);
+      return response.data;
+    } catch (e) {
+      const err = e as AxiosError;
+      return rejectWithValue(err);
+    }
+  }
+);
+
 
 
 /*--------------------- SLICE--------------------  */
@@ -39,9 +63,13 @@ export const UsersSlice = createSlice({
   },
 
   extraReducers: (builder) =>
-    builder.addCase(getUserById.fulfilled, (state, action) => {
-      state.userById = action.payload;
-    }),
+    builder
+      .addCase(getUserById.fulfilled, (state, action) => {
+        state.userById = action.payload;
+      })
+      .addCase(createUser.fulfilled, (state, action) => {
+        state.createdUser = action.payload;
+      }),
 });
 
 const { reducer: usersReducer, actions } = UsersSlice;
@@ -49,6 +77,7 @@ const { reducer: usersReducer, actions } = UsersSlice;
 const usersActions = {
   ...actions,
   getUserById,
+  createUser,
 };
 
 export { usersActions, usersReducer };

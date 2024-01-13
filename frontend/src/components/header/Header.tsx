@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { authActions } from "../../redux/slices/AuthSlice";
 import { urls } from "../../constants/urls";
 import { authService } from "../../services/authService";
+import { AppRoutes } from "../../routing/AppRoutes";
 
 const Header = () => {
   const { me } = useAppSelector((state) => state.auth);
@@ -16,22 +17,23 @@ const Header = () => {
     }
   }, [dispatch, me]);
 
- 
 
 
-
-  const onLogout =async () => {
+  const onLogout = async () => {
     await authService.logout();
     authActions.deleteMe();
     navigate('auth/login');
   }
 
   return (
-    <div className="header">
+    <header>
+
       {me !== null ? (
-        <div>
-          <div className="userGreeting">Welcome, {me.name}!</div>
-          <button onClick={onLogout}>Logout</button>
+        <div className="header-box">
+          <Link to={AppRoutes.HOME} className="logo">HOME</Link>
+          <div className="userGreeting">Welcome, {me.name.toUpperCase()}!</div>
+          <button onClick={onLogout} className="button">Logout</button>
+          {me.role === 'admin' && <Link to={AppRoutes.ADMIN}><button className="admin-button">Admin Panel</button></Link>}
         </div>
       ) : (
         <div className="login-btn">
@@ -43,7 +45,8 @@ const Header = () => {
           </Link>
         </div>
       )}
-    </div>
+    </header>
+
   );
 };
 

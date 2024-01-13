@@ -18,7 +18,7 @@ const OrderForm: React.FC = () => {
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
   const dispatch = useAppDispatch();
 
-  const { orderActive, messages, createMessagTriger, activePage } = useAppSelector((state: RootState) => state.orders);
+  const { orderActive, messages, createMessagTriger } = useAppSelector((state: RootState) => state.orders);
 
 
   const openEditModal = () => {

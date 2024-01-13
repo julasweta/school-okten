@@ -4,6 +4,58 @@
   box-sizing: border-box;
 }
 
+header {
+  background-color: #8395b6;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+header a {
+  color: #fff;
+  text-decoration: none;
+  margin-right: 20px;
+  font-size: 16px;
+}
+.header-box{
+  display: flex;
+  width: 90%;
+  justify-content: space-between;
+  align-items: center;
+}
+.userGreeting {
+  margin-right: 10px;
+  color: #fff;
+}
+.logo {
+  font-family: 'Pacifico', cursive;
+  /* Використовуйте зазначений шрифт */
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: #333;
+  /* Змініть колір тексту на ваш смак */
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-style: italic;
+}
+
+.logo:hover {
+  color: #3498db;
+  /* Колір при наведенні */
+}
+
+.admin-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 /* TABLE */
 table {
   border-collapse: collapse;
@@ -210,7 +262,43 @@ select {
 
 .clean-button:hover {
   background: linear-gradient(90deg, #c0392b, #e74c3c);
-  /* Зміна градієнту при наведенні */
   color: #fff;
-  /* Зміна кольору тексту при наведенні */
+}
+
+.admin-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.create-field {
+  width: 80%;
+  margin: 20px 0;
+}
+
+/* USER */ 
+.user-details {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-property {
+  margin-bottom: 10px;
+}
+
+.user-property label {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.user-property span {
+  color: #333;
+  display: block;
+  word-wrap: break-word;
+  /* або overflow-wrap: break-word; */
 }
