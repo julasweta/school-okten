@@ -12,5 +12,8 @@ COPY ./backend/package.json /app
 
 # Виконуємо команду npm install для встановлення залежностей
 RUN npm i
+ 
+
+
 
 
