@@ -3,7 +3,8 @@ const baseURL = process.env.REACT_APP_API;
 const orders = "/orders";
 const auth = "/auth";
 const users = "/users";
-const messages = '/messages'
+const messages = '/messages';
+const groups = '/groups';
 const urls = {
   orders: {
     base: orders,
@@ -11,6 +12,8 @@ const urls = {
     update: (id: string): string => `${orders}/update/${id}`,
     messages: messages,
     messagesAll: `${messages}/all`,
+    groups: groups,
+    groupCreate: `${groups}/create`,
   },
   auth: {
     login: "auth/login",

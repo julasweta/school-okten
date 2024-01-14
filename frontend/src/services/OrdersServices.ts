@@ -1,5 +1,6 @@
 import { urls } from "../constants/urls";
 import { EditOrderFormData, IMessages, Order } from "../interfaces";
+import { IGroup } from "../interfaces/IGroup";
 import { IPageInterface } from "../interfaces/IPaginationOrder";
 import { IRes, apiService } from "./ApiServices";
 
@@ -34,6 +35,9 @@ const orderService = {
     apiService.post(urls.orders.messages, data),
   getAllMessages: (orderId: string): Promise<IMessages> =>
     apiService.get(urls.orders.messagesAll, { params: { orderId } }),
+  getAllGroups: (): IRes<IGroup[]> => apiService.get(urls.orders.groups),
+  createGroup: (title: {title: string}): IRes<void> =>
+    apiService.post(urls.orders.groupCreate, title),
 };
 
 export { orderService };

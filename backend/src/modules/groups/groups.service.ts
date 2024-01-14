@@ -1,9 +1,9 @@
 // groups.service.ts
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { GroupBaseDto } from './dto/group-base.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Group } from './schema/group.schema';
 import { Model } from 'mongoose';
+import { GroupBaseDto } from './dto/group-base.dto';
 
 @Injectable()
 export class GroupsService {
@@ -14,7 +14,7 @@ export class GroupsService {
     if (isGroup) {
       throw new HttpException('This group allready is', HttpStatus.BAD_REQUEST);
     }
-    return await this.groupModel.create(body);
+    return await this.groupModel.create({ title: body.title });
   }
 
   async findGroups() {

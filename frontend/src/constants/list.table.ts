@@ -12,6 +12,7 @@ const columns = [
   "sum",
   "already_paid",
   "created_at",
+  "groupName",
   "userId",
 ];
 

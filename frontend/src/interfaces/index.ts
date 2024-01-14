@@ -6,3 +6,4 @@ export * from "./IUser";
 export * from "./Itokens";
 export * from "./IModal";
 export * from "./IMessage";
+export * from "./IAuth";

@@ -3,6 +3,7 @@ import { Message, Order } from "../../interfaces";
 import { orderService } from "../../services/OrdersServices";
 import { AxiosError } from "axios";
 import { IPageInterface } from "../../interfaces/IPaginationOrder";
+import { IGroup } from "../../interfaces/IGroup";
 
 interface OrderState {
   orders: Order[];
@@ -14,6 +15,8 @@ interface OrderState {
   activePage: number;
   searchValue: string;
   nameSearchRow: string;
+  groups: IGroup[],
+  addGroupTriger: boolean;
 }
 
 const initialState: OrderState = {
@@ -24,8 +27,10 @@ const initialState: OrderState = {
   createMessagTriger: true,
   itemsFound: 0,
   activePage: 1,
-  searchValue: '',
-  nameSearchRow:'',
+  searchValue: "",
+  nameSearchRow: "",
+  groups: [],
+  addGroupTriger: true
 };
 
 /*-----------------AsyncThunk -------------------------------  */
@@ -108,6 +113,19 @@ const getMessagesAll = createAsyncThunk(
   }
 );
 
+export const getGroups = createAsyncThunk<IGroup[], void>(
+  "ordersSlice/getGroups",
+  async (_, { rejectWithValue }) => {
+    try {
+      const {data} = await orderService.getAllGroups();
+      return data;
+    } catch (e) {
+      const err = e as AxiosError;
+      return rejectWithValue(err);
+    }
+  }
+);
+
 
 
 
@@ -133,6 +151,9 @@ export const OrdersSlice = createSlice({
     setSearchNameRow: (state, action) => {
       state.nameSearchRow = action.payload;
     },
+    setaddGroupTriger: (state) => {
+      state.addGroupTriger = !state.addGroupTriger;
+    },
   },
 
   extraReducers: (builder) =>
@@ -146,6 +167,9 @@ export const OrdersSlice = createSlice({
       })
       .addCase(getMessagesAll.fulfilled, (state, action) => {
         state.messages = action.payload;
+      })
+      .addCase(getGroups.fulfilled, (state, action) => {
+        state.groups = action.payload;
       }),
 });
 
@@ -156,6 +180,7 @@ const ordersActions = {
   getOrders,
   getOrderActive,
   getMessagesAll,
+  getGroups,
 };
 
 export { ordersActions, ordersReducer };

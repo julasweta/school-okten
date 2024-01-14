@@ -39,12 +39,12 @@ const LoginForm: React.FC = () => {
   const errorMessage = errors?.response?.data?.detail;
 
   return (
-    <div>
-      LoginForm
-      <form onSubmit={handleSubmit(login)}>
+    <div className="login-page">
+      <h2>LoginForm</h2>
+      <form onSubmit={handleSubmit(login)} className="login-form">
         <input type="text" placeholder={"username"} {...register("email")} />
         <input type="text" placeholder={"password"} {...register("password")} />
-        <button className="button">login</button>
+        <button className="button login-btn">login</button>
         {errorMessage && <span>{errorMessage}</span>}
       </form>
     </div>

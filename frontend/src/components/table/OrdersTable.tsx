@@ -19,7 +19,7 @@ const OrdersTable: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { orders, updateOrderTriger, orderActive, activePage, searchValue, nameSearchRow } = useAppSelector((state: RootState) => state.orders);
+  const { orders, updateOrderTriger, orderActive, activePage, searchValue, nameSearchRow, addGroupTriger } = useAppSelector((state: RootState) => state.orders);
   const [sort, setSort] = useState('DESC');
   const [nameSortRow, setNameRow] = useState('');
   const searchParams = new URLSearchParams(location.search);
@@ -96,6 +96,7 @@ const OrdersTable: React.FC = () => {
                 <td>{order.sum}</td>
                 <td>{order.alreadyPaid ? "Yes" : "No"}</td>
                 <td>{order.created_at}</td>
+                <td>{order.groupName}</td>
                 <td><UserName id={order.userId?.toString()} /></td>
                 {/* Додати інші стовпці за потребою */}
               </tr>

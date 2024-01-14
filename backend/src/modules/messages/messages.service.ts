@@ -22,7 +22,6 @@ export class MessagesService {
       body.orderId.toString(),
     );
     const { _id } = await this.userService.userFindOneEmail(email);
-
     if (_id.toString() !== orderId.userId.toString()) {
       throw new HttpException(
         'коментарі до цієї заявки може додавати лише закріплений менеджер ',

@@ -35,16 +35,7 @@ const Header = () => {
           <button onClick={onLogout} className="button">Logout</button>
           {me.role === 'admin' && <Link to={AppRoutes.ADMIN}><button className="admin-button">Admin Panel</button></Link>}
         </div>
-      ) : (
-        <div className="login-btn">
-          <Link to={urls.auth.login}>
-            <button className="button">Login</button>
-          </Link>
-          <Link to={urls.auth.register}>
-            <button className="button">Register</button>
-          </Link>
-        </div>
-      )}
+      ) : ''}
     </header>
 
   );

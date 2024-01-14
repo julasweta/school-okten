@@ -56,6 +56,28 @@ header a {
   cursor: pointer;
 }
 
+/* LOGIN FORM */
+.login-page {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+}
+
+.login-form {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-btn {
+  width: 60%;
+}
+
 /* TABLE */
 table {
   border-collapse: collapse;
@@ -205,6 +227,10 @@ input {
   margin: 5px 0;
   border: 1px solid #3498db;
   border-radius: 5px;
+}
+
+.error-message{
+  color:red;
 }
 
 /* SEARCH FORM*/

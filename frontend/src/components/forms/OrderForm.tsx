@@ -34,10 +34,14 @@ const OrderForm: React.FC = () => {
   }, [orderActive, dispatch, createMessagTriger]);
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    const dataCreate = { text: data.message, orderId: orderActive._id && orderActive._id.toString() }
-    await orderService.createMessage(dataCreate);
-    dispatch(ordersActions.setCreateMessagTriger());
-    reset();
+    if (orderActive.userId) {
+      const dataCreate = { text: data.message, orderId: orderActive._id && orderActive._id.toString() }
+      await orderService.createMessage(dataCreate);
+      dispatch(ordersActions.setCreateMessagTriger());
+      reset();
+    } else {
+      alert('Only manager of this order can add message. To take this order to work, click button "OPEN EDIT MODAL" ')
+    }
   };
 
   const dateFormat = (date: string) => {

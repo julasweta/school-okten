@@ -13,4 +13,5 @@ export interface Order {
   alreadyPaid: boolean;
   created_at: string;
   userId: object;
+  groupName: string;
 }
