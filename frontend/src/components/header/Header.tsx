@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { authActions } from "../../redux/slices/AuthSlice";
-import { urls } from "../../constants/urls";
 import { authService } from "../../services/authService";
 import { AppRoutes } from "../../routing/AppRoutes";
 

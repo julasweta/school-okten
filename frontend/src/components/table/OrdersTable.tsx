@@ -37,6 +37,10 @@ const OrdersTable: React.FC = () => {
   }, [navigate]);
 
   useEffect(() => {
+    dispatch(ordersActions.getGroups())
+  }, [addGroupTriger, dispatch]);
+
+  useEffect(() => {
     if (pageNumber) {
       dispatch(ordersActions.setActivePage(pageNumber))
     }
@@ -47,12 +51,13 @@ const OrdersTable: React.FC = () => {
   }, [dispatch, pageNumber]);
 
   useEffect(() => {
-    if (orders.length < 1) {
-      dispatch(ordersActions.setSearchValue(''));
-      activePage && dispatch(ordersActions.getOrders({ sort: sort, limit: 15, page: activePage, search: searchValue.trim(), nameSortRow: nameSortRow, nameSearchRow: nameSearchRow }));
+    if (orders && orders.length < 1) {
+      activePage && dispatch(ordersActions.getOrders({ sort: sort, limit: 15, page: activePage, search: searchValue, nameSortRow: nameSortRow, nameSearchRow: nameSearchRow }));
     }
-    else { activePage && dispatch(ordersActions.getOrders({ sort: sort, limit: 15, page: activePage, search: searchValue.trim(), nameSortRow: nameSortRow, nameSearchRow: nameSearchRow })); }
-  }, [activePage, updateOrderTriger, searchValue, nameSortRow, sort, nameSearchRow, dispatch]);
+    else {
+      activePage && dispatch(ordersActions.getOrders({ sort: sort, limit: 15, page: activePage, search: searchValue, nameSortRow: nameSortRow, nameSearchRow: nameSearchRow }));
+    }
+  }, [activePage, updateOrderTriger, searchValue, nameSortRow, sort, nameSearchRow, orders.length, dispatch]);
 
   const onSortRow = (column: string) => {
     setSort(sort === 'DESC' ? 'ASC' : 'DESC');

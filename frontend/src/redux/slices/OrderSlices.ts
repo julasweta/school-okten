@@ -17,6 +17,7 @@ interface OrderState {
   nameSearchRow: string;
   groups: IGroup[],
   addGroupTriger: boolean;
+  isChecked: boolean;
 }
 
 const initialState: OrderState = {
@@ -30,7 +31,8 @@ const initialState: OrderState = {
   searchValue: "",
   nameSearchRow: "",
   groups: [],
-  addGroupTriger: true
+  addGroupTriger: true,
+  isChecked: false,
 };
 
 /*-----------------AsyncThunk -------------------------------  */
@@ -153,6 +155,9 @@ export const OrdersSlice = createSlice({
     },
     setaddGroupTriger: (state) => {
       state.addGroupTriger = !state.addGroupTriger;
+    },
+    setIsChecked: (state) => {
+      state.isChecked = !state.isChecked;
     },
   },
 

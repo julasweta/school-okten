@@ -9,19 +9,22 @@ import { ordersActions } from "../../redux/slices/OrderSlices";
 const Pagin: React.FC = () => {
   const dispatch = useAppDispatch();
   const { itemsFound, activePage } = useAppSelector((state: RootState) => state.orders);
-  const limit = 5;
+  const limit = 15;
   const pageCount = Math.ceil(itemsFound / limit);
-  const buttonsToShow = 10; // Змініть це значення на те, скільки кнопок ви хочете показувати навколо поточної сторінки.
+  const buttonsToShow = 10; //  скільки кнопок  навколо поточної сторінки.
 
   const generateButtons = () => {
     const buttons = [];
     const startPage = Math.max(1, activePage - Math.floor(buttonsToShow / 2));
     const endPage = Math.min(pageCount, startPage + buttonsToShow - 1);
 
+    console.log('pagecount', pageCount);
+
     if (startPage > 1) {
       const onEllipsisBefore = () => {
         dispatch(ordersActions.setActivePage(activePage - 10));
       }
+
 
       buttons.push(
         <button key="ellipsis-before" className="button" disabled={false} onClick={onEllipsisBefore}>

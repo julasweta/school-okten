@@ -1,4 +1,4 @@
-const columns = [
+export const columns = [
   "_id",
   "name",
   "surname",
@@ -16,4 +16,17 @@ const columns = [
   "userId",
 ];
 
-export { columns };
+export const searchColumns = [
+  "name",
+  "surname",
+  "email",
+  "phone",
+  "age",
+  "course",
+  "course_format",
+  "course_type",
+  "status",
+  "sum",
+  "groupName",
+  "userId",
+];

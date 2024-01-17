@@ -31,12 +31,10 @@ header a {
 }
 .logo {
   font-family: 'Pacifico', cursive;
-  /* Використовуйте зазначений шрифт */
   font-size: 28px;
   font-weight: bold;
   letter-spacing: 1px;
   color: #333;
-  /* Змініть колір тексту на ваш смак */
   text-decoration: none;
   transition: color 0.3s ease;
   font-style: italic;
@@ -44,7 +42,6 @@ header a {
 
 .logo:hover {
   color: #3498db;
-  /* Колір при наведенні */
 }
 
 .admin-button {
@@ -302,6 +299,49 @@ select {
   width: 80%;
   margin: 20px 0;
 }
+.check-box {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.check-box input[type="checkbox"] {
+  appearance: none;
+  width: 2%;
+  height: 30px;
+  border: 2px solid #4CAF50;
+  border-radius: 8px;
+  background-color: white;
+  margin-right: 5px;
+  cursor: pointer;
+  position: relative;
+}
+
+.check-box input[type="checkbox"]:checked::before {
+  content: '\2713';
+  /* код для галочки (Unicode) */
+  font-size: 18px;
+  /* розмір галочки */
+  color: #eef4ef;
+  /* колір галочки */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+  background-color: #5eaf61;
+}
+
+.me-label {
+  font-size: 28px;
+  color: #4e7eb1;
+  margin-right: 16px;
+  width: 10%;
+}
+
 
 /* USER */ 
 .user-details {
