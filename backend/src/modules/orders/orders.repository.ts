@@ -18,10 +18,14 @@ export class OrderRepository {
     query: OrderListQuerytDto,
   ): Promise<IPaginationResponse<Order>> {
     const filter: any = {};
-    console.log(query);
-    if (query.search && query.nameSearchRow === '_id') {
+    if (query.search && query.nameSearchRow === 'userId') {
       const searchObjectId = new Types.ObjectId(query.search.trim());
-      filter._id = searchObjectId;
+      filter[query.nameSearchRow] = searchObjectId;
+    } else if (
+      query.search &&
+      (query.nameSearchRow === 'sum' || query.nameSearchRow === 'age')
+    ) {
+      filter[query.nameSearchRow] = +query.search;
     } else if (query.search) {
       const searchRegex = new RegExp(query.search.trim(), 'i');
       filter.$or = [{ [query.nameSearchRow]: searchRegex }];

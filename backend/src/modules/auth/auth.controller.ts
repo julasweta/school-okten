@@ -20,11 +20,15 @@ import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from '../../common/guards/role.guard';
 import { LogoutGuard } from '../../common/guards/logout.guard';
 import { ActivateUser } from '../../common/interfaces/IListRes';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly mailerService: MailerService,
+  ) {}
 
   @ApiOperation({ summary: 'Login' })
   @Post('login')
@@ -39,6 +43,21 @@ export class AuthController {
   async createUser(@Body() body: CreateUserReqDto) {
     console.log('control', body);
     const user = await this.authService.createUser(body);
+    await this.mailerService
+      .sendMail({
+        to: user.email,
+        from: 'stugarka@gmail.com',
+        subject: 'Активація облікового запису',
+        text: 'welcome',
+        html: `<p> ${user.name} your LINK for activation on Okten-School: </p><b>http://localhost:3001/activate/${user.token}</b>`,
+      })
+      .then((success) => {
+        console.log(success);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
     return UserResponseMapper.toResUserMapper(user);
   }
 
