@@ -13,6 +13,8 @@ import { UsersModule } from '../users/users.module';
 import { BearerStrategy } from './dto/bearer.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RedisModule } from '@webeleon/nestjs-redis';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
@@ -31,6 +33,29 @@ import { RedisModule } from '@webeleon/nestjs-redis';
         secret: 'secret',
         signOptions: {
           expiresIn: '24h',
+        },
+      }),
+    }),
+    MailerModule.forRootAsync({
+      useFactory: () => ({
+        transport: {
+          host: 'smtp.gmail.com',
+          port: 587,
+          secure: false, // upgrade later with STARTTLS
+          auth: {
+            user: 'stugarka@gmail.com',
+            pass: 'oueq hezr ohjk rsin',
+          },
+        },
+        defaults: {
+          from: '"nest-modules" <modules@nestjs.com>',
+        },
+        template: {
+          dir: process.cwd() + '/templates/',
+          adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
+          options: {
+            strict: true,
+          },
         },
       }),
     }),

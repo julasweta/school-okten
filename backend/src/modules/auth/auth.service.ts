@@ -29,7 +29,6 @@ export class AuthService {
   ) {}
 
   async createUser(@Body() body: CreateUserReqDto): Promise<CreateUserResType> {
-    console.log(body);
     const token = await this.verificationService.createToken(
       {
         email: body.email,
