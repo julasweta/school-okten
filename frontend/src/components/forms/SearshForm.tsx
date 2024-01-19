@@ -37,6 +37,12 @@ const SearchForm: React.FC = () => {
     console.log(isChecked);
     dispatch(ordersActions.setIsChecked());
 
+    searchColumns.forEach((column) => {
+      if (column !== 'isMe') {
+        setValue(column, '');
+      }
+    });
+
     if (!isChecked) {
       dispatch(ordersActions.setSearchValue( me && me._id ));
       dispatch(ordersActions.setSearchNameRow('userId'));
