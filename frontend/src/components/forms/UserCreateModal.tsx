@@ -1,20 +1,39 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
-import { useAppDispatch } from "../../hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { SubmitHandler, useForm } from "react-hook-form";
-import {  EditOrderModalProps, IUser } from "../../interfaces";
+import { EditOrderModalProps, IUser } from "../../interfaces";
 import { usersActions } from "../../redux/slices/UserSlices";
+import { RootState } from "../../redux/store";
+import { ToastContainer, toast } from 'react-toastify';
 
 
 
 const UserCreateModal: React.FC<EditOrderModalProps> = ({ isOpen, onRequestClose }) => {
   const dispatch = useAppDispatch();
   const { register, handleSubmit } = useForm<IUser>();
+  const { users } = useAppSelector((state: RootState) => state.users);
+  const [usersTriger, setUsersTriger] = useState(true)
+
+  useEffect(() => {
+    dispatch(usersActions.getAllUsers())
+  }, [usersTriger, dispatch]);
+  console.log(usersTriger);
 
   const onSubmit: SubmitHandler<IUser> = async (data) => {
-    console.log('create', data);
-    dispatch(usersActions.createUser(data));
-    onRequestClose();
+    const isUser = users && users.filter(user => user.email.toLowerCase() === data.email.toLowerCase());
+    if (isUser.length >= 1) {
+      toast.error('this user is already registered', {
+        className: "toast",
+        bodyClassName: "grow-font-size",
+        progressClassName: "fancy-progress-bar",
+      });
+    } else {
+      await dispatch(usersActions.createUser(data));
+      onRequestClose();
+
+      setUsersTriger(!usersTriger);
+    }
   };
 
   useEffect(() => {
@@ -53,6 +72,17 @@ const UserCreateModal: React.FC<EditOrderModalProps> = ({ isOpen, onRequestClose
         </form>
         <button onClick={onRequestClose}>Close Modal</button>
       </Modal>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light" />
     </div>
   );
 };

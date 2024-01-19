@@ -8,7 +8,7 @@ import { ordersActions } from "../../redux/slices/OrderSlices";
 
 const Pagin: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { itemsFound, activePage } = useAppSelector((state: RootState) => state.orders);
+  const { itemsFound, activePage, searchValue, nameSearchRow } = useAppSelector((state: RootState) => state.orders);
   const limit = 15;
   const pageCount = Math.ceil(itemsFound / limit);
   const buttonsToShow = 10; //  скільки кнопок  навколо поточної сторінки.
@@ -18,7 +18,6 @@ const Pagin: React.FC = () => {
     const startPage = Math.max(1, activePage - Math.floor(buttonsToShow / 2));
     const endPage = Math.min(pageCount, startPage + buttonsToShow - 1);
 
-    console.log('pagecount', pageCount);
 
     if (startPage > 1) {
       const onEllipsisBefore = () => {
@@ -35,7 +34,9 @@ const Pagin: React.FC = () => {
 
     for (let i = startPage; i <= endPage; i++) {
       buttons.push(
-        <Link to={`${urls.orders.base}?page=${i}`} key={i}>
+        <Link to={`${urls.orders.base}?page=${i}${searchValue ? `&search=${searchValue}`:''}${nameSearchRow ? `&nameSearchRow=${nameSearchRow}`:''}`
+}
+ key={i}>
           <button className={activePage === i ? 'button active-btn' : 'button'}>{i}</button>
         </Link>
       );
@@ -72,13 +73,13 @@ const Pagin: React.FC = () => {
 
   return (
     <div>
-      <Link to={`${urls.orders.base}?page=${activePage > 1 ? (activePage - 1) : 1}`}>
+      <Link to={`${urls.orders.base}?page=${activePage > 1 ? (activePage - 1) : 1}${searchValue ? `&search=${searchValue}` : ''}${nameSearchRow ? `&nameSearchRow=${nameSearchRow}`: ''}`}>
         <button onClick={onHead} className="button"> forward </button>
       </Link>
 
       {generateButtons()}
 
-      <Link to={`${urls.orders.base}?page=${activePage < pageCount ? (activePage + 1) : pageCount}`}>
+      <Link to={`${urls.orders.base}?page=${activePage < pageCount ? (activePage + 1) : pageCount}${searchValue ? `&search=${searchValue}`: ''}${nameSearchRow ? `&nameSearchRow=${nameSearchRow}`: ''}`}>
         <button onClick={onBack} className="button"> back </button>
       </Link>
     </div>

@@ -23,6 +23,22 @@ const initialState: UserState = {
   },
 };
 
+const getAllUsers = createAsyncThunk<IUser[]>(
+  "usersSlice/getAllUsers",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await userService.getAllUsers();
+      return response.data;
+    } catch (e) {
+      const err = e as AxiosError;
+      return rejectWithValue(err);
+    }
+  }
+);
+
+
+
+
 const getUserById = createAsyncThunk<
   IUser,
   string,
@@ -69,6 +85,8 @@ export const UsersSlice = createSlice({
       })
       .addCase(createUser.fulfilled, (state, action) => {
         state.createdUser = action.payload;
+      }).addCase(getAllUsers.fulfilled, (state, action) => {
+        state.users = action.payload;
       }),
 });
 
@@ -78,6 +96,7 @@ const usersActions = {
   ...actions,
   getUserById,
   createUser,
+  getAllUsers,
 };
 
 export { usersActions, usersReducer };

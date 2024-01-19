@@ -24,10 +24,17 @@ const OrdersTable: React.FC = () => {
   const [nameSortRow, setNameRow] = useState('');
   const searchParams = new URLSearchParams(location.search);
   const pageNumber = +searchParams.get('page');
+  const searchParam = searchParams.get('search');
+  const nameSearchRowParam = searchParams.get('nameSearchRow');
 
   const onSetOrderActive = (orderId: string) => {
     dispatch(ordersActions.getOrderActive(orderId));
   };
+
+  useEffect(() => {
+    dispatch(ordersActions.setSearchValue(searchParam));
+    dispatch(ordersActions.setSearchNameRow(nameSearchRowParam))
+  }, [searchParam, nameSearchRowParam, dispatch]); 
 
   useEffect(() => {
     const isAccess = localStorage.getItem("accessToken");
@@ -50,11 +57,13 @@ const OrdersTable: React.FC = () => {
     dispatch(ordersActions.getOrderActive(null));
   }, [dispatch, pageNumber]);
 
+
+
   useEffect(() => {
-    activePage && dispatch(ordersActions.getOrders({ sort: sort, limit: 15, page: activePage, search: searchValue, nameSortRow: nameSortRow, nameSearchRow: nameSearchRow }));
+    (activePage !== undefined || searchValue || nameSearchRow) && dispatch(ordersActions.getOrders({ sort: sort, limit: 15, page: activePage, search: searchValue, nameSortRow: nameSortRow, nameSearchRow: nameSearchRow }));
   }, [activePage, updateOrderTriger, searchValue, nameSortRow, sort, nameSearchRow, orders.length, dispatch]);
 
-  console.log('orders table serch', searchValue);
+
 
   const onSortRow = (column: string) => {
     setSort(sort === 'DESC' ? 'ASC' : 'DESC');

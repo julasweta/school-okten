@@ -19,7 +19,7 @@ const RegisterForm = () => {
     } = await dispatch(authActions.register({ user }));
     if (requestStatus === "fulfilled") {
       activePage ?
-        navigate(`/orders?page=${activePage}`) : navigate(`/orders?page=1`);
+        navigate(`/orders?${activePage}`) : navigate(`/orders?page=1`);
     }
   };
 
@@ -34,7 +34,7 @@ const RegisterForm = () => {
         <button>register</button>
         <p></p>
         {errors?.response.data.username ===
-        "user model with this username already exists." ? (
+          "user model with this username already exists." ? (
           <p> Імя вже зареєстровано</p>
         ) : (
           ""

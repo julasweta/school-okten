@@ -22,6 +22,13 @@ export class UsersController {
     return UserResponseMapper.toResUserMapper(user);
   }
 
+  @ApiOperation({ summary: 'Get all users' })
+  @Get()
+  async getAllUsers(): Promise<CreateUserResType[]> {
+    const users = await this.usersService.getAllUsers();
+    return users;
+  }
+
   //додати можливість тільки для адміна
   @RoleDecorator(UserRole.ADMIN)
   @UseGuards(AuthGuard(), RoleGuard)

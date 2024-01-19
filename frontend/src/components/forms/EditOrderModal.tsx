@@ -26,16 +26,16 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({ isOpen, onRequestClose 
     name: yup.string().required("Ім'я є обов'язковим полем"),
     surname: yup.string().required("Прізвище є обов'язковим полем"),
     email: yup.string().email("Введіть правильний email").required("Email є обов'язковим полем"),
-    phone: yup.string().matches(phoneRegExp, 'Введіть телефон у форматі +380 00 000 00 00').required("Телефон є обов'язковим полем"),
+    phone: yup.string().matches(phoneRegExp, 'Введіть телефон у форматі +380 00 000 00 00'),
     groupName: yup.string().notRequired(),
     age: yup.number().required("Введіть вік"),
-    course: yup.string().required("Курс є обов'язковим полем"),
-    course_format: yup.string().required("Формат курсу є обов'язковим полем"),
-    course_type: yup.string().required("Тип курсу є обов'язковим полем"),
+    course: yup.string(),
+    course_format: yup.string(),
+    course_type: yup.string(),
     status: yup.string().notRequired(),
-    sum: yup.number().required("Введіть суму"),
+    sum: yup.number(),
     alreadyPaid: yup.boolean().notRequired(),
-    created_at: yup.string().required("Дата створення є обов'язковою"),
+    created_at: yup.string(),
   });
 
 

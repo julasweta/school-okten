@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { Course, CourseFormat, CourseType, StatusWork } from "../../interfaces";
 import { searchColumns } from "../../constants/list.table";
 import { RootState } from "../../redux/store";
+import { useNavigate } from "react-router-dom";
 
 
 const SearchForm: React.FC = () => {
@@ -12,12 +13,12 @@ const SearchForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const { groups, isChecked } = useAppSelector((state: RootState) => state.orders);
   const { me } = useAppSelector((state: RootState) => state.auth);
+  const navigate = useNavigate();
 
   const values = getValues();
 
 
   useEffect(() => {
-    console.log('wtach', values);
     Object.entries(values).forEach(([key, item]) => {
       if (item) {
         dispatch(ordersActions.setSearchValue(item));
@@ -39,13 +40,15 @@ const SearchForm: React.FC = () => {
 
     searchColumns.forEach((column) => {
       if (column !== 'isMe') {
-        setValue(column, '');
+        setValue(column, watch(column) || '');
       }
     });
 
     if (!isChecked) {
-      dispatch(ordersActions.setSearchValue( me && me._id ));
-      dispatch(ordersActions.setSearchNameRow('userId'));
+      if (me && me._id) {
+        dispatch(ordersActions.setSearchValue(me._id));
+        dispatch(ordersActions.setSearchNameRow('userId'));
+      }
     } else {
       dispatch(ordersActions.setSearchValue(''));
       dispatch(ordersActions.setSearchNameRow(''));
@@ -54,7 +57,17 @@ const SearchForm: React.FC = () => {
 
 
   const onClean = () => {
-    dispatch(ordersActions.setSearchValue({}));
+    navigate(`/orders?page=1`);
+    dispatch(ordersActions.setSearchValue(''));
+    dispatch(ordersActions.setSearchNameRow(''));
+    dispatch(ordersActions.setActivePage(1));
+    dispatch(ordersActions.setUpdateOrderTriger());
+    if (isChecked) {
+      dispatch(ordersActions.setIsChecked());
+    }
+    searchColumns.forEach((column) => {
+      setValue(column, watch(column) || '');
+    });
   };
 
 
@@ -84,13 +97,12 @@ const SearchForm: React.FC = () => {
             {...register(column)}
             id={column}
             className="search-input"
-            value={watch(column)}
+            value={watch(column) || ""}
             onChange={(e) => {
-              setValue(column, e.target.value); // Встановити значення поточного поля
-              // Очистити всі інші поля, крім поточного
+              setValue(column, e.target.value);
               searchColumns.forEach((otherColumn) => {
                 if (otherColumn !== column) {
-                  setValue(otherColumn, ""); // Встановити значення інших полів на порожнє
+                  setValue(otherColumn, "");
                 }
               });
             }}
@@ -107,13 +119,12 @@ const SearchForm: React.FC = () => {
             {...register(column)}
             id={column}
             className="search-input"
-            value={watch(column)}
+            value={watch(column) || ""}
             onChange={(e) => {
-              setValue(column, e.target.value); // Встановити значення поточного поля
-              // Очистити всі інші поля, крім поточного
+              setValue(column, e.target.value);
               searchColumns.forEach((otherColumn) => {
                 if (otherColumn !== column) {
-                  setValue(otherColumn, ""); // Встановити значення інших полів на порожнє
+                  setValue(otherColumn, "");
                 }
               });
             }}
@@ -132,13 +143,12 @@ const SearchForm: React.FC = () => {
             {...register(column)}
             id={column}
             className="search-input"
-            value={watch(column)}
+            value={watch(column) || ""}
             onChange={(e) => {
-              setValue(column, e.target.value); // Встановити значення поточного поля
-              // Очистити всі інші поля, крім поточного
+              setValue(column, e.target.value);
               searchColumns.forEach((otherColumn) => {
                 if (otherColumn !== column) {
-                  setValue(otherColumn, ""); // Встановити значення інших полів на порожнє
+                  setValue(otherColumn, "");
                 }
               });
             }}
@@ -150,25 +160,31 @@ const SearchForm: React.FC = () => {
 
   const getEnumType = (column: string): Record<string, string> => {
     switch (column) {
-      case 'course':
+      case "course":
         return Course;
-      case 'course_format':
+      case "course_format":
         return CourseFormat;
-      case 'course_type':
+      case "course_type":
         return CourseType;
-      case 'status':
+      case "status":
         return StatusWork;
       default:
         return {};
     }
   };
 
+
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)} className="search-form">
         {renderSearchButton()}
         <div className="check-box">
-          <input type="checkbox" {...register('isMe')} checked={isChecked} onChange={() => onMeCheckboxChange()} />
+          <input
+            type="checkbox"
+            {...register('isMe')}
+            checked={isChecked}
+            onChange={() => onMeCheckboxChange()}
+          />
           <label htmlFor="isMe" className="me-label">
             Me
           </label>
@@ -182,6 +198,7 @@ const SearchForm: React.FC = () => {
     </div>
   );
 };
+
 
 const SearchFormWrapper: React.FC = () => {
   const methods = useForm();

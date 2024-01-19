@@ -25,6 +25,7 @@ const urls = {
   users: {
     byId: (id: string): string => `${users}/${id}`,
     create: `${auth}/create/user`,
+    getAll:`${users}`
   },
 };
 

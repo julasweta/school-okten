@@ -9,7 +9,7 @@ import { RootState } from '../../redux/store';
 const LoginForm: React.FC = () => {
   const { register, reset, handleSubmit } = useForm<IAuth>();
   const { errors } = useAppSelector((state) => state.auth);
-  const { activePage } = useAppSelector((state: RootState) => state.orders);
+  const { activePage, searchValue, nameSearchRow } = useAppSelector((state: RootState) => state.orders);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const getRefreshToken = localStorage.getItem("refreshToken");
@@ -17,9 +17,9 @@ const LoginForm: React.FC = () => {
   useEffect(() => {
     if (getRefreshToken) {
       activePage ?
-        navigate(`/orders?page=${activePage}`) : navigate(`/orders?page=1`);
+        navigate(`/orders?page=${activePage}${searchValue ? `&search=${searchValue}`:''}`) : navigate(`/orders?page=1${searchValue? `&search=${searchValue}`:''}`);
     }
-  }, [getRefreshToken, navigate, activePage]);
+  }, [getRefreshToken, navigate, nameSearchRow, activePage, searchValue]);
 
   const login: SubmitHandler<IAuth> = async (user) => {
     try {
@@ -29,7 +29,7 @@ const LoginForm: React.FC = () => {
       if (requestStatus === "fulfilled") {
         reset();
         activePage ?
-          navigate(`/orders?page=${activePage}`): navigate(`/orders?page=1`);
+          navigate(`/orders?page=${activePage}${searchValue && `&search=${searchValue}`}`) : navigate(`/orders?page=1${searchValue && `&search=${searchValue}`}${nameSearchRow && `&nameSearchRow=${nameSearchRow}`}`);
       }
     } catch (error) {
       console.error("An error occurred during login:", error);

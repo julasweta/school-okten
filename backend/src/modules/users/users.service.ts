@@ -53,4 +53,14 @@ export class UsersService {
 
     return updatedUser;
   }
+
+  async getAllUsers(): Promise<any> {
+    try {
+      const users = await this.userModel.find();
+      return users;
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      throw error; // Пробросити помилку для подальшого аналізу
+    }
+  }
 }
