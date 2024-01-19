@@ -22,11 +22,11 @@ export const searchColumns = [
   "email",
   "phone",
   "age",
+  "sum",
+  "userId",
   "course",
   "course_format",
   "course_type",
   "status",
-  "sum",
   "groupName",
-  "userId",
 ];

@@ -107,6 +107,7 @@ th {
 tr:hover {
   background: linear-gradient(90deg, #6587bb, #46a1dd);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
 }
 
 .focus {
@@ -234,6 +235,9 @@ input {
 .search-form {
   display: flex;
   flex-wrap: wrap;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
 }
 
 .search-box {
@@ -367,4 +371,8 @@ select {
   display: block;
   word-wrap: break-word;
   /* або overflow-wrap: break-word; */
+}
+
+.Toastify__toast-container--top-center{
+  width: 80%;
 }

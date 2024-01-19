@@ -51,13 +51,10 @@ const OrdersTable: React.FC = () => {
   }, [dispatch, pageNumber]);
 
   useEffect(() => {
-    if (orders && orders.length < 1) {
-      activePage && dispatch(ordersActions.getOrders({ sort: sort, limit: 15, page: activePage, search: searchValue, nameSortRow: nameSortRow, nameSearchRow: nameSearchRow }));
-    }
-    else {
-      activePage && dispatch(ordersActions.getOrders({ sort: sort, limit: 15, page: activePage, search: searchValue, nameSortRow: nameSortRow, nameSearchRow: nameSearchRow }));
-    }
+    activePage && dispatch(ordersActions.getOrders({ sort: sort, limit: 15, page: activePage, search: searchValue, nameSortRow: nameSortRow, nameSearchRow: nameSearchRow }));
   }, [activePage, updateOrderTriger, searchValue, nameSortRow, sort, nameSearchRow, orders.length, dispatch]);
+
+  console.log('orders table serch', searchValue);
 
   const onSortRow = (column: string) => {
     setSort(sort === 'DESC' ? 'ASC' : 'DESC');

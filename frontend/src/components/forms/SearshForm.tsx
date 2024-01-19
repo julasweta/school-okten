@@ -1,63 +1,71 @@
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { ordersActions } from "../../redux/slices/OrderSlices";
-import { useState } from "react";
+import { useEffect } from "react";
 import { Course, CourseFormat, CourseType, StatusWork } from "../../interfaces";
 import { searchColumns } from "../../constants/list.table";
 import { RootState } from "../../redux/store";
 
 
-
 const SearchForm: React.FC = () => {
-  const { register, handleSubmit, getValues } = useForm();
+  const { register, handleSubmit, getValues, setValue, watch } = useForm();
   const dispatch = useAppDispatch();
-  const [lastInputValues, setLastInputValues] = useState<{ [key: string]: string }>({});
   const { groups, isChecked } = useAppSelector((state: RootState) => state.orders);
   const { me } = useAppSelector((state: RootState) => state.auth);
 
-  const values = Object.values(lastInputValues);
-  const lastValue = values[values.length - 1];
+  const values = getValues();
 
 
+  useEffect(() => {
+    console.log('wtach', values);
+    Object.entries(values).forEach(([key, item]) => {
+      if (item) {
+        dispatch(ordersActions.setSearchValue(item));
+        dispatch(ordersActions.setSearchNameRow(key));
+      }
+    });
+  }, [values, dispatch]);
 
-  const onSearchButton = (column: string) => {
-    setLastInputValues({});
-    const watchValue = getValues(column);
-    setLastInputValues((prevValues) => ({ ...prevValues, [column]: watchValue }));
-    dispatch(ordersActions.setSearchValue(lastValue));
+  const onSearchButton = async (column: string) => {
+    dispatch(ordersActions.setSearchValue(values[column]));
     dispatch(ordersActions.setSearchNameRow(column));
   };
 
   const onSubmit = () => { };
 
   const onMeCheckboxChange = () => {
-    dispatch(ordersActions.setIsChecked())
+    console.log(isChecked);
+    dispatch(ordersActions.setIsChecked());
+
     if (!isChecked) {
-      //console.log('me id', me._id);
-      dispatch(ordersActions.setSearchValue(me && me._id));
+      dispatch(ordersActions.setSearchValue( me && me._id ));
       dispatch(ordersActions.setSearchNameRow('userId'));
     } else {
-      // Якщо галочка знята
       dispatch(ordersActions.setSearchValue(''));
       dispatch(ordersActions.setSearchNameRow(''));
     }
   };
 
+
   const onClean = () => {
-    dispatch(ordersActions.setSearchValue(''));
-    setLastInputValues({});
+    dispatch(ordersActions.setSearchValue({}));
   };
+
+
 
   const renderSearchButton = () => {
     return searchColumns.map((column, index) => (
       <div key={index} className="search-box">
         {getInputElement(column)}
-        <button type="submit" onClick={() => onSearchButton(column)} className="button search-button">
-          {column}
-        </button>
+        {(['course', 'course_format', 'course_type', 'status', 'groupName'].includes(column) && (
+          <button type="submit" onClick={() => onSearchButton(column)} className="button search-button">
+            {column}
+          </button>
+        ))}
       </div>
     ));
   };
+
 
   const getInputElement = (column: string) => {
     const isDropdown = ['course', 'course_format', 'course_type', 'status'].includes(column);
@@ -70,8 +78,16 @@ const SearchForm: React.FC = () => {
             {...register(column)}
             id={column}
             className="search-input"
-            value={lastValue === lastInputValues[column] ? lastValue : ''}
-            onChange={(e) => setLastInputValues((prevValues) => ({ ...prevValues, [column]: e.target.value }))}
+            value={watch(column)}
+            onChange={(e) => {
+              setValue(column, e.target.value); // Встановити значення поточного поля
+              // Очистити всі інші поля, крім поточного
+              searchColumns.forEach((otherColumn) => {
+                if (otherColumn !== column) {
+                  setValue(otherColumn, ""); // Встановити значення інших полів на порожнє
+                }
+              });
+            }}
           >
             <option value="">Select...</option>
             {Object.values(getEnumType(column)).map((value, index) => (
@@ -80,38 +96,51 @@ const SearchForm: React.FC = () => {
               </option>
             ))}
           </select>
+        ) : isGroup ? (
+          <select
+            {...register(column)}
+            id={column}
+            className="search-input"
+            value={watch(column)}
+            onChange={(e) => {
+              setValue(column, e.target.value); // Встановити значення поточного поля
+              // Очистити всі інші поля, крім поточного
+              searchColumns.forEach((otherColumn) => {
+                if (otherColumn !== column) {
+                  setValue(otherColumn, ""); // Встановити значення інших полів на порожнє
+                }
+              });
+            }}
+          >
+            <option value="">Select...</option>
+            {groups.map((group, index) => (
+              <option key={index} value={group.title}>
+                {group.title}
+              </option>
+            ))}
+          </select>
         ) : (
-          isGroup ? (
-            <select
-              {...register(column)}
-              id={column}
-              className="search-input"
-              value={lastValue === lastInputValues[column] ? lastValue : ''}
-              onChange={(e) => setLastInputValues((prevValues) => ({ ...prevValues, [column]: e.target.value }))}
-            >
-              <option value="">Select...</option>
-              {groups.map((group, index) => (
-                <option key={index} value={group.title}>
-                  {group.title}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <input
-              type="text"
-              placeholder="search"
-              {...register(column)}
-              id={column}
-              className="search-input"
-              value={lastValue === lastInputValues[column] ? lastValue : ''}
-              onChange={(e) => setLastInputValues((prevValues) => ({ ...prevValues, [column]: e.target.value }))}
-            />
-          )
+          <input
+            type="text"
+            placeholder={column}
+            {...register(column)}
+            id={column}
+            className="search-input"
+            value={watch(column)}
+            onChange={(e) => {
+              setValue(column, e.target.value); // Встановити значення поточного поля
+              // Очистити всі інші поля, крім поточного
+              searchColumns.forEach((otherColumn) => {
+                if (otherColumn !== column) {
+                  setValue(otherColumn, ""); // Встановити значення інших полів на порожнє
+                }
+              });
+            }}
+          />
         )}
       </>
     );
   };
-
 
   const getEnumType = (column: string): Record<string, string> => {
     switch (column) {
@@ -132,14 +161,8 @@ const SearchForm: React.FC = () => {
     <div>
       <form onSubmit={handleSubmit(onSubmit)} className="search-form">
         {renderSearchButton()}
-
         <div className="check-box">
-          <input
-            type="checkbox"
-            {...register('isMe')}
-            checked={isChecked}
-            onChange={() => onMeCheckboxChange()}
-          />
+          <input type="checkbox" {...register('isMe')} checked={isChecked} onChange={() => onMeCheckboxChange()} />
           <label htmlFor="isMe" className="me-label">
             Me
           </label>
@@ -150,12 +173,24 @@ const SearchForm: React.FC = () => {
           Clean
         </button>
       </div>
-      
     </div>
   );
 };
 
-export { SearchForm };
+const SearchFormWrapper: React.FC = () => {
+  const methods = useForm();
+
+  return (
+    <FormProvider {...methods}>
+      <SearchForm />
+    </FormProvider>
+  );
+};
+
+export { SearchFormWrapper as SearchForm };
+
+
+
 
 
 

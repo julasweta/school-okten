@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { RootState } from "../../redux/store";
 import { ordersActions } from "../../redux/slices/OrderSlices";
 import { UserName } from "../users/UserName";
+import { ToastContainer, toast } from 'react-toastify';
 
 
 
@@ -40,7 +41,11 @@ const OrderForm: React.FC = () => {
       dispatch(ordersActions.setCreateMessagTriger());
       reset();
     } else {
-      alert('Only manager of this order can add message. To take this order to work, click button "OPEN EDIT MODAL" ')
+      toast.error('Only manager of this order can add message. To take this order to work, click button "OPEN EDIT MODAL"', {
+        className: "toast",
+        bodyClassName: "grow-font-size",
+        progressClassName: "fancy-progress-bar",
+      });
     }
   };
 
@@ -56,6 +61,19 @@ const OrderForm: React.FC = () => {
 
   return (
     <div className="order-form">
+
+      <ToastContainer 
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light" />
+
       <div className="messages">
         <ol>{messages && messages.map((item, index) =>
           <li key={index}>
@@ -77,6 +95,7 @@ const OrderForm: React.FC = () => {
 
       {/* Модальне вікно для редагування замовлення */}
       <EditOrderModal isOpen={isEditModalOpen} onRequestClose={closeEditModal} />
+
     </div>
   );
 };
