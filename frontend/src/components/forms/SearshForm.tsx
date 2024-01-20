@@ -9,43 +9,46 @@ import useCleanrUtils from "../../constants/cleanUtils";
 
 
 const SearchForm: React.FC = () => {
-  const { register, handleSubmit, getValues, setValue, watch } = useForm();
+  const { register, handleSubmit, getValues, setValue, watch } = useForm({ shouldUnregister: true, });
   const dispatch = useAppDispatch();
-  const { groups, isChecked } = useAppSelector((state: RootState) => state.orders);
+  const { groups, isChecked, updateOrderTriger, searchValue, nameSearchRow } = useAppSelector((state: RootState) => state.orders);
   const { me } = useAppSelector((state: RootState) => state.auth);
   const { onCleanUtils } = useCleanrUtils();
+  let {isMe, ...updateValues} = getValues();
 
-  const values = getValues();
 
 
   useEffect(() => {
-    Object.entries(values).forEach(([key, item]) => {
+
+    Object.entries(updateValues).forEach(([key, item]) => {
       if (item) {
+        dispatch(ordersActions.setIsChecked('off'));
         dispatch(ordersActions.setSearchValue(item));
         dispatch(ordersActions.setSearchNameRow(key));
         dispatch(ordersActions.setActivePage(1));
       }
     });
-  }, [values, dispatch]);
+
+  }, [updateOrderTriger, updateValues, searchValue, nameSearchRow,  dispatch]);
+
+
 
   const onSearchButton = async (column: string) => {
-    dispatch(ordersActions.setSearchValue(values[column]));
+    dispatch(ordersActions.setSearchValue(updateValues[column]));
     dispatch(ordersActions.setSearchNameRow(column));
   };
 
   const onSubmit = () => { };
 
-  const onMeCheckboxChange = () => {
-    console.log(isChecked);
-    dispatch(ordersActions.setIsChecked());
-
+  const onMeCheckboxChange =() => {
+   dispatch(ordersActions.setUpdateOrderTriger());
+    dispatch(ordersActions.setIsChecked(isChecked === 'on' ? 'off' : 'on'));
     searchColumns.forEach((column) => {
       if (column !== 'isMe') {
-        setValue(column, watch(column) || '');
+        setValue(column, '');
       }
     });
-
-    if (!isChecked) {
+    if (isChecked === 'off') {
       if (me && me._id) {
         dispatch(ordersActions.setSearchValue(me._id));
         dispatch(ordersActions.setSearchNameRow('userId'));
@@ -59,11 +62,11 @@ const SearchForm: React.FC = () => {
 
   const onClean = () => {
     onCleanUtils();
-    if (isChecked) {
-      dispatch(ordersActions.setIsChecked());
+    if (isChecked === 'on') {
+      dispatch(ordersActions.setIsChecked('off'));
     }
     searchColumns.forEach((column) => {
-      setValue(column,  '');
+      setValue(column, '');
     });
   };
 
@@ -140,7 +143,7 @@ const SearchForm: React.FC = () => {
             {...register(column)}
             id={column}
             className="search-input"
-            value={watch(column) || ""}
+                value={updateValues[column] || ""}
             onChange={(e) => {
               setValue(column, e.target.value);
               searchColumns.forEach((otherColumn) => {
@@ -148,6 +151,7 @@ const SearchForm: React.FC = () => {
                   setValue(otherColumn, "");
                 }
               });
+              dispatch(ordersActions.setUpdateOrderTriger())
             }}
           />
         )}
@@ -170,7 +174,6 @@ const SearchForm: React.FC = () => {
     }
   };
 
-
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)} className="search-form">
@@ -179,7 +182,7 @@ const SearchForm: React.FC = () => {
           <input
             type="checkbox"
             {...register('isMe')}
-            checked={isChecked}
+            checked={isChecked === 'on'}
             onChange={() => onMeCheckboxChange()}
           />
           <label htmlFor="isMe" className="me-label">

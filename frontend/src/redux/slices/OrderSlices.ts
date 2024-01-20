@@ -17,7 +17,7 @@ interface OrderState {
   nameSearchRow: string;
   groups: IGroup[],
   addGroupTriger: boolean;
-  isChecked: boolean;
+  isChecked: string;
   sort: string;
 }
 
@@ -33,7 +33,7 @@ const initialState: OrderState = {
   nameSearchRow: "",
   groups: [],
   addGroupTriger: true,
-  isChecked: false,
+  isChecked: 'off',
   sort: 'DESC',
 };
 
@@ -56,7 +56,6 @@ const getOrders = createAsyncThunk<
     { rejectWithValue }
   ) => {
     try {
-      console.log("Before request - search:", search);
 
       const { data } = await orderService.getOrders(
         sort,
@@ -66,8 +65,6 @@ const getOrders = createAsyncThunk<
         nameSortRow,
         nameSearchRow? nameSearchRow : ''
       );
-
-      console.log("After request - page:", page);
 
       return data;
     } catch (e) {
@@ -151,8 +148,8 @@ export const OrdersSlice = createSlice({
     setaddGroupTriger: (state) => {
       state.addGroupTriger = !state.addGroupTriger;
     },
-    setIsChecked: (state) => {
-      state.isChecked = !state.isChecked;
+    setIsChecked: (state, action) => {
+      state.isChecked = action.payload;
     },
     setSort: (state, action) => {
       state.sort = action.payload;

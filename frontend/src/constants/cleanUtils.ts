@@ -13,9 +13,8 @@ const useCleanrUtils = () => {
     dispatch(ordersActions.setActivePage(1));
     dispatch(ordersActions.setUpdateOrderTriger());
     dispatch(ordersActions.setSort('DESC'));
+    dispatch(ordersActions.setIsChecked('off'));
 
-    // Якщо isChecked знаходиться в компоненті, передайте його значення або додайте його в аргументи функції
-    // dispatch(ordersActions.setIsChecked());
     // searchColumns і setValue повинні також бути передані або доступні в контексті цієї функції
    // searchColumns.forEach((column) => {
      // setValue(column, watch(column) || "");

@@ -19,7 +19,7 @@ const OrdersTable: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { orders, updateOrderTriger, orderActive, activePage, searchValue, nameSearchRow, addGroupTriger, sort } = useAppSelector((state: RootState) => state.orders);
+  const { orders, updateOrderTriger, orderActive, activePage, searchValue, nameSearchRow, addGroupTriger, sort, isChecked } = useAppSelector((state: RootState) => state.orders);
   const [nameSortRow, setNameRow] = useState('');
   const searchParams = new URLSearchParams(location.search);
   const searchParam = searchParams.get('search');
@@ -31,7 +31,6 @@ const OrdersTable: React.FC = () => {
   };
 
   useEffect(() => {
-
     dispatch(ordersActions.setActivePage(pageNumber));
     dispatch(ordersActions.getOrderActive(null));
     dispatch(ordersActions.setSearchValue(searchParam));
@@ -50,17 +49,8 @@ const OrdersTable: React.FC = () => {
   }, [addGroupTriger, dispatch]);
 
 
-
-
-
-
   useEffect(() => {
-    console.log('activePage', activePage);
-    console.log('sort', sort);
-    console.log('searchValue', searchValue);
-    console.log('nameSortRow', nameSortRow);
-    console.log('nameSearchRow', nameSearchRow);
-
+    console.log('orders Table - searchValue', searchValue);
     dispatch(
       ordersActions.getOrders({
         sort: sort,
@@ -71,9 +61,7 @@ const OrdersTable: React.FC = () => {
         nameSearchRow: nameSearchRow,
       })
     );
-  }, [activePage, updateOrderTriger, searchValue, nameSortRow, sort, nameSearchRow, dispatch]);
-
-
+  }, [activePage, updateOrderTriger, searchValue, nameSortRow, sort, nameSearchRow,  dispatch]);
 
 
   const onSortRow = (column: string) => {
