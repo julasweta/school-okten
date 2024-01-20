@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { Course, CourseFormat, CourseType, StatusWork } from "../../interfaces";
 import { searchColumns } from "../../constants/list.table";
 import { RootState } from "../../redux/store";
-import { useNavigate } from "react-router-dom";
+import useCleanrUtils from "../../constants/cleanUtils";
 
 
 const SearchForm: React.FC = () => {
@@ -13,7 +13,7 @@ const SearchForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const { groups, isChecked } = useAppSelector((state: RootState) => state.orders);
   const { me } = useAppSelector((state: RootState) => state.auth);
-  const navigate = useNavigate();
+  const { onCleanUtils } = useCleanrUtils();
 
   const values = getValues();
 
@@ -23,6 +23,7 @@ const SearchForm: React.FC = () => {
       if (item) {
         dispatch(ordersActions.setSearchValue(item));
         dispatch(ordersActions.setSearchNameRow(key));
+        dispatch(ordersActions.setActivePage(1));
       }
     });
   }, [values, dispatch]);
@@ -57,16 +58,12 @@ const SearchForm: React.FC = () => {
 
 
   const onClean = () => {
-    navigate(`/orders?page=1`);
-    dispatch(ordersActions.setSearchValue(''));
-    dispatch(ordersActions.setSearchNameRow(''));
-    dispatch(ordersActions.setActivePage(1));
-    dispatch(ordersActions.setUpdateOrderTriger());
+    onCleanUtils();
     if (isChecked) {
       dispatch(ordersActions.setIsChecked());
     }
     searchColumns.forEach((column) => {
-      setValue(column, watch(column) || '');
+      setValue(column,  '');
     });
   };
 

@@ -18,6 +18,7 @@ interface OrderState {
   groups: IGroup[],
   addGroupTriger: boolean;
   isChecked: boolean;
+  sort: string;
 }
 
 const initialState: OrderState = {
@@ -33,6 +34,7 @@ const initialState: OrderState = {
   groups: [],
   addGroupTriger: true,
   isChecked: false,
+  sort: 'DESC',
 };
 
 /*-----------------AsyncThunk -------------------------------  */
@@ -41,7 +43,7 @@ const getOrders = createAsyncThunk<
   {
     sort: string;
     limit: number;
-    page: number;
+    page?: number | null; // Змінив тип на необов'язковий
     search: string;
     nameSortRow: string;
     nameSearchRow: string;
@@ -54,34 +56,27 @@ const getOrders = createAsyncThunk<
     { rejectWithValue }
   ) => {
     try {
-      if (page === 0) {
-        page = 1;
-        const { data } = await orderService.getOrders(
-          sort,
-          limit,
-          page,
-          search.trim(),
-          nameSortRow,
-          nameSearchRow
-        );
-        return data;
-      } else {
-        const { data } = await orderService.getOrders(
-          sort,
-          limit,
-          page,
-          search.trim(),
-          nameSortRow,
-          nameSearchRow
-        );
-        return data;
-      }
+      console.log("Before request - search:", search);
+
+      const { data } = await orderService.getOrders(
+        sort,
+        limit,
+        page,
+        search ? search.trim():'',
+        nameSortRow,
+        nameSearchRow? nameSearchRow : ''
+      );
+
+      console.log("After request - page:", page);
+
+      return data;
     } catch (e) {
       const err = e as AxiosError;
       return rejectWithValue(err);
     }
   }
 );
+
 
 
 const getOrderActive = createAsyncThunk<
@@ -158,6 +153,9 @@ export const OrdersSlice = createSlice({
     },
     setIsChecked: (state) => {
       state.isChecked = !state.isChecked;
+    },
+    setSort: (state, action) => {
+      state.sort = action.payload;
     },
   },
 

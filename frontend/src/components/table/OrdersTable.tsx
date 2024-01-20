@@ -19,22 +19,24 @@ const OrdersTable: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { orders, updateOrderTriger, orderActive, activePage, searchValue, nameSearchRow, addGroupTriger } = useAppSelector((state: RootState) => state.orders);
-  const [sort, setSort] = useState('DESC');
+  const { orders, updateOrderTriger, orderActive, activePage, searchValue, nameSearchRow, addGroupTriger, sort } = useAppSelector((state: RootState) => state.orders);
   const [nameSortRow, setNameRow] = useState('');
   const searchParams = new URLSearchParams(location.search);
-  const pageNumber = +searchParams.get('page');
   const searchParam = searchParams.get('search');
   const nameSearchRowParam = searchParams.get('nameSearchRow');
+  const pageNumber = +searchParams.get('page') || 1;
 
   const onSetOrderActive = (orderId: string) => {
     dispatch(ordersActions.getOrderActive(orderId));
   };
 
   useEffect(() => {
+
+    dispatch(ordersActions.setActivePage(pageNumber));
+    dispatch(ordersActions.getOrderActive(null));
     dispatch(ordersActions.setSearchValue(searchParam));
     dispatch(ordersActions.setSearchNameRow(nameSearchRowParam))
-  }, [searchParam, nameSearchRowParam, dispatch]); 
+  }, [searchParam, nameSearchRowParam, pageNumber, dispatch]);
 
   useEffect(() => {
     const isAccess = localStorage.getItem("accessToken");
@@ -47,26 +49,35 @@ const OrdersTable: React.FC = () => {
     dispatch(ordersActions.getGroups())
   }, [addGroupTriger, dispatch]);
 
-  useEffect(() => {
-    if (pageNumber) {
-      dispatch(ordersActions.setActivePage(pageNumber))
-    }
-    else {
-      dispatch(ordersActions.setActivePage(1))
-    }
-    dispatch(ordersActions.getOrderActive(null));
-  }, [dispatch, pageNumber]);
+
+
 
 
 
   useEffect(() => {
-    (activePage !== undefined || searchValue || nameSearchRow) && dispatch(ordersActions.getOrders({ sort: sort, limit: 15, page: activePage, search: searchValue, nameSortRow: nameSortRow, nameSearchRow: nameSearchRow }));
-  }, [activePage, updateOrderTriger, searchValue, nameSortRow, sort, nameSearchRow, orders.length, dispatch]);
+    console.log('activePage', activePage);
+    console.log('sort', sort);
+    console.log('searchValue', searchValue);
+    console.log('nameSortRow', nameSortRow);
+    console.log('nameSearchRow', nameSearchRow);
+
+    dispatch(
+      ordersActions.getOrders({
+        sort: sort,
+        limit: 15,
+        page: activePage,
+        search: searchValue,
+        nameSortRow: nameSortRow,
+        nameSearchRow: nameSearchRow,
+      })
+    );
+  }, [activePage, updateOrderTriger, searchValue, nameSortRow, sort, nameSearchRow, dispatch]);
+
 
 
 
   const onSortRow = (column: string) => {
-    setSort(sort === 'DESC' ? 'ASC' : 'DESC');
+    dispatch(ordersActions.setSort(sort === 'DESC' ? 'ASC' : 'DESC'))
     setNameRow(column);
   }
 

@@ -34,9 +34,9 @@ const Pagin: React.FC = () => {
 
     for (let i = startPage; i <= endPage; i++) {
       buttons.push(
-        <Link to={`${urls.orders.base}?page=${i}${searchValue ? `&search=${searchValue}`:''}${nameSearchRow ? `&nameSearchRow=${nameSearchRow}`:''}`
-}
- key={i}>
+        <Link to={`${urls.orders.base}?page=${i}${searchValue ? `&search=${searchValue}` : ''}${nameSearchRow ? `&nameSearchRow=${nameSearchRow}` : ''}`
+        }
+          key={i}>
           <button className={activePage === i ? 'button active-btn' : 'button'}>{i}</button>
         </Link>
       );
@@ -73,13 +73,13 @@ const Pagin: React.FC = () => {
 
   return (
     <div>
-      <Link to={`${urls.orders.base}?page=${activePage > 1 ? (activePage - 1) : 1}${searchValue ? `&search=${searchValue}` : ''}${nameSearchRow ? `&nameSearchRow=${nameSearchRow}`: ''}`}>
+      <Link to={`${urls.orders.base}?page=${activePage > 1 ? (activePage - 1) : 1}${searchValue ? `&search=${searchValue}` : ''}${nameSearchRow ? `&nameSearchRow=${nameSearchRow}` : ''}`}>
         <button onClick={onHead} className="button"> forward </button>
       </Link>
 
       {generateButtons()}
 
-      <Link to={`${urls.orders.base}?page=${activePage < pageCount ? (activePage + 1) : pageCount}${searchValue ? `&search=${searchValue}`: ''}${nameSearchRow ? `&nameSearchRow=${nameSearchRow}`: ''}`}>
+      <Link to={`${urls.orders.base}?page=${activePage < pageCount ? (activePage + 1) : pageCount}${searchValue ? `&search=${searchValue}` : ''}${nameSearchRow ? `&nameSearchRow=${nameSearchRow}` : ''}`}>
         <button onClick={onBack} className="button"> back </button>
       </Link>
     </div>
