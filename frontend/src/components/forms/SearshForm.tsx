@@ -16,7 +16,7 @@ const SearchForm: React.FC = () => {
   const { onCleanUtils } = useCleanrUtils();
   let {isMe, ...updateValues} = getValues();
 
-
+  console.log(updateValues);
 
   useEffect(() => {
 

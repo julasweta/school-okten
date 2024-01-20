@@ -6,6 +6,7 @@ import {
   Put,
   Get,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -21,6 +22,7 @@ import { RoleGuard } from '../../common/guards/role.guard';
 import { LogoutGuard } from '../../common/guards/logout.guard';
 import { ActivateUser } from '../../common/interfaces/IListRes';
 import { MailerService } from '@nestjs-modules/mailer';
+import { ParamsToken } from '../orders/dto/orders-params.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -41,7 +43,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Create User' })
   @Post('create/user')
   async createUser(@Body() body: CreateUserReqDto) {
-    console.log('control', body);
+    console.log('auth control crate user', body);
     const user = await this.authService.createUser(body);
     await this.mailerService
       .sendMail({
@@ -49,7 +51,7 @@ export class AuthController {
         from: 'stugarka@gmail.com',
         subject: 'Активація облікового запису',
         text: 'welcome',
-        html: `<p> ${user.name} your LINK for activation on Okten-School: </p><b>http://localhost:3001/activate/${user.token}</b>`,
+        html: `<p> ${user.name} your LINK for activation on Okten-School: </p><b>http://localhost:3001/auth/activate?token=${user.token}</b>`,
       })
       .then((success) => {
         console.log(success);
@@ -64,10 +66,11 @@ export class AuthController {
   @ApiOperation({ summary: 'Activate user, add password' })
   @Put('activate')
   async activateUser(
-    @Headers('authorization') accessToken: string,
+    @Query() query: ParamsToken,
     @Body() pass: ActivateUser,
   ): Promise<Partial<UserBaseDto>> {
-    const user = await this.authService.activateUser(accessToken, pass);
+    //console.log('auth contr activate token', query.token);
+    const user = await this.authService.activateUser(query.token, pass);
     return user;
   }
 
@@ -75,6 +78,7 @@ export class AuthController {
   async refreshTokens(
     @Headers('authorization') refreshToken: string,
   ): Promise<{ accessToken: string; refreshToken: string }> {
+    console.log('auth control refreshToken', refreshToken);
     const token = extractTokenFromHeader(refreshToken);
     if (!token) {
       console.error('Invalid token');

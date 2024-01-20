@@ -41,7 +41,7 @@ export class UsersService {
     }
   }
 
-  async updateUser(
+  async banUser(
     id: string,
     body: ActivateUserReqDto,
   ): Promise<UserBaseType | null> {

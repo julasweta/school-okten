@@ -5,6 +5,7 @@ import { RootState } from "../redux/store";
 import { User } from "../components/users/User";
 import { Order } from "../interfaces";
 import { ordersActions } from "../redux/slices/OrderSlices";
+import { Users } from "../components/users";
 
 const Admin = () => {
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
@@ -46,6 +47,7 @@ const Admin = () => {
     <div> total: {orders.length}</div>
     <div> inWork: {filterOrders('status', 'In work'.trim()).length}</div>
     <div> NEW: {filterOrders('status', null).length}</div>
+    <Users/>
   </div>;
 };
 

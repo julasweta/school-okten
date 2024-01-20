@@ -38,7 +38,6 @@ export class OrdersController {
   async getdAll(
     @Query() query: OrderListQuerytDto,
   ): Promise<IPaginationResponse<Order>> {
-    console.log('ja v orders controller');
     const result = await this.ordersService.getdAll(query);
     return result;
   }

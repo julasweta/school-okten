@@ -19,16 +19,19 @@ header a {
   margin-right: 20px;
   font-size: 16px;
 }
-.header-box{
+
+.header-box {
   display: flex;
   width: 90%;
   justify-content: space-between;
   align-items: center;
 }
+
 .userGreeting {
   margin-right: 10px;
   color: #fff;
 }
+
 .logo {
   font-family: 'Pacifico', cursive;
   font-size: 28px;
@@ -227,8 +230,8 @@ input {
   border-radius: 5px;
 }
 
-.error-message{
-  color:red;
+.error-message {
+  color: red;
 }
 
 /* SEARCH FORM*/
@@ -303,6 +306,7 @@ select {
   width: 80%;
   margin: 20px 0;
 }
+
 .check-box {
   display: flex;
   width: 100%;
@@ -347,7 +351,7 @@ select {
 }
 
 
-/* USER */ 
+/* USER */
 .user-details {
   max-width: 400px;
   margin: 0 auto;
@@ -359,6 +363,13 @@ select {
 
 .user-property {
   margin-bottom: 10px;
+
+}
+
+
+.pointer:hover {
+  background-color: #a5adb1;
+  cursor: pointer;
 }
 
 .user-property label {
@@ -366,13 +377,37 @@ select {
   margin-right: 5px;
 }
 
-.user-property span {
+.user-property span{
   color: #333;
   display: block;
   word-wrap: break-word;
-  /* або overflow-wrap: break-word; */
+  text-transform: uppercase;
+}
+.user-box {
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    flex-direction: column;
 }
 
-.Toastify__toast-container--top-center{
+.user-info {
+  margin: 0 auto;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+.user-buttons{
+  display: flex;
+  justify-content: space-around;
+
+}
+
+
+.Toastify__toast-container--top-center {
   width: 80%;
 }

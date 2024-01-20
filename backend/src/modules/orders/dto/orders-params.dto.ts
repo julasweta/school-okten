@@ -55,3 +55,7 @@ export class OrderListQuerytDto extends ParamsQueryDto {
   nameSortRow?: string;
   nameSearchRow?: string;
 }
+
+export class ParamsToken {
+  token: string;
+}

@@ -18,7 +18,6 @@ const UserCreateModal: React.FC<EditOrderModalProps> = ({ isOpen, onRequestClose
   useEffect(() => {
     dispatch(usersActions.getAllUsers())
   }, [usersTriger, dispatch]);
-  console.log(usersTriger);
 
   const onSubmit: SubmitHandler<IUser> = async (data) => {
     const isUser = users && users.filter(user => user.email.toLowerCase() === data.email.toLowerCase());

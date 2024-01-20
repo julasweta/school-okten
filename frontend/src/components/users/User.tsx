@@ -5,6 +5,7 @@ interface UserProps {
 } 
 
 const User: React.FC<UserProps> = ({ user }) => {
+
   return (
     <div className="user-details">
       <h2>Created User Details</h2>

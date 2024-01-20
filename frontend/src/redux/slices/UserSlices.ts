@@ -7,6 +7,7 @@ interface UserState {
   users: IUser[];
   userById: IUser;
   createdUser: IUser;
+  updateUserTriger: boolean;
 }
 
 const initialState: UserState = {
@@ -18,9 +19,10 @@ const initialState: UserState = {
     role: "",
     name: "",
     status: "",
-    token:
-      "",
+    token: "",
   },
+
+  updateUserTriger: true,
 };
 
 const getAllUsers = createAsyncThunk<IUser[]>(
@@ -76,6 +78,9 @@ export const UsersSlice = createSlice({
   initialState,
   reducers: {
     setActivePage: (state, action) => {},
+    setUpdateUserTriger: (state) => {
+      state.updateUserTriger = !state.updateUserTriger;
+    },
   },
 
   extraReducers: (builder) =>
@@ -85,7 +90,8 @@ export const UsersSlice = createSlice({
       })
       .addCase(createUser.fulfilled, (state, action) => {
         state.createdUser = action.payload;
-      }).addCase(getAllUsers.fulfilled, (state, action) => {
+      })
+      .addCase(getAllUsers.fulfilled, (state, action) => {
         state.users = action.payload;
       }),
 });

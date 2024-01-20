@@ -18,7 +18,6 @@ export class OrderRepository {
     query: OrderListQuerytDto,
   ): Promise<IPaginationResponse<Order>> {
     const filter: any = {};
-    console.log('orders-repository query', query);
 
     if (query.search && query.nameSearchRow === 'userId') {
       const searchObjectId = new Types.ObjectId(query.search.trim());

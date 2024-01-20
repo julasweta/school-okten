@@ -8,12 +8,20 @@ export class VerificationService {
   constructor(private readonly jwtService: JwtService) {}
 
   async decodeToken(token: string): Promise<ITokenPayload> {
-    try {
+    console.log('verif service token', token);
+    const bearerRegex = token.includes('Bearer');
+    console.log(bearerRegex);
+
+    //console.log('startsWithBearer', bearerRegex);
+    if (bearerRegex) {
       const extractToken = extractTokenFromHeader(token);
-      return this.jwtService.decode(extractToken);
-    } catch (err) {
-      throw new BadRequestException(' error decoder ');
+      const decodedToken = this.jwtService.decode(extractToken);
+      return decodedToken;
     }
+
+    const decodedToken = this.jwtService.decode(token);
+    // console.log('decodedToken', decodedToken);
+    return decodedToken;
   }
 
   async signToken(payload: ITokenPayload, time: string): Promise<any> {
@@ -25,8 +33,8 @@ export class VerificationService {
   }
 
   async createToken(payload: ITokenPayload, time: string): Promise<string> {
+    //console.log('payload', payload);
     const token = this.signToken(payload, time);
-
     return token;
   }
 

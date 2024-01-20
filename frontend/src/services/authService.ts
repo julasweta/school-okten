@@ -13,10 +13,12 @@ const authService = {
   async login(authData: IAuth): Promise<any> {
     const { data } = await apiService.post<ITokens>(urls.auth.login, authData);
     this.setTokens(data);
-
     const { data: me } = await this.me();
     return me;
   },
+
+  activateUser: (pass: string, token: string): IRes<IUser> =>
+    apiService.put(`${urls.auth.activate}?token=${token}`, {password:pass}),
 
   async logout(): Promise<any> {
     const res = await apiService.post(urls.auth.logout);

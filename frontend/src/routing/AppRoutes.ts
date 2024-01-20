@@ -4,5 +4,7 @@ export const AppRoutes = {
   ORDER: "order",
   LOGIN: "auth/login",
   REGISTER: "register",
-  ADMIN: "admin"
+  ADMIN: "admin",
+  USERS: "users",
+  ACTIVATE: "auth/activate"
 };

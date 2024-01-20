@@ -3,8 +3,8 @@ const baseURL = process.env.REACT_APP_API;
 const orders = "/orders";
 const auth = "/auth";
 const users = "/users";
-const messages = '/messages';
-const groups = '/groups';
+const messages = "/messages";
+const groups = "/groups";
 const urls = {
   orders: {
     base: orders,
@@ -21,11 +21,13 @@ const urls = {
     register: `auth/create/user`,
     me: `${auth}/me`,
     logout: `auth/logout`,
+    activate: `${auth}/activate`,
   },
   users: {
     byId: (id: string): string => `${users}/${id}`,
     create: `${auth}/create/user`,
-    getAll:`${users}`
+    getAll: `${users}`,
+    ban: (id: string): string => `${users}/ban/${id}`,
   },
 };
 

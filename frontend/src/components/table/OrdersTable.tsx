@@ -19,14 +19,14 @@ const OrdersTable: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { orders, updateOrderTriger, orderActive, activePage, searchValue, nameSearchRow, addGroupTriger, sort, isChecked } = useAppSelector((state: RootState) => state.orders);
+  const { orders, updateOrderTriger, orderActive, activePage, searchValue, nameSearchRow, addGroupTriger, sort } = useAppSelector((state: RootState) => state.orders);
   const [nameSortRow, setNameRow] = useState('');
   const searchParams = new URLSearchParams(location.search);
   const searchParam = searchParams.get('search');
   const nameSearchRowParam = searchParams.get('nameSearchRow');
   const pageNumber = +searchParams.get('page') || 1;
 
-  const onSetOrderActive = (orderId: string) => {
+  const onGetOrderActive = (orderId: string) => {
     dispatch(ordersActions.getOrderActive(orderId));
   };
 
@@ -61,7 +61,7 @@ const OrdersTable: React.FC = () => {
         nameSearchRow: nameSearchRow,
       })
     );
-  }, [activePage, updateOrderTriger, searchValue, nameSortRow, sort, nameSearchRow,  dispatch]);
+  }, [activePage, updateOrderTriger, searchValue, nameSortRow, sort, nameSearchRow, orderActive,  dispatch]);
 
 
   const onSortRow = (column: string) => {
@@ -91,7 +91,7 @@ const OrdersTable: React.FC = () => {
         <tbody>
           {orders.map((order) => (
             <React.Fragment key={order._id}>
-              <tr onClick={() => onSetOrderActive(order._id)} className={orderActive?._id === order._id ? 'focus' : ''}>
+              <tr onClick={() => onGetOrderActive(order._id)} className={orderActive?._id === order._id ? 'focus' : ''}>
 
                 <td>{order._id}</td>
                 <td>{order.name}</td>

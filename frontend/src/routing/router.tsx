@@ -6,6 +6,7 @@ import { MainLayout } from "../layouts/MainLayout";
 import { LoginForm } from "../components/auth/LoginForm";
 import { RegisterForm } from "../components/auth/RegisterForm";
 import { Admin } from "../pages";
+import { Activate } from "../components/activate/Activate";
 
 export const router = createBrowserRouter([
   {
@@ -21,8 +22,12 @@ export const router = createBrowserRouter([
         element: <OrdersPage />,
       },
       {
+        path: AppRoutes.ACTIVATE,
+        element: <Activate />,
+      },
+      {
         path: AppRoutes.ADMIN,
-        element: <Admin/>,
+        element: <Admin />,
       },
       {
         path: AppRoutes.LOGIN,

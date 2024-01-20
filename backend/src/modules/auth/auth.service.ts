@@ -29,6 +29,7 @@ export class AuthService {
   ) {}
 
   async createUser(@Body() body: CreateUserReqDto): Promise<CreateUserResType> {
+    console.log('auth serv create user', body);
     const token = await this.verificationService.createToken(
       {
         email: body.email,
@@ -43,6 +44,8 @@ export class AuthService {
     accessToken: string,
     pass: ActivateUser,
   ): Promise<UserBaseType> {
+    //console.log(' auth-servic accesstoken', accessToken);
+    //console.log(' auth-servic pass', pass);
     const extractUserEmail =
       await this.verificationService.decodeToken(accessToken);
 
@@ -51,6 +54,7 @@ export class AuthService {
     }
 
     const password = await bcrypt.hash(pass.password.toLowerCase().trim(), 5);
+    console.log(' auth-servic decode email', extractUserEmail);
 
     const updatedUser = await this.userModel.findOneAndUpdate(
       { email: extractUserEmail.email },
@@ -70,16 +74,13 @@ export class AuthService {
         'This email or password is wrong',
       );
     }
-
-    console.log('body', body.password);
-    console.log('user', user.password.trim());
+    // console.log('body', body.password);
+    //console.log('user', user.password.trim());
     const hashPassw = await bcrypt.compare(
       body.password.toLowerCase().trim(),
       user.password,
     );
-
-    console.log('passhash', hashPassw);
-
+    //console.log('passhash', hashPassw);
     if (!hashPassw) {
       throw new UnauthorizedException(
         'This email or password is wrong',

@@ -50,6 +50,7 @@ export class OrdersService {
     id: string,
     accessToken: string,
   ): Promise<string | HttpException> {
+    console.log('orders servise update token', accessToken);
     const { email } = await this.verificationService.decodeToken(accessToken);
     const order = await this.orderModel.findOne({ _id: id });
     const { _id } = await this.userService.userFindOneEmail(email); //user

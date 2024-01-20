@@ -23,17 +23,17 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({ isOpen, onRequestClose 
   const phoneRegExp = /^\+380\d{3}\d{2}\d{2}\d{2}$/;
 
   const schema = yup.object().shape({
-    name: yup.string().required("Ім'я є обов'язковим полем"),
+    name: yup.string().notRequired(),
     surname: yup.string().required("Прізвище є обов'язковим полем"),
     email: yup.string().email("Введіть правильний email").required("Email є обов'язковим полем"),
-    phone: yup.string().matches(phoneRegExp, 'Введіть телефон у форматі +380 00 000 00 00'),
-    groupName: yup.string().notRequired(),
+    phone: yup.string().notRequired().matches(phoneRegExp, 'Введіть телефон у форматі +380 00 000 00 00'),
+    groupName: yup.string(),
     age: yup.number().required("Введіть вік"),
-    course: yup.string(),
-    course_format: yup.string(),
-    course_type: yup.string(),
+    course: yup.string().notRequired(),
+    course_format: yup.string().notRequired(),
+    course_type: yup.string().notRequired(),
     status: yup.string().notRequired(),
-    sum: yup.number(),
+    sum: yup.number().notRequired(),
     alreadyPaid: yup.boolean().notRequired(),
     created_at: yup.string(),
   });
@@ -45,14 +45,14 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({ isOpen, onRequestClose 
 
 
   const onSubmit: SubmitHandler<any> = async (data) => {
-    console.log(data);
     if (orderActive.userId === null || orderActive.userId.toString() === me._id) {
       const dataFormat = { ...data, age: +data.age, already_paid: data.alreadyPaid };
       await orderService.updateOrder(orderActive._id, dataFormat);
+      dispatch(ordersActions.getOrderActive(orderActive._id));
       dispatch(ordersActions.setUpdateOrderTriger());
       onRequestClose();
     } else {
-      alert("You don't change this order");
+      toast.error("You don't change this order");
     }
   };
 

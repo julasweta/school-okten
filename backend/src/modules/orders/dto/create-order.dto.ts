@@ -14,25 +14,31 @@ export class CreateOrderDto {
   name: string;
 
   @IsString()
-  surname: string;
+  @IsOptional()
+  surname?: string;
 
   @IsEmail()
   email: string;
 
   @IsPhoneNumber()
-  phone: string;
+  @IsOptional()
+  phone?: string;
 
   @IsNumber()
-  age: number;
+  @IsOptional()
+  age?: number;
 
   @IsEnum(Course)
-  course: Course;
+  @IsOptional()
+  course?: Course;
 
   @IsEnum(CourseFormat)
-  course_format: CourseFormat;
+  @IsOptional()
+  course_format?: CourseFormat;
 
   @IsEnum(CourseType)
-  course_type: CourseType;
+  @IsOptional()
+  course_type?: CourseType;
 
   @IsOptional()
   @IsNumber()
@@ -43,7 +49,8 @@ export class CreateOrderDto {
   already_paid?: number;
 
   @IsString()
-  utm: string;
+  @IsOptional()
+  utm?: string;
 
   @IsOptional()
   @IsString()
@@ -58,5 +65,6 @@ export class CreateOrderDto {
   userId?: string | null | Types.ObjectId;
 
   @IsString()
+  @IsOptional()
   groupName?: string | null;
 }

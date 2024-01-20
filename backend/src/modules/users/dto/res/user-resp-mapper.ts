@@ -11,4 +11,10 @@ export class UserResponseMapper {
       token: data?.token,
     };
   }
+
+  static toResUsersArrayMapper(
+    users: Partial<UserBaseDto>[],
+  ): Partial<UserBaseDto>[] {
+    return users.map((user) => this.toResUserMapper(user));
+  }
 }
