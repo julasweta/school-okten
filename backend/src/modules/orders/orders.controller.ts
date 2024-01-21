@@ -28,7 +28,7 @@ export class OrdersController {
   }
 
   @ApiOperation({ summary: 'Get all orders' })
-  @Get('getAll')
+  @Get('all')
   getAllOrders() {
     return this.ordersService.getAllOrders();
   }

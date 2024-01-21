@@ -8,3 +8,7 @@ export interface IPaginationResponse<T> {
 export interface ActivateUser {
   password: string;
 }
+
+export interface RecoveryPassword {
+  email: string;
+}

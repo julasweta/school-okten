@@ -10,12 +10,12 @@ import { Users } from "../components/users";
 const Admin = () => {
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
   const { createdUser } = useAppSelector((state: RootState) => state.users);
-  const { orders, updateOrderTriger} = useAppSelector((state: RootState) => state.orders);
+  const { orders, updateOrderTriger } = useAppSelector((state: RootState) => state.orders);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(ordersActions.getOrders({ sort: 'DESC', limit: 0, page: 1, search: '', nameSortRow: '_id', nameSearchRow: '' }));
-  }, [updateOrderTriger,  dispatch]);
+  }, [updateOrderTriger, dispatch]);
 
 
   const openEditModal = () => {
@@ -41,13 +41,13 @@ const Admin = () => {
 
 
   return <div className="admin-page">
-    <button onClick={openEditModal} className="button create-field">Open Modal Create User</button>
+    <button onClick={openEditModal} className="button create-field">Create User</button>
     <UserCreateModal isOpen={isEditModalOpen} onRequestClose={closeEditModal} />
     {createdUser.token ? (<>  {showActivateLinkForUser()}</>) : ''}
     <div> total: {orders.length}</div>
     <div> inWork: {filterOrders('status', 'In work'.trim()).length}</div>
     <div> NEW: {filterOrders('status', null).length}</div>
-    <Users/>
+    <Users />
   </div>;
 };
 

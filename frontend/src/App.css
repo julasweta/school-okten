@@ -2,6 +2,8 @@
 *::before,
 *::after {
   box-sizing: border-box;
+  transition: background-color 2s ease;
+    /* 0.5s - тривалість, ease - функція плавності */
 }
 
 header {
@@ -305,6 +307,8 @@ select {
 .create-field {
   width: 80%;
   margin: 20px 0;
+    background: linear-gradient(90deg, #083241, #17b7c9);
+  box-shadow: -1px 1px 12px 1px #000000;
 }
 
 .check-box {
@@ -366,12 +370,23 @@ select {
 
 }
 
-
-.pointer:hover {
-  background-color: #a5adb1;
-  cursor: pointer;
+.red{
+  color:red
+}
+.green{
+  color:green;
+}
+.blue{
+  color:blue;
 }
 
+.pointer:hover {
+  background-color: #bec5c8;
+  cursor: pointer;
+}
+.user{
+  background-color: #6ad0db;
+}
 .user-property label {
   font-weight: bold;
   margin-right: 5px;
@@ -407,6 +422,9 @@ select {
 
 }
 
+.capitOne {
+  text-transform: capitalize;
+}
 
 .Toastify__toast-container--top-center {
   width: 80%;

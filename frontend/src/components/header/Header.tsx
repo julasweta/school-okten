@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { authActions } from "../../redux/slices/AuthSlice";
 import { authService } from "../../services/authService";
@@ -11,19 +11,25 @@ const Header = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { onCleanUtils } = useCleanrUtils();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
 
   useEffect(() => {
+    const token = searchParams.get('token');
     if (authService.getAccessToken() && !me) {
       dispatch(authActions.me());
-    }
-  }, [dispatch, me]);
+    } if (token !== null) {
+      navigate(`${AppRoutes.ACTIVATE}?token=${token}`);
+    } if (!authService.getAccessToken()) { navigate(AppRoutes.LOGIN); }
 
+  }, [dispatch, navigate, me]);
 
 
   const onLogout = async () => {
     await authService.logout();
     authActions.deleteMe();
-    navigate('auth/login');
+    onCleanUtils()
+    navigate('/auth/login');
   }
 
 

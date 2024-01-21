@@ -29,7 +29,7 @@ const OrdersTable: React.FC = () => {
   const onGetOrderActive = (orderId: string) => {
     dispatch(ordersActions.getOrderActive(orderId));
   };
-
+//write params
   useEffect(() => {
     dispatch(ordersActions.setActivePage(pageNumber));
     dispatch(ordersActions.getOrderActive(null));
@@ -50,7 +50,6 @@ const OrdersTable: React.FC = () => {
 
 
   useEffect(() => {
-    console.log('orders Table - searchValue', searchValue);
     dispatch(
       ordersActions.getOrders({
         sort: sort,
@@ -61,7 +60,7 @@ const OrdersTable: React.FC = () => {
         nameSearchRow: nameSearchRow,
       })
     );
-  }, [activePage, updateOrderTriger, searchValue, nameSortRow, sort, nameSearchRow, orderActive,  dispatch]);
+  }, [activePage, updateOrderTriger, searchValue, nameSortRow, sort, nameSearchRow, orderActive, dispatch]);
 
 
   const onSortRow = (column: string) => {

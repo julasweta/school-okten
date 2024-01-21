@@ -28,6 +28,7 @@ const orderService = {
       }`
     ),
 
+  getAll: (): IRes<Order[]> => apiService.get(urls.orders.all),
   getOrder: (id: string): IRes<any> => apiService.get(urls.orders.byId(id)),
   updateOrder: (id: string, data: EditOrderFormData): IRes<any> =>
     apiService.put(urls.orders.update(id), data),
@@ -36,7 +37,7 @@ const orderService = {
   getAllMessages: (orderId: string): Promise<IMessages> =>
     apiService.get(urls.orders.messagesAll, { params: { orderId } }),
   getAllGroups: (): IRes<IGroup[]> => apiService.get(urls.orders.groups),
-  createGroup: (title: {title: string}): IRes<void> =>
+  createGroup: (title: { title: string }): IRes<void> =>
     apiService.post(urls.orders.groupCreate, title),
 };
 

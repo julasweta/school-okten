@@ -20,7 +20,10 @@ import { UserRole } from '../users/interfaces/users.types';
 import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from '../../common/guards/role.guard';
 import { LogoutGuard } from '../../common/guards/logout.guard';
-import { ActivateUser } from '../../common/interfaces/IListRes';
+import {
+  ActivateUser,
+  RecoveryPassword,
+} from '../../common/interfaces/IListRes';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ParamsToken } from '../orders/dto/orders-params.dto';
 
@@ -35,6 +38,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Login' })
   @Post('login')
   async login(@Body() body: LoginRequestDto): Promise<any> {
+    console.log('auth controller login', body);
     return await this.authService.login(body);
   }
 
@@ -71,6 +75,15 @@ export class AuthController {
   ): Promise<Partial<UserBaseDto>> {
     //console.log('auth contr activate token', query.token);
     const user = await this.authService.activateUser(query.token, pass);
+    return user;
+  }
+
+  @ApiOperation({ summary: 'recovery Password' })
+  @Put('recovery')
+  async recoveryPassword(
+    @Body() email: RecoveryPassword,
+  ): Promise<Partial<string>> {
+    const user = await this.authService.recoveryPassword(email);
     return user;
   }
 

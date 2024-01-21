@@ -17,9 +17,15 @@ const authService = {
     return me;
   },
 
+  //додавання паролю по токену
   activateUser: (pass: string, token: string): IRes<IUser> =>
-    apiService.put(`${urls.auth.activate}?token=${token}`, {password:pass}),
+    apiService.put(`${urls.auth.activate}?token=${token}`, { password: pass }),
 
+  //створення нового паролю/відправляємо email, отримуємо токен, на сервері додаємо його до юзера, потім button *recovery password* змінюється на *activate*
+  recoveryPassword: (email: string): IRes<string> =>
+    apiService.put(`${urls.auth.recoveryPassword}`, { email: email }),
+
+  
   async logout(): Promise<any> {
     const res = await apiService.post(urls.auth.logout);
     localStorage.removeItem("accessToken");

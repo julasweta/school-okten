@@ -16,10 +16,8 @@ const SearchForm: React.FC = () => {
   const { onCleanUtils } = useCleanrUtils();
   let {isMe, ...updateValues} = getValues();
 
-  console.log(updateValues);
 
   useEffect(() => {
-
     Object.entries(updateValues).forEach(([key, item]) => {
       if (item) {
         dispatch(ordersActions.setIsChecked('off'));

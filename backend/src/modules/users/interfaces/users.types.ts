@@ -1,5 +1,5 @@
 export enum StatusUser {
-  ACTIVATE = 'active',
+  ACTIVATE = 'activate',
   INACTIVE = 'inactive',
   BAN = 'ban',
 }

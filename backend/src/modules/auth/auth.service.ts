@@ -17,7 +17,10 @@ import { User } from '../users/schema/user.schema';
 import { CreateUserReqDto } from '../users/dto/req/create-user-req-dto';
 import { CreateUserResType } from '../users/dto/res/create-user-res-dto.';
 import * as bcrypt from 'bcrypt';
-import { ActivateUser } from '../../common/interfaces/IListRes';
+import {
+  ActivateUser,
+  RecoveryPassword,
+} from '../../common/interfaces/IListRes';
 
 @Injectable()
 export class AuthService {
@@ -48,21 +51,37 @@ export class AuthService {
     //console.log(' auth-servic pass', pass);
     const extractUserEmail =
       await this.verificationService.decodeToken(accessToken);
-
     if (!pass) {
       throw new Error('Password is wrong');
     }
-
     const password = await bcrypt.hash(pass.password.toLowerCase().trim(), 5);
-    console.log(' auth-servic decode email', extractUserEmail);
-
+    //console.log(' auth-servic decode email', extractUserEmail);
     const updatedUser = await this.userModel.findOneAndUpdate(
       { email: extractUserEmail.email },
       { $set: { status: 'activate', password: password, token: null } },
       { new: true }, // Опція new повертає оновлений документ
     );
-
     return updatedUser;
+  }
+
+  async recoveryPassword(email: RecoveryPassword): Promise<string> {
+    const user = await this.userService.userFindOneEmail(email.email);
+    if (!user) {
+      throw new Error('User is not Found');
+    }
+    const token = await this.verificationService.createToken(
+      {
+        email: user.email,
+        type: 'access',
+      },
+      '30m',
+    );
+    const updatedUser = await this.userModel.findOneAndUpdate(
+      { email: user.email },
+      { $set: { token: token, status: 'inactive' } },
+      { new: true }, // Опція new повертає оновлений документ
+    );
+    return updatedUser.token;
   }
 
   async login(body: LoginRequestDto): Promise<any> {

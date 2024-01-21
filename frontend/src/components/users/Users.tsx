@@ -9,7 +9,7 @@ const Users: React.FC = () => {
   return (
     <div className="user-box">
       <h2>Users</h2>
-      { users.map(item => <UserInfo user={ item} />)}
+      { users.map((item, index )=> <UserInfo user={ item} key ={index} />)}
 
     </div>
   );
