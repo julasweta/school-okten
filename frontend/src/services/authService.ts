@@ -25,7 +25,6 @@ const authService = {
   recoveryPassword: (email: string): IRes<string> =>
     apiService.put(`${urls.auth.recoveryPassword}`, { email: email }),
 
-  
   async logout(): Promise<any> {
     const res = await apiService.post(urls.auth.logout);
     localStorage.removeItem("accessToken");

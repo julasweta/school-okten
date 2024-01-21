@@ -1,12 +1,12 @@
-import { Controller, Get, Body, Param, Put } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { Body, Controller, Get, Param, Put } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { CreateUserResType } from './dto/res/create-user-res-dto.';
-import { ActivateUserReqDto } from './dto/req/activate-user-dto';
-import { UserBaseDto } from './dto/user.base.dto';
-import { UserResponseMapper } from './dto/res/user-resp-mapper';
 import { RoleDecorator } from '../../common/decorators/role.decorator';
+import { ActivateUserReqDto } from './dto/req/activate-user-dto';
+import { CreateUserResType } from './dto/res/create-user-res-dto.';
+import { UserResponseMapper } from './dto/res/user-resp-mapper';
+import { UserBaseDto } from './dto/user.base.dto';
 import { UserRole } from './interfaces/users.types';
+import { UsersService } from './users.service';
 
 @ApiTags('Users')
 @Controller('users')

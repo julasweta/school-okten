@@ -1,15 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react";
+
 import { useAppDispatch } from "../../hooks/hooks";
-import { usersActions } from "../../redux/slices/UserSlices";
 import { IUser } from "../../interfaces";
+import { usersActions } from "../../redux/slices/UserSlices";
 
 interface UserNameProps {
-  id: string; 
+  id: string;
 }
 
-
 const UserName: React.FC<UserNameProps> = ({ id }) => {
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const dispatch = useAppDispatch();
 
   const memoizedName = useMemo(() => name, [name]);
@@ -24,7 +24,7 @@ const UserName: React.FC<UserNameProps> = ({ id }) => {
             setName(user.name);
           }
         } else {
-          setName('');
+          setName("");
         }
       } catch (error) {
         // Обробка помилок, якщо потрібно
@@ -39,4 +39,3 @@ const UserName: React.FC<UserNameProps> = ({ id }) => {
 };
 
 export { UserName };
-

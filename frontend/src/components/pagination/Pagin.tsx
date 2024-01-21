@@ -8,7 +8,9 @@ import { ordersActions } from "../../redux/slices/OrderSlices";
 
 const Pagin: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { itemsFound, activePage, searchValue, nameSearchRow } = useAppSelector((state: RootState) => state.orders);
+  const { itemsFound, activePage, searchValue, nameSearchRow } = useAppSelector(
+    (state: RootState) => state.orders,
+  );
   const limit = 15;
   const pageCount = Math.ceil(itemsFound / limit);
   const buttonsToShow = 10; //  скільки кнопок  навколо поточної сторінки.
@@ -18,46 +20,55 @@ const Pagin: React.FC = () => {
     const startPage = Math.max(1, activePage - Math.floor(buttonsToShow / 2));
     const endPage = Math.min(pageCount, startPage + buttonsToShow - 1);
 
-
     if (startPage > 1) {
       const onEllipsisBefore = () => {
         dispatch(ordersActions.setActivePage(activePage - 10));
-      }
-
+      };
 
       buttons.push(
-        <button key="ellipsis-before" className="button" disabled={false} onClick={onEllipsisBefore}>
+        <button
+          key="ellipsis-before"
+          className="button"
+          disabled={false}
+          onClick={onEllipsisBefore}
+        >
           ...
-        </button>
+        </button>,
       );
     }
 
     for (let i = startPage; i <= endPage; i++) {
       buttons.push(
-        <Link to={`${urls.orders.base}?page=${i}${searchValue ? `&search=${searchValue}` : ''}${nameSearchRow ? `&nameSearchRow=${nameSearchRow}` : ''}`
-        }
-          key={i}>
-          <button className={activePage === i ? 'button active-btn' : 'button'}>{i}</button>
-        </Link>
+        <Link
+          to={`${urls.orders.base}?page=${i}${searchValue ? `&search=${searchValue}` : ""}${nameSearchRow ? `&nameSearchRow=${nameSearchRow}` : ""}`}
+          key={i}
+        >
+          <button className={activePage === i ? "button active-btn" : "button"}>
+            {i}
+          </button>
+        </Link>,
       );
     }
 
     if (endPage < pageCount) {
       const onEllipsisAfter = () => {
         dispatch(ordersActions.setActivePage(activePage + 10));
-      }
+      };
 
       buttons.push(
-        <button key="ellipsis-after" className="button" disabled={false} onClick={onEllipsisAfter}>
+        <button
+          key="ellipsis-after"
+          className="button"
+          disabled={false}
+          onClick={onEllipsisAfter}
+        >
           ...
-        </button>
+        </button>,
       );
     }
 
     return buttons;
   };
-
-
 
   const onHead = () => {
     if (activePage > 2) {
@@ -73,18 +84,27 @@ const Pagin: React.FC = () => {
 
   return (
     <div>
-      <Link to={`${urls.orders.base}?page=${activePage > 1 ? (activePage - 1) : 1}${searchValue ? `&search=${searchValue}` : ''}${nameSearchRow ? `&nameSearchRow=${nameSearchRow}` : ''}`}>
-        <button onClick={onHead} className="button"> forward </button>
+      <Link
+        to={`${urls.orders.base}?page=${activePage > 1 ? activePage - 1 : 1}${searchValue ? `&search=${searchValue}` : ""}${nameSearchRow ? `&nameSearchRow=${nameSearchRow}` : ""}`}
+      >
+        <button onClick={onHead} className="button">
+          {" "}
+          forward{" "}
+        </button>
       </Link>
 
       {generateButtons()}
 
-      <Link to={`${urls.orders.base}?page=${activePage < pageCount ? (activePage + 1) : pageCount}${searchValue ? `&search=${searchValue}` : ''}${nameSearchRow ? `&nameSearchRow=${nameSearchRow}` : ''}`}>
-        <button onClick={onBack} className="button"> back </button>
+      <Link
+        to={`${urls.orders.base}?page=${activePage < pageCount ? activePage + 1 : pageCount}${searchValue ? `&search=${searchValue}` : ""}${nameSearchRow ? `&nameSearchRow=${nameSearchRow}` : ""}`}
+      >
+        <button onClick={onBack} className="button">
+          {" "}
+          back{" "}
+        </button>
       </Link>
     </div>
   );
 };
 
 export { Pagin };
-

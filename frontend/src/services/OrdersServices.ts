@@ -11,7 +11,7 @@ const orderService = {
     page: number,
     search: string,
     nameSortRow: string,
-    nameSearchRow: string
+    nameSearchRow: string,
   ): IRes<IPageInterface<Order>> =>
     apiService.get(
       `orders/getAllQuery?order=${sort}&limit=${limit}&page=${page}${
@@ -25,7 +25,7 @@ const orderService = {
         nameSearchRow !== undefined && nameSearchRow !== ""
           ? `&nameSearchRow=${nameSearchRow}`
           : ""
-      }`
+      }`,
     ),
 
   getAll: (): IRes<Order[]> => apiService.get(urls.orders.all),

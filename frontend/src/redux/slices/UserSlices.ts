@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { userService } from "../../services/UsersServices";
-import { IUser } from "../../interfaces";
 import { AxiosError } from "axios";
+
+import { IUser } from "../../interfaces";
+import { userService } from "../../services/UsersServices";
 
 interface UserState {
   users: IUser[];
@@ -35,11 +36,8 @@ const getAllUsers = createAsyncThunk<IUser[]>(
       const err = e as AxiosError;
       return rejectWithValue(err);
     }
-  }
+  },
 );
-
-
-
 
 const getUserById = createAsyncThunk<
   IUser,
@@ -59,17 +57,15 @@ const createUser = createAsyncThunk<IUser, IUser, { rejectValue: AxiosError }>(
   "usersSlice/createUser",
   async (data, { rejectWithValue }) => {
     try {
-      console.log('slice', data);
+      console.log("slice", data);
       const response = await userService.createUser(data);
       return response.data;
     } catch (e) {
       const err = e as AxiosError;
       return rejectWithValue(err);
     }
-  }
+  },
 );
-
-
 
 /*--------------------- SLICE--------------------  */
 

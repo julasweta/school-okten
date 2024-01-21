@@ -3,9 +3,9 @@ export interface Message {
   text: string;
   userId: string;
   orderId: string;
-  date: string; 
+  date: string;
 }
 
-export interface IMessages{
-  data: Message[]
+export interface IMessages {
+  data: Message[];
 }

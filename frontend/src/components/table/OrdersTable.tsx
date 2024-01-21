@@ -1,40 +1,46 @@
 // OrderTable.tsx
 import React, { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-import { RootState } from "../../redux/store";
-import { ordersActions } from "../../redux/slices/OrderSlices";
-import { Pagin } from "../pagination/Pagin";
 import { useLocation, useNavigate } from "react-router-dom";
-import { urls } from "../../constants/urls";
-import { UserName } from "../users/UserName";
-import { OrderForm } from "../forms/OrderForm";
+
 import { columns } from "../../constants/list.table";
-import { SearchForm } from "../forms/SearshForm";
-
-
-
+import { urls } from "../../constants/urls";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { ordersActions } from "../../redux/slices/OrderSlices";
+import { RootState } from "../../redux/store";
+import { OrderForm, SearchForm } from "../forms";
+import { Pagin } from "../pagination/Pagin";
+import { UserName } from "../users/UserName";
 
 const OrdersTable: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { orders, updateOrderTriger, orderActive, activePage, searchValue, nameSearchRow, addGroupTriger, sort } = useAppSelector((state: RootState) => state.orders);
-  const [nameSortRow, setNameRow] = useState('');
+  const {
+    orders,
+    updateOrderTriger,
+    orderActive,
+    activePage,
+    searchValue,
+    nameSearchRow,
+    addGroupTriger,
+    sort,
+  } = useAppSelector((state: RootState) => state.orders);
+  const [nameSortRow, setNameRow] = useState("");
   const searchParams = new URLSearchParams(location.search);
-  const searchParam = searchParams.get('search');
-  const nameSearchRowParam = searchParams.get('nameSearchRow');
-  const pageNumber = +searchParams.get('page') || 1;
+  const searchParam = searchParams.get("search");
+  const nameSearchRowParam = searchParams.get("nameSearchRow");
+  const pageNumber = +searchParams.get("page") || 1;
 
   const onGetOrderActive = (orderId: string) => {
     dispatch(ordersActions.getOrderActive(orderId));
   };
-//write params
+  //write params
   useEffect(() => {
     dispatch(ordersActions.setActivePage(pageNumber));
     dispatch(ordersActions.getOrderActive(null));
     dispatch(ordersActions.setSearchValue(searchParam));
-    dispatch(ordersActions.setSearchNameRow(nameSearchRowParam))
+    dispatch(ordersActions.setSearchNameRow(nameSearchRowParam));
   }, [searchParam, nameSearchRowParam, pageNumber, dispatch]);
 
   useEffect(() => {
@@ -45,9 +51,8 @@ const OrdersTable: React.FC = () => {
   }, [navigate]);
 
   useEffect(() => {
-    dispatch(ordersActions.getGroups())
+    dispatch(ordersActions.getGroups());
   }, [addGroupTriger, dispatch]);
-
 
   useEffect(() => {
     dispatch(
@@ -58,40 +63,50 @@ const OrdersTable: React.FC = () => {
         search: searchValue,
         nameSortRow: nameSortRow,
         nameSearchRow: nameSearchRow,
-      })
+      }),
     );
-  }, [activePage, updateOrderTriger, searchValue, nameSortRow, sort, nameSearchRow, orderActive, dispatch]);
-
+  }, [
+    activePage,
+    updateOrderTriger,
+    searchValue,
+    nameSortRow,
+    sort,
+    nameSearchRow,
+    orderActive,
+    dispatch,
+  ]);
 
   const onSortRow = (column: string) => {
-    dispatch(ordersActions.setSort(sort === 'DESC' ? 'ASC' : 'DESC'))
+    dispatch(ordersActions.setSort(sort === "DESC" ? "ASC" : "DESC"));
     setNameRow(column);
-  }
-
+  };
 
   const renderTableHeader = () => {
     return columns.map((column) => (
-      <th key={column} onClick={() => onSortRow(column)} title={`sort ` + column}>
+      <th
+        key={column}
+        onClick={() => onSortRow(column)}
+        title={`sort ` + column}
+      >
         {column}
       </th>
     ));
   };
-
 
   return (
     <div>
       <SearchForm />
       <table>
         <thead>
-          <tr>
-            {renderTableHeader()}
-          </tr>
+          <tr>{renderTableHeader()}</tr>
         </thead>
         <tbody>
           {orders.map((order) => (
             <React.Fragment key={order._id}>
-              <tr onClick={() => onGetOrderActive(order._id)} className={orderActive?._id === order._id ? 'focus' : ''}>
-
+              <tr
+                onClick={() => onGetOrderActive(order._id)}
+                className={orderActive?._id === order._id ? "focus" : ""}
+              >
                 <td>{order._id}</td>
                 <td>{order.name}</td>
                 <td>{order.surname}</td>
@@ -106,7 +121,9 @@ const OrdersTable: React.FC = () => {
                 <td>{order.alreadyPaid ? "Yes" : "No"}</td>
                 <td>{order.created_at}</td>
                 <td>{order.groupName}</td>
-                <td><UserName id={order.userId?.toString()} /></td>
+                <td>
+                  <UserName id={order.userId?.toString()} />
+                </td>
                 {/* Додати інші стовпці за потребою */}
               </tr>
               {orderActive?._id === order._id && (
@@ -126,6 +143,3 @@ const OrdersTable: React.FC = () => {
 };
 
 export { OrdersTable };
-
-
-

@@ -17,10 +17,10 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"const body = JSON.parse(responseBody);\r",
+									"const body = pm.response.json();\r",
 									"\r",
-									"pm.environment.set('accessTokenSchool', body.accessToken);\r",
-									"pm.environment.set('refreshTokenSchool', body.refreshToken);"
+									"pm.globals.set('accessTokenSchool', body.accessToken);\r",
+									"pm.globals.set('refreshTokenSchool', body.refreshToken);"
 								],
 								"type": "text/javascript"
 							}
@@ -74,7 +74,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"admin@gmail.com\",\r\n    \"password\": \"admin\"\r\n}",
+							"raw": "{\"email\": \"manager2@gmail.com\",\r\n    \"password\": \"J1234567j@\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -97,7 +97,7 @@
 					"response": []
 				},
 				{
-					"name": "refresh Copy",
+					"name": "refresh",
 					"event": [
 						{
 							"listen": "test",
@@ -105,8 +105,8 @@
 								"exec": [
 									"const body = JSON.parse(responseBody);\r",
 									"\r",
-									"pm.environment.set('accessTokenSchool', body.accessToken);\r",
-									"pm.environment.set('refreshTokenSchool', body.refreshToken);"
+									"pm.globals.set('accessTokenSchool', body.accessToken);\r",
+									"pm.globals.set('refreshTokenSchool', body.refreshToken);"
 								],
 								"type": "text/javascript"
 							}
@@ -170,7 +170,7 @@
 								"exec": [
 									"const body = JSON.parse(responseBody);\r",
 									"\r",
-									"pm.environment.set('RegisterAccessTokenSchool', body.token);"
+									"pm.globals.set('RegisterAccessTokenSchool', body.token);"
 								],
 								"type": "text/javascript"
 							}
@@ -191,7 +191,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"admi54217@gmail.com\",\r\n  \"name\": \"admin2\",\r\n  \"surName\": \"admin\",\r\n  \"role\": \"admin\"\r\n}",
+							"raw": "{\r\n  \"email\": \"julashop@ukr.net\",\r\n  \"name\": \"managershop\",\r\n  \"surName\": \"admin\",\r\n  \"role\": \"admin\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -217,22 +217,93 @@
 				{
 					"name": "Activate User",
 					"request": {
-						"method": "GET",
-						"header": []
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"J1234567j@\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/activate?token={{RegisterAccessTokenSchool}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"activate"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{RegisterAccessTokenSchool}}"
+								}
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "me",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessTokenSchool}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
-						"header": []
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/me",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"me"
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "logout",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessTokenSchool}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"url": {
@@ -261,7 +332,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/users/658498b0cd0f53e6865c03fa",
+							"raw": "http://localhost:3000/users/{{UserSchool}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -269,7 +340,7 @@
 							"port": "3000",
 							"path": [
 								"users",
-								"658498b0cd0f53e6865c03fa"
+								"{{UserSchool}}"
 							]
 						}
 					},
@@ -278,8 +349,46 @@
 				{
 					"name": "Ban User and UnBan",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3MDU3OTI3NTcsImV4cCI6MTcwNTc5NjM1N30.Rm9_Edx5PxC2w6mOWH8VZx6EmXSzr9PdIWH8UGAhXw8",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
-						"header": []
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"status\": \"ban\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/users/ban/{{UserSchool}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"ban",
+								"{{UserSchool}}"
+							]
+						}
 					},
 					"response": []
 				},
@@ -368,7 +477,7 @@
 					"response": []
 				},
 				{
-					"name": "all Orders",
+					"name": "get All With Params",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -385,7 +494,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/orders/getAllQuery?limit=2&search=olena&page=3&order=DESC",
+							"raw": "http://localhost:3000/orders/getAllQuery?limit=2&nameSearchRow=name&search=olena&order=DESC",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -406,9 +515,8 @@
 									"value": "2"
 								},
 								{
-									"key": "created_at",
-									"value": "2023-11-16",
-									"disabled": true
+									"key": "nameSearchRow",
+									"value": "name"
 								},
 								{
 									"key": "search",
@@ -416,7 +524,8 @@
 								},
 								{
 									"key": "page",
-									"value": "3"
+									"value": "3",
+									"disabled": true
 								},
 								{
 									"key": "order",
@@ -429,6 +538,26 @@
 				},
 				{
 					"name": "Get Order By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/orders/{{IdOrderShool}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"orders",
+								"{{IdOrderShool}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get All",
 					"request": {
 						"method": "GET",
 						"header": []
@@ -484,7 +613,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/groups/delete/{{IdGroup}}",
+							"raw": "http://localhost:3000/groups/delete/{{GroupId}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -493,7 +622,7 @@
 							"path": [
 								"groups",
 								"delete",
-								"{{IdGroup}}"
+								"{{GroupId}}"
 							]
 						}
 					},
@@ -503,7 +632,18 @@
 					"name": "get Groups",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/groups",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"groups"
+							]
+						}
 					},
 					"response": []
 				}
@@ -529,7 +669,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"text\": \"comment 1\",\r\n    \"userId\": \"65860287d27048e6d520166e\",\r\n    \"orderId\": \"658f619ddecbf7baff16bf15\"\r\n}",
+							"raw": "{\r\n    \"text\": \"comment 1\",\r\n    \"userId\": \"65860287d27048e6d520166e\",\r\n    \"orderId\":\"659d7dad8f6802d42ee8538d\" \r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -554,7 +694,19 @@
 					"name": "get All Messages",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/messages/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"messages",
+								"all"
+							]
+						}
 					},
 					"response": []
 				},

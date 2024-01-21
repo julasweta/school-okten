@@ -6,4 +6,3 @@ export interface IUser {
   status: string;
   token?: string;
 }
-

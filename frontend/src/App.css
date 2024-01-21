@@ -3,7 +3,7 @@
 *::after {
   box-sizing: border-box;
   transition: background-color 2s ease;
-    /* 0.5s - тривалість, ease - функція плавності */
+  /* 0.5s - тривалість, ease - функція плавності */
 }
 
 header {
@@ -35,7 +35,7 @@ header a {
 }
 
 .logo {
-  font-family: 'Pacifico', cursive;
+  font-family: "Pacifico", cursive;
   font-size: 28px;
   font-weight: bold;
   letter-spacing: 1px;
@@ -50,7 +50,7 @@ header a {
 }
 
 .admin-button {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -147,14 +147,15 @@ tbody td {
   position: relative;
   overflow: hidden;
   background: linear-gradient(90deg, #3498db, #2980b9);
-  transition: background 0.5s, color 0.5s;
+  transition:
+    background 0.5s,
+    color 0.5s;
 }
 
 .button:hover {
   background: linear-gradient(90deg, #fff, #3498db);
   color: #0a314a;
 }
-
 
 .active-btn {
   background: linear-gradient(90deg, #ef0707, #2980b9);
@@ -170,7 +171,6 @@ ul li {
   padding: 0;
   margin: 0;
   list-style: none;
-
 }
 
 .disabled {
@@ -286,7 +286,9 @@ select {
   overflow: hidden;
   background: linear-gradient(90deg, #e74c3c, #c0392b);
   /* Червоний градієнт для фону */
-  transition: background 0.5s, color 0.5s;
+  transition:
+    background 0.5s,
+    color 0.5s;
   width: 150px;
   height: 40px;
   margin-left: 20%;
@@ -307,7 +309,7 @@ select {
 .create-field {
   width: 80%;
   margin: 20px 0;
-    background: linear-gradient(90deg, #083241, #17b7c9);
+  background: linear-gradient(90deg, #083241, #17b7c9);
   box-shadow: -1px 1px 12px 1px #000000;
 }
 
@@ -322,7 +324,7 @@ select {
   appearance: none;
   width: 2%;
   height: 30px;
-  border: 2px solid #4CAF50;
+  border: 2px solid #4caf50;
   border-radius: 8px;
   background-color: white;
   margin-right: 5px;
@@ -331,7 +333,7 @@ select {
 }
 
 .check-box input[type="checkbox"]:checked::before {
-  content: '\2713';
+  content: "\2713";
   /* код для галочки (Unicode) */
   font-size: 18px;
   /* розмір галочки */
@@ -354,7 +356,6 @@ select {
   width: 10%;
 }
 
-
 /* USER */
 .user-details {
   max-width: 400px;
@@ -367,24 +368,23 @@ select {
 
 .user-property {
   margin-bottom: 10px;
-
 }
 
-.red{
-  color:red
+.red {
+  color: red;
 }
-.green{
-  color:green;
+.green {
+  color: green;
 }
-.blue{
-  color:blue;
+.blue {
+  color: blue;
 }
 
 .pointer:hover {
   background-color: #bec5c8;
   cursor: pointer;
 }
-.user{
+.user {
   background-color: #6ad0db;
 }
 .user-property label {
@@ -392,7 +392,7 @@ select {
   margin-right: 5px;
 }
 
-.user-property span{
+.user-property span {
   color: #333;
   display: block;
   word-wrap: break-word;
@@ -405,9 +405,9 @@ select {
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    flex-direction: column;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  flex-direction: column;
 }
 
 .user-info {
@@ -416,10 +416,9 @@ select {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   width: 100%;
 }
-.user-buttons{
+.user-buttons {
   display: flex;
   justify-content: space-around;
-
 }
 
 .capitOne {

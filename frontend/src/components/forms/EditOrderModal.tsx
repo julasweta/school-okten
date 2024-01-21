@@ -1,32 +1,49 @@
-import React, { useEffect, useState } from "react";
-import Modal from "react-modal";
-import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-import { RootState } from "../../redux/store";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { orderService } from "../../services/OrdersServices";
-import { ordersActions } from "../../redux/slices/OrderSlices";
-import { Course, CourseFormat, CourseType, EditOrderFormData, EditOrderModalProps, StatusWork } from "../../interfaces";
 import { yupResolver } from "@hookform/resolvers/yup";
+import React, { useEffect, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import Modal from "react-modal";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import * as yup from "yup";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import {
+  Course,
+  CourseFormat,
+  CourseType,
+  EditOrderFormData,
+  EditOrderModalProps,
+  StatusWork,
+} from "../../interfaces";
+import { ordersActions } from "../../redux/slices/OrderSlices";
+import { RootState } from "../../redux/store";
+import { orderService } from "../../services/OrdersServices";
 
-const EditOrderModal: React.FC<EditOrderModalProps> = ({ isOpen, onRequestClose }) => {
+const EditOrderModal: React.FC<EditOrderModalProps> = ({
+  isOpen,
+  onRequestClose,
+}) => {
   const dispatch = useAppDispatch();
-  const { orderActive, groups, addGroupTriger } = useAppSelector((state: RootState) => state.orders);
+  const { orderActive, groups, addGroupTriger } = useAppSelector(
+    (state: RootState) => state.orders,
+  );
   const { me } = useAppSelector((state: RootState) => state.auth);
-  const [groupName, setGroupName] = useState('');
-  const [groupSelect, setGroupSelect] = useState('add');
-
+  const [groupName, setGroupName] = useState("");
+  const [groupSelect, setGroupSelect] = useState("add");
 
   const phoneRegExp = /^\+380\d{3}\d{2}\d{2}\d{2}$/;
 
   const schema = yup.object().shape({
     name: yup.string().notRequired(),
     surname: yup.string().required("Прізвище є обов'язковим полем"),
-    email: yup.string().email("Введіть правильний email").required("Email є обов'язковим полем"),
-    phone: yup.string().notRequired().matches(phoneRegExp, 'Введіть телефон у форматі +380 00 000 00 00'),
+    email: yup
+      .string()
+      .email("Введіть правильний email")
+      .required("Email є обов'язковим полем"),
+    phone: yup
+      .string()
+      .notRequired()
+      .matches(phoneRegExp, "Введіть телефон у форматі +380 00 000 00 00"),
     groupName: yup.string(),
     age: yup.number().required("Введіть вік"),
     course: yup.string().notRequired(),
@@ -38,15 +55,25 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({ isOpen, onRequestClose 
     created_at: yup.string(),
   });
 
-
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
     resolver: yupResolver(schema),
   });
 
-
   const onSubmit: SubmitHandler<any> = async (data) => {
-    if (orderActive.userId === null || orderActive.userId.toString() === me._id) {
-      const dataFormat = { ...data, age: +data.age, already_paid: data.alreadyPaid };
+    if (
+      orderActive.userId === null ||
+      orderActive.userId.toString() === me._id
+    ) {
+      const dataFormat = {
+        ...data,
+        age: +data.age,
+        already_paid: data.alreadyPaid,
+      };
       await orderService.updateOrder(orderActive._id, dataFormat);
       dispatch(ordersActions.getOrderActive(orderActive._id));
       dispatch(ordersActions.setUpdateOrderTriger());
@@ -65,34 +92,31 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({ isOpen, onRequestClose 
   }, [orderActive, setValue]);
 
   useEffect(() => {
-    Modal.setAppElement('.modal');
+    Modal.setAppElement(".modal");
   }, []);
 
   useEffect(() => {
-    dispatch(ordersActions.getGroups())
+    dispatch(ordersActions.getGroups());
   }, [addGroupTriger, dispatch]);
 
-
   const onAddGroup = (group: string) => {
-    setGroupSelect('add');
-    const isGroup = groups.filter(item => item.title === group);
+    setGroupSelect("add");
+    const isGroup = groups.filter((item) => item.title === group);
 
     if (isGroup.length < 1) {
       dispatch(ordersActions.setaddGroupTriger());
       orderService.createGroup({ title: group });
       toast.success(`Group ${group.toUpperCase()}  was created `);
     } else {
-      setGroupSelect('add');
-      toast.error('This group already exists!');
+      setGroupSelect("add");
+      toast.error("This group already exists!");
     }
   };
 
-
-
   const onSelectGroup = (group: string) => {
-    dispatch(ordersActions.setaddGroupTriger())
-    setGroupSelect('select')
-  }
+    dispatch(ordersActions.setaddGroupTriger());
+    setGroupSelect("select");
+  };
 
   const renderFormFields = () => {
     if (!orderActive) {
@@ -101,13 +125,24 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({ isOpen, onRequestClose 
 
     return Object.entries(orderActive).map(([key, value]) => (
       <div key={key as string} className="modal-item">
-        {(key !== "userId" && key !== "msg") && (
+        {key !== "userId" && key !== "msg" && (
           <>
             <label htmlFor={key as string}>{key}:</label>
-            {(key === "course" || key === "course_format" || key === "course_type" || key === "status") ? (
+            {key === "course" ||
+            key === "course_format" ||
+            key === "course_type" ||
+            key === "status" ? (
               <div className="select-wrapper">
                 <select {...register(key as keyof EditOrderFormData)}>
-                  {Object.values((key === "course" ? Course : key === "course_format" ? CourseFormat : key === "course_type" ? CourseType : StatusWork)).map((option) => (
+                  {Object.values(
+                    key === "course"
+                      ? Course
+                      : key === "course_format"
+                        ? CourseFormat
+                        : key === "course_type"
+                          ? CourseType
+                          : StatusWork,
+                  ).map((option) => (
                     <option key={option} value={option}>
                       {option}
                     </option>
@@ -118,23 +153,59 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({ isOpen, onRequestClose 
               <>
                 {key === "groupName" ? (
                   <div className="group-name-wrapper">
-                    {groupSelect === 'select' ? (
+                    {groupSelect === "select" ? (
                       <>
-                        <select {...register(key as keyof EditOrderFormData)} onChange={(e) => setGroupName(e.target.value)}>
+                        <select
+                          {...register(key as keyof EditOrderFormData)}
+                          onChange={(e) => setGroupName(e.target.value)}
+                        >
                           {groups.map((group) => (
                             <option key={group._id} value={group.title}>
                               {group.title}
                             </option>
                           ))}
                         </select>
-                        <button type="button" className="button" onClick={() => onSelectGroup(groupName)}> Select group </button>
-                        <button type="button" className="button" onClick={() => onAddGroup(groupName)}> Add group </button>
+                        <button
+                          type="button"
+                          className="button"
+                          onClick={() => onSelectGroup(groupName)}
+                        >
+                          {" "}
+                          Select group{" "}
+                        </button>
+                        <button
+                          type="button"
+                          className="button"
+                          onClick={() => onAddGroup(groupName)}
+                        >
+                          {" "}
+                          Add group{" "}
+                        </button>
                       </>
                     ) : (
                       <>
-                        <input type="text" {...register(key as keyof EditOrderFormData)} value={groupName || ''} onChange={(e) => setGroupName(e.target.value)} />
-                        <button type="button" className="button" onClick={() => onAddGroup(groupName)}> Add group </button>
-                        <button type="button" className="button" onClick={() => onSelectGroup(groupName)}> Select group </button>
+                        <input
+                          type="text"
+                          {...register(key as keyof EditOrderFormData)}
+                          value={groupName || ""}
+                          onChange={(e) => setGroupName(e.target.value)}
+                        />
+                        <button
+                          type="button"
+                          className="button"
+                          onClick={() => onAddGroup(groupName)}
+                        >
+                          {" "}
+                          Add group{" "}
+                        </button>
+                        <button
+                          type="button"
+                          className="button"
+                          onClick={() => onSelectGroup(groupName)}
+                        >
+                          {" "}
+                          Select group{" "}
+                        </button>
                       </>
                     )}
                   </div>
@@ -146,7 +217,9 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({ isOpen, onRequestClose 
 
             {/* Показати повідомлення про помилку валідації, якщо є */}
             {errors[key as keyof EditOrderFormData] && (
-              <p className="error-message">{String(errors[key as keyof EditOrderFormData].message)}</p>
+              <p className="error-message">
+                {String(errors[key as keyof EditOrderFormData].message)}
+              </p>
             )}
           </>
         )}
@@ -154,13 +227,18 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({ isOpen, onRequestClose 
     ));
   };
 
-
-
   return (
     <div className="modal">
-      <Modal isOpen={isOpen} onRequestClose={onRequestClose} contentLabel="Edit Order Modal">
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={onRequestClose}
+        contentLabel="Edit Order Modal"
+      >
         <h2>Edit Order</h2>
-        <form onSubmit={handleSubmit(onSubmit, (errors) => console.log(errors))} className="form-modal">
+        <form
+          onSubmit={handleSubmit(onSubmit, (errors) => console.log(errors))}
+          className="form-modal"
+        >
           {renderFormFields()}
           <button type="submit">Save Changes</button>
         </form>
@@ -174,5 +252,3 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({ isOpen, onRequestClose 
 };
 
 export { EditOrderModal };
-
-

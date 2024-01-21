@@ -14,7 +14,7 @@ const urls = {
     messagesAll: `${messages}/all`,
     groups: groups,
     groupCreate: `${groups}/create`,
-    all: `${orders}/all`
+    all: `${orders}/all`,
   },
   auth: {
     login: "auth/login",
@@ -23,7 +23,7 @@ const urls = {
     me: `${auth}/me`,
     logout: `auth/logout`,
     activate: `${auth}/activate`,
-    recoveryPassword: `${auth}/recovery`
+    recoveryPassword: `${auth}/recovery`,
   },
   users: {
     byId: (id: string): string => `${users}/${id}`,

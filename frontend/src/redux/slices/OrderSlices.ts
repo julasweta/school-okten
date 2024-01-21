@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { Message, Order } from "../../interfaces";
-import { orderService } from "../../services/OrdersServices";
 import { AxiosError } from "axios";
-import { IPageInterface } from "../../interfaces/IPaginationOrder";
+
+import { Message, Order } from "../../interfaces";
 import { IGroup } from "../../interfaces/IGroup";
+import { IPageInterface } from "../../interfaces/IPaginationOrder";
+import { orderService } from "../../services/OrdersServices";
 
 interface OrderState {
   orders: Order[];
@@ -15,7 +16,7 @@ interface OrderState {
   activePage: number;
   searchValue: string;
   nameSearchRow: string;
-  groups: IGroup[],
+  groups: IGroup[];
   addGroupTriger: boolean;
   isChecked: string;
   sort: string;
@@ -33,8 +34,8 @@ const initialState: OrderState = {
   nameSearchRow: "",
   groups: [],
   addGroupTriger: true,
-  isChecked: 'off',
-  sort: 'DESC',
+  isChecked: "off",
+  sort: "DESC",
 };
 
 /*-----------------AsyncThunk -------------------------------  */
@@ -53,17 +54,16 @@ const getOrders = createAsyncThunk<
   "ordersSlice/getOrders",
   async (
     { sort, limit, page, search, nameSortRow, nameSearchRow },
-    { rejectWithValue }
+    { rejectWithValue },
   ) => {
     try {
-
       const { data } = await orderService.getOrders(
         sort,
         limit,
         page,
-        search ? search.trim():'',
+        search ? search.trim() : "",
         nameSortRow,
-        nameSearchRow? nameSearchRow : ''
+        nameSearchRow ? nameSearchRow : "",
       );
 
       return data;
@@ -71,10 +71,8 @@ const getOrders = createAsyncThunk<
       const err = e as AxiosError;
       return rejectWithValue(err);
     }
-  }
+  },
 );
-
-
 
 const getOrderActive = createAsyncThunk<
   Order,
@@ -95,7 +93,7 @@ const getMessagesAll = createAsyncThunk(
   async (orderId: string, { rejectWithValue }) => {
     try {
       const response = await orderService.getAllMessages(orderId);
-      const data = response.data; 
+      const data = response.data;
 
       const dataFilter = data.filter((item) => item.orderId === orderId);
 
@@ -104,25 +102,21 @@ const getMessagesAll = createAsyncThunk(
       const err = e as AxiosError;
       return rejectWithValue(err);
     }
-  }
+  },
 );
 
 export const getGroups = createAsyncThunk<IGroup[], void>(
   "ordersSlice/getGroups",
   async (_, { rejectWithValue }) => {
     try {
-      const {data} = await orderService.getAllGroups();
+      const { data } = await orderService.getAllGroups();
       return data;
     } catch (e) {
       const err = e as AxiosError;
       return rejectWithValue(err);
     }
-  }
+  },
 );
-
-
-
-
 
 /*--------------------- SLICE--------------------  */
 

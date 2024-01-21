@@ -2,10 +2,9 @@ import { IUser } from "../../interfaces";
 
 interface UserProps {
   user: IUser;
-} 
+}
 
 const User: React.FC<UserProps> = ({ user }) => {
-
   return (
     <div className="user-details">
       <h2>Created User Details</h2>
@@ -19,4 +18,4 @@ const User: React.FC<UserProps> = ({ user }) => {
   );
 };
 
-export {User}
+export { User };

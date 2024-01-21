@@ -6,5 +6,5 @@ export const AppRoutes = {
   REGISTER: "register",
   ADMIN: "admin",
   USERS: "users",
-  ACTIVATE: "/auth/activate"
+  ACTIVATE: "/auth/activate",
 };

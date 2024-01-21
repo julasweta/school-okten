@@ -5,8 +5,9 @@ import {
   isRejected,
 } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import { authService } from "../../services/authService";
+
 import { IAuth, IReg, IUser } from "../../interfaces";
+import { authService } from "../../services/authService";
 
 interface AuthState {
   deleteTriger: boolean;

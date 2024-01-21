@@ -1,10 +1,10 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../hooks/hooks';
-import { authService } from '../../services/authService';
-import { ToastContainer, toast } from 'react-toastify';
-import { AppRoutes } from '../../routing/AppRoutes';
+import React from "react";
+import { useForm } from "react-hook-form";
+
+import { useLocation, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import { AppRoutes } from "../../routing/AppRoutes";
+import { authService } from "../../services/authService";
 
 interface FormData {
   password: string;
@@ -18,17 +18,16 @@ const Activate: React.FC = () => {
 
   // Отримати токен з браузерного рядка
   const urlParams = new URLSearchParams(location.search);
-  const tokenFromURL = urlParams.get('token') || '';
+  const tokenFromURL = urlParams.get("token") || "";
 
   const onSubmit = async (data: FormData) => {
     try {
       await authService.activateUser(data.password, tokenFromURL);
       navigate(AppRoutes.LOGIN);
     } catch (error) {
-      toast.error('Error activating user:', error);
+      toast.error("Error activating user:", error);
     }
   };
-
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -37,14 +36,15 @@ const Activate: React.FC = () => {
         <input
           type="password"
           name="password"
-          placeholder='password'
-          {...register('password', { required: 'Password is required' })}
+          placeholder="password"
+          {...register("password", { required: "Password is required" })}
         />
-        {formState.errors.password && <p>{formState.errors.password.message}</p>}
+        {formState.errors.password && (
+          <p>{formState.errors.password.message}</p>
+        )}
         <button type="submit">Submit</button>
       </div>
-      <ToastContainer/>
-
+      <ToastContainer />
     </form>
   );
 };

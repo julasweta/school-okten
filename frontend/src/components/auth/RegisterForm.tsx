@@ -1,9 +1,9 @@
-import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useAppSelector, useAppDispatch } from "../../hooks/hooks";
-import { authActions } from "../../redux/slices/AuthSlice";
 import { useNavigate } from "react-router-dom";
+
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { IReg } from "../../interfaces/IRegister";
+import { authActions } from "../../redux/slices/AuthSlice";
 import { RootState } from "../../redux/store";
 
 const RegisterForm = () => {
@@ -18,8 +18,9 @@ const RegisterForm = () => {
       meta: { requestStatus },
     } = await dispatch(authActions.register({ user }));
     if (requestStatus === "fulfilled") {
-      activePage ?
-        navigate(`/orders?${activePage}`) : navigate(`/orders?page=1`);
+      activePage
+        ? navigate(`/orders?${activePage}`)
+        : navigate(`/orders?page=1`);
     }
   };
 
@@ -34,7 +35,7 @@ const RegisterForm = () => {
         <button>register</button>
         <p></p>
         {errors?.response.data.username ===
-          "user model with this username already exists." ? (
+        "user model with this username already exists." ? (
           <p> Імя вже зареєстровано</p>
         ) : (
           ""
