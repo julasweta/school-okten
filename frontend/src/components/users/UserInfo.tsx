@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-import { IUser, Order } from "../../interfaces";
+import { IUser, Order, StatusWork } from "../../interfaces";
 import { usersActions } from "../../redux/slices/UserSlices";
 import { RootState } from "../../redux/store";
 import { authService, orderService, userService } from "../../services";
@@ -36,13 +36,9 @@ const UserInfo: React.FC<UserProps> = ({ user }) => {
     getOrdersAsync();
   }, []);
 
-  const inWork = () => {
-    console.log(' myOrders do', myOrders);
+  const inWork = (status: StatusWork) => {
     const res =
-      myOrders && myOrders.filter((item) => item.status === "In work");
-    console.log('res',res);
-    console.log(' myOrders', myOrders);
-
+      myOrders && myOrders.filter((item) => item.status === status);
     return res;
   };
 
@@ -71,38 +67,38 @@ const UserInfo: React.FC<UserProps> = ({ user }) => {
     >
       {isOpen
         ? Object.entries(user).map(
-            ([key, value]) =>
-              key === "name" && (
-                <div className="user" key={key}>
-                  <label className="capitOne">{key}: </label>
-                  <span className="capitOne">{value}</span>
-                </div>
-              ),
-          )
-        : Object.entries(user).map(([key, value]) => (
-            <div className="user" key={key}>
-              <div>
-                <label
-                  className={key === "status" ? "capitOne green" : "capitOne"}
-                >
-                  {key}:{" "}
-                </label>
-                <span
-                  className={
-                    value === "activate"
-                      ? "capitOne green"
-                      : value === "ban"
-                        ? "capitOne red"
-                        : value === "inactive"
-                          ? "capitOne blue"
-                          : "capitOne"
-                  }
-                >
-                  {value}
-                </span>
+          ([key, value]) =>
+            key === "name" && (
+              <div className="user" key={key}>
+                <label className="capitOne">{key}: </label>
+                <span className="capitOne">{value}</span>
               </div>
+            ),
+        )
+        : Object.entries(user).map(([key, value]) => (
+          <div className="user" key={key}>
+            <div>
+              <label
+                className={key === "status" ? "capitOne green" : "capitOne"}
+              >
+                {key}:{" "}
+              </label>
+              <span
+                className={
+                  value === "activate"
+                    ? "capitOne green"
+                    : value === "ban"
+                      ? "capitOne red"
+                      : value === "inactive"
+                        ? "capitOne blue"
+                        : "capitOne"
+                }
+              >
+                {value}
+              </span>
             </div>
-          ))}
+          </div>
+        ))}
       <hr></hr>
       <div>
         {" "}
@@ -110,8 +106,20 @@ const UserInfo: React.FC<UserProps> = ({ user }) => {
       </div>
       <div>
         {" "}
-        <b>Orders InWork: </b> {inWork().length}
+        <b>Orders InWork: </b> {inWork(StatusWork.InWork).length}
       </div>
+      {inWork(StatusWork.Aggre).length ? <div>
+        <b>Orders {StatusWork.Aggre} </b> {inWork(StatusWork.Aggre).length}
+      </div> : ''}
+      {inWork(StatusWork.Disaggre).length ? <div>
+        <b>Orders {StatusWork.Disaggre} </b> {inWork(StatusWork.Disaggre).length}
+      </div> : ''}
+      {inWork(StatusWork.Dubbing).length ? <div>
+        <b>Orders {StatusWork.Dubbing} </b> {inWork(StatusWork.Dubbing).length}
+      </div> : ''}
+      {inWork(StatusWork.New).length ? <div>
+        <b>Orders {StatusWork.New} </b> {inWork(StatusWork.New).length}
+      </div> : ''}
       <div className="user-buttons">
         {!isOpen && (
           <button className="button" onClick={() => setIsOpen(!isOpen)}>
