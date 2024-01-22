@@ -1,21 +1,22 @@
+import * as yup from 'yup';
 export interface EditOrderModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
 }
 
 export interface EditOrderFormData {
-  name: string;
-  surname: string;
-  email: string;
-  phone: string;
-  age: number;
-  course: Course;
-  course_format: CourseFormat;
-  course_type: CourseType;
-  status: StatusWork;
-  sum: number;
-  alreadyPaid: boolean;
-  created_at: string;
+  name?: string;
+  surname?: string;
+  email?: string;
+  phone?: string;
+  age?: number;
+  course?: Course;
+  course_format?: CourseFormat;
+  course_type?: CourseType;
+  status?: StatusWork;
+  sum?: number;
+  alreadyPaid?: boolean;
+  created_at?: string;
 }
 
 export enum StatusWork {
@@ -35,6 +36,7 @@ export enum Course {
   PCX = "PCX",
 }
 
+
 export enum CourseType {
   PRO = "pro",
   MINIMAL = "minimal",
@@ -42,6 +44,7 @@ export enum CourseType {
   INCUBATOR = "incubator",
   VIP = "vip",
 }
+
 
 export enum CourseFormat {
   STATIC = "static",

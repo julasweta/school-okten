@@ -1,5 +1,5 @@
 import { urls } from "../constants/urls";
-import { EditOrderFormData, IMessages, Order } from "../interfaces";
+import { EditOrderFormData, IMessages, Message, Order } from "../interfaces";
 import { IGroup } from "../interfaces/IGroup";
 import { IPageInterface } from "../interfaces/IPaginationOrder";
 import { IRes, apiService } from "./ApiServices";
@@ -29,10 +29,10 @@ const orderService = {
     ),
 
   getAll: (): IRes<Order[]> => apiService.get(urls.orders.all),
-  getOrder: (id: string): IRes<any> => apiService.get(urls.orders.byId(id)),
-  updateOrder: (id: string, data: EditOrderFormData): IRes<any> =>
+  getOrder: (id: string): IRes<Order> => apiService.get(urls.orders.byId(id)),
+  updateOrder: (id: string, data: Partial<EditOrderFormData>): IRes<Order> =>
     apiService.put(urls.orders.update(id), data),
-  createMessage: (data: object): IRes<any> =>
+  createMessage: (data: object): IRes<Message> =>
     apiService.post(urls.orders.messages, data),
   getAllMessages: (orderId: string): Promise<IMessages> =>
     apiService.get(urls.orders.messagesAll, { params: { orderId } }),

@@ -25,7 +25,7 @@ const UserCreateModal: React.FC<EditOrderModalProps> = ({
     const isUser =
       users &&
       users.filter(
-        (user) => user.email.toLowerCase() === data.email.toLowerCase()
+        (user) => user.email.toLowerCase() === data.email.toLowerCase(),
       );
     if (isUser.length >= 1) {
       toast.error("this user is already registered", {

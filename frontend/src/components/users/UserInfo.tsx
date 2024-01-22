@@ -37,8 +37,12 @@ const UserInfo: React.FC<UserProps> = ({ user }) => {
   }, []);
 
   const inWork = () => {
+    console.log(' myOrders do', myOrders);
     const res =
       myOrders && myOrders.filter((item) => item.status === "In work");
+    console.log('res',res);
+    console.log(' myOrders', myOrders);
+
     return res;
   };
 

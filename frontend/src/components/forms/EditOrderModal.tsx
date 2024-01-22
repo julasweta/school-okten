@@ -13,11 +13,13 @@ import {
   CourseType,
   EditOrderFormData,
   EditOrderModalProps,
+  Order,
   StatusWork,
 } from "../../interfaces";
 import { ordersActions } from "../../redux/slices/OrderSlices";
 import { RootState } from "../../redux/store";
 import { orderService } from "../../services/OrdersServices";
+import { Group } from '../../../../backend/src/modules/groups/schema/group.schema';
 
 const EditOrderModal: React.FC<EditOrderModalProps> = ({
   isOpen,
@@ -25,8 +27,9 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   const { orderActive, groups, addGroupTriger } = useAppSelector(
-    (state: RootState) => state.orders,
-  );
+    (state: RootState) => state.orders
+  ) as { orderActive: Partial<Order>; groups: Group[]; addGroupTriger: boolean };
+
   const { me } = useAppSelector((state: RootState) => state.auth);
   const [groupName, setGroupName] = useState("");
   const [groupSelect, setGroupSelect] = useState("add");
@@ -45,11 +48,11 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({
       .notRequired()
       .matches(phoneRegExp, "Введіть телефон у форматі +380 00 000 00 00"),
     groupName: yup.string(),
-    age: yup.number().required("Введіть вік"),
-    course: yup.string().notRequired(),
-    course_format: yup.string().notRequired(),
-    course_type: yup.string().notRequired(),
-    status: yup.string().notRequired(),
+    age: yup.number().notRequired(),
+    course: yup.string().oneOf(Object.values(Course)),
+    course_format: yup.string().oneOf(Object.values(CourseFormat)),
+    course_type: yup.string().oneOf(Object.values(CourseType)),
+    status: yup.string().oneOf(Object.values(StatusWork)),
     sum: yup.number().notRequired(),
     alreadyPaid: yup.boolean().notRequired(),
     created_at: yup.string(),
@@ -64,7 +67,7 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<any> = async (data) => {
+  const onSubmit: SubmitHandler<EditOrderFormData> = async (data) => {
     if (
       orderActive.userId === null ||
       orderActive.userId.toString() === me._id
@@ -86,7 +89,7 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({
   useEffect(() => {
     if (orderActive) {
       Object.entries(orderActive).forEach(([key, value]) => {
-        setValue(key as keyof EditOrderFormData, value);
+        setValue(key as keyof EditOrderFormData, value as string | number | boolean);
       });
     }
   }, [orderActive, setValue]);
@@ -129,9 +132,9 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({
           <>
             <label htmlFor={key as string}>{key}:</label>
             {key === "course" ||
-            key === "course_format" ||
-            key === "course_type" ||
-            key === "status" ? (
+              key === "course_format" ||
+              key === "course_type" ||
+              key === "status" ? (
               <div className="select-wrapper">
                 <select {...register(key as keyof EditOrderFormData)}>
                   {Object.values(

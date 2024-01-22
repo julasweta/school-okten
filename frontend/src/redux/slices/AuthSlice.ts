@@ -11,7 +11,9 @@ import { authService } from "../../services/authService";
 
 interface AuthState {
   deleteTriger: boolean;
-  errors: any;
+ errors: {
+   response?: { data: { password: string; username: string;  detail:string}};
+  };
   me: IUser | null;
 }
 

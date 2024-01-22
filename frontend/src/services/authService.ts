@@ -10,7 +10,7 @@ const authService = {
     apiService.post(urls.auth.register, user),
 
   //при логіні відправляємо два запити на авторизацію і на отримання данних токенів з auth.me
-  async login(authData: IAuth): Promise<any> {
+  async login(authData: IAuth): Promise<IUser> {
     const { data } = await apiService.post<ITokens>(urls.auth.login, authData);
     this.setTokens(data);
     const { data: me } = await this.me();
@@ -25,11 +25,11 @@ const authService = {
   recoveryPassword: (email: string): IRes<string> =>
     apiService.put(`${urls.auth.recoveryPassword}`, { email: email }),
 
-  async logout(): Promise<any> {
-    const res = await apiService.post(urls.auth.logout);
+  async logout(): Promise<string> {
+    await apiService.post(urls.auth.logout);
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    return res;
+    return "res";
   },
 
   async refresh(): Promise<void> {
