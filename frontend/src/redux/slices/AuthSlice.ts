@@ -49,6 +49,7 @@ const login = createAsyncThunk<IUser, { user: IAuth }>(
   },
 );
 
+
 const me = createAsyncThunk<IUser>(
   "authSlice/me",
   async (_, { rejectWithValue, dispatch }) => {

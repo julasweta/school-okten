@@ -55,16 +55,22 @@ const OrdersTable: React.FC = () => {
   }, [addGroupTriger, dispatch]);
 
   useEffect(() => {
-    dispatch(
-      ordersActions.getOrders({
-        sort: sort,
-        limit: 15,
-        page: activePage,
-        search: searchValue,
-        nameSortRow: nameSortRow,
-        nameSearchRow: nameSearchRow,
-      }),
-    );
+
+    try {
+      console.log('searchValue', searchValue);
+      dispatch(
+        ordersActions.getOrders({
+          sort: sort,
+          limit: 15,
+          page: activePage,
+          search: searchValue === 'select'? '': searchValue,
+          nameSortRow: nameSortRow,
+          nameSearchRow: searchValue === 'select' ? '': nameSearchRow,
+        }),
+      );
+    } catch (error) {
+      console.error("An error occurred while fetching orders:", error);
+    }
   }, [
     activePage,
     updateOrderTriger,
@@ -75,6 +81,7 @@ const OrdersTable: React.FC = () => {
     orderActive,
     dispatch,
   ]);
+
 
   const onSortRow = (column: string) => {
     dispatch(ordersActions.setSort(sort === "DESC" ? "ASC" : "DESC"));

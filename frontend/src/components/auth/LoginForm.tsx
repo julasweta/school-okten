@@ -6,10 +6,31 @@ import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { IAuth } from "../../interfaces";
 import { authActions } from "../../redux/slices/AuthSlice";
 import { RootState } from "../../redux/store";
+import { ToastContainer, toast } from 'react-toastify';
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const LoginForm: React.FC = () => {
-  const { register, reset, handleSubmit } = useForm<IAuth>();
-  const { errors } = useAppSelector((state) => state.auth);
+
+  const schema = yup.object().shape({
+    email: yup.string().email('Invalid email').required('Email is required'),
+    password: yup
+      .string()
+      .required('Password is required')
+      .test('password', 'Invalid password format', value => {
+        // Перевірка, чи пароль відповідає патерну або має значення "admin"
+        return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/.test(value) || value === 'admin';
+      }),
+  });
+
+
+
+  const { register, reset, handleSubmit, formState: { errors } } = useForm<IAuth>({
+    resolver: yupResolver(schema),
+    shouldUnregister: true,
+    criteriaMode: "all",
+  });
+
   const { activePage, searchValue, nameSearchRow } = useAppSelector(
     (state: RootState) => state.orders,
   );
@@ -17,49 +38,56 @@ const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const getRefreshToken = localStorage.getItem("refreshToken");
 
+
   useEffect(() => {
     if (getRefreshToken) {
       activePage
         ? navigate(
-            `/orders?page=${activePage}${searchValue ? `&search=${searchValue}` : ""}`,
-          )
+          `/orders?page=${activePage}${searchValue ? `&search=${searchValue}` : ""}`,
+        )
         : navigate(
-            `/orders?page=1${searchValue ? `&search=${searchValue}` : ""}`,
-          );
+          `/orders?page=1${searchValue ? `&search=${searchValue}` : ""}`,
+        );
     }
   }, [getRefreshToken, navigate, nameSearchRow, activePage, searchValue]);
+
+
 
   const login: SubmitHandler<IAuth> = async (user) => {
     try {
       const response = await dispatch(authActions.login({ user }));
       const requestStatus = response.meta.requestStatus;
-
       if (requestStatus === "fulfilled") {
         reset();
         activePage
           ? navigate(
-              `/orders?page=${activePage}${searchValue && `&search=${searchValue}`}`,
-            )
+            `/orders?page=${activePage}${searchValue && `&search=${searchValue}`}`,
+          )
           : navigate(
-              `/orders?page=1${searchValue && `&search=${searchValue}`}${nameSearchRow && `&nameSearchRow=${nameSearchRow}`}`,
-            );
+            `/orders?page=1${searchValue && `&search=${searchValue}`}${nameSearchRow && `&nameSearchRow=${nameSearchRow}`}`,
+          );
+      } else {
+        toast.error("Incorrect username or password.")
       }
     } catch (error) {
-      console.error("An error occurred during login:", error);
+      console.error("Incorrect username or password.");
     }
   };
-
-  const errorMessage = errors?.response?.data?.detail;
+  console.log(errors?.email?.message && errors?.email?.message);
 
   return (
     <div className="login-page">
       <h2>LoginForm</h2>
       <form onSubmit={handleSubmit(login)} className="login-form">
-        <input type="text" placeholder={"username"} {...register("email")} />
-        <input type="text" placeholder={"password"} {...register("password")} />
-        <button className="button login-btn">login</button>
-        {errorMessage && <span>{errorMessage}</span>}
+        <input type="text" placeholder="Email" {...register('email')} />
+        <span className="red">{errors?.email?.message && errors.email.message}</span>
+        <input type="password" placeholder="Password" {...register('password')} />
+        <span className="red">{errors?.password?.message && errors.password.message}</span>
+        <button className="button login-btn" type="submit">
+          Login
+        </button>
       </form>
+      <ToastContainer />
     </div>
   );
 };

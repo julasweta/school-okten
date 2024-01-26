@@ -1,52 +1,95 @@
-import { useEffect } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { UseFormReturn, useForm } from "react-hook-form";
 
-import { searchColumns } from "../../constants";
+import { ISearchColumns, searchColumns } from "../../constants";
 import useCleanrUtils from "../../constants/cleanUtils";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { Course, CourseFormat, CourseType, StatusWork } from "../../interfaces";
 import { ordersActions } from "../../redux/slices/OrderSlices";
 import { RootState } from "../../redux/store";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
 
 const SearchForm: React.FC = () => {
-  const { register, handleSubmit, getValues, setValue, watch } = useForm({
-    shouldUnregister: true,
-  });
   const dispatch = useAppDispatch();
   const { groups, isChecked, updateOrderTriger, searchValue, nameSearchRow } =
     useAppSelector((state: RootState) => state.orders);
   const { me } = useAppSelector((state: RootState) => state.auth);
   const { onCleanUtils } = useCleanrUtils();
-  let { isMe, ...updateValues } = getValues();
+
+
+  const schema = yup.object().shape({
+    name: yup.string(),
+    surname: yup.string(),
+    email: yup.string(),
+    phone: yup.string(),
+    age: yup.string(),
+
+    course: yup.string(),
+    course_format: yup.string(),
+    course_type: yup.string(),
+    status: yup.string(),
+    groupName: yup.string(),
+    isMe: yup.string(),
+  });
+
+
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    setValue,
+    watch,
+    clearErrors,
+    formState: { errors }
+  }: UseFormReturn<any> = useForm({
+    resolver: yupResolver(schema),
+    shouldUnregister: true,
+    criteriaMode: "all",
+  });
+
+  let { isMe, ...updateValues }: any = getValues();
 
   useEffect(() => {
+    console.log('ja minaju searchValue');
     Object.entries(updateValues).forEach(([key, item]) => {
       if (item) {
+        console.log('item', item);
         dispatch(ordersActions.setIsChecked("off"));
         dispatch(ordersActions.setSearchValue(item));
         dispatch(ordersActions.setSearchNameRow(key));
         dispatch(ordersActions.setActivePage(1));
       }
     });
-  }, [updateOrderTriger, updateValues, searchValue, nameSearchRow, dispatch]);
 
+  }, [updateOrderTriger, searchValue, nameSearchRow, dispatch]);
+  console.log('updateValues', updateValues);
+
+  //при натисканні на button до кожної пошукової кнопки
   const onSearchButton = async (column: string) => {
     dispatch(ordersActions.setSearchValue(updateValues[column]));
     dispatch(ordersActions.setSearchNameRow(column));
   };
 
-  const onSubmit = () => {};
+  const onSubmit = (data: any) => { console.log(data); };
 
   const onMeCheckboxChange = () => {
     dispatch(ordersActions.setUpdateOrderTriger());
     dispatch(ordersActions.setIsChecked(isChecked === "on" ? "off" : "on"));
     searchColumns.forEach((column) => {
       if (column !== "isMe") {
-        setValue(column, "");
+        setValue("isMe", "");
       }
     });
     if (isChecked === "off") {
       if (me && me._id) {
+        searchColumns.forEach((column) => {
+          if (column !== "isMe") {
+            clearErrors()
+            setValue(column, "");
+          }
+        });
         dispatch(ordersActions.setSearchValue(me._id));
         dispatch(ordersActions.setSearchNameRow("userId"));
       }
@@ -58,10 +101,11 @@ const SearchForm: React.FC = () => {
 
   const onClean = () => {
     onCleanUtils();
+    clearErrors();
     if (isChecked === "on") {
       dispatch(ordersActions.setIsChecked("off"));
     }
-    searchColumns.forEach((column) => {
+    searchColumns.map((column: string) => {
       setValue(column, "");
     });
   };
@@ -77,14 +121,14 @@ const SearchForm: React.FC = () => {
           "status",
           "groupName",
         ].includes(column) && (
-          <button
-            type="submit"
-            onClick={() => onSearchButton(column)}
-            className="button search-button"
-          >
-            {column}
-          </button>
-        )}
+            <button
+              type="submit"
+              onClick={() => onSearchButton(column)}
+              className="button search-button"
+            >
+              {column}
+            </button>
+          )}
       </div>
     ));
   };
@@ -105,64 +149,84 @@ const SearchForm: React.FC = () => {
             {...register(column)}
             id={column}
             className="search-input"
-            value={watch(column) || ""}
+            value={watch(column)}
             onChange={(e) => {
               setValue(column, e.target.value);
+              dispatch(ordersActions.setUpdateOrderTriger());
               searchColumns.forEach((otherColumn) => {
                 if (otherColumn !== column) {
+                  clearErrors(otherColumn);
                   setValue(otherColumn, "");
                 }
               });
             }}
           >
-            <option value="">Select...</option>
+            <option value="select">Select...</option>
             {Object.values(getEnumType(column)).map((value, index) => (
               <option key={index} value={value}>
                 {value}
               </option>
             ))}
           </select>
+
         ) : isGroup ? (
           <select
             {...register(column)}
             id={column}
             className="search-input"
-            value={watch(column) || ""}
+            value={watch(column)}
             onChange={(e) => {
               setValue(column, e.target.value);
+              dispatch(ordersActions.setUpdateOrderTriger());
+              console.log('ja pidgladaju');
               searchColumns.forEach((otherColumn) => {
                 if (otherColumn !== column) {
+                  clearErrors(otherColumn);
                   setValue(otherColumn, "");
                 }
               });
             }}
           >
-            <option value="">Select...</option>
+            <option value="select">Select...</option>
             {groups.map((group, index) => (
               <option key={index} value={group.title}>
                 {group.title}
               </option>
             ))}
           </select>
-        ) : (
+        ) : (column !== 'isMe' &&
           <input
             type="text"
             placeholder={column}
             {...register(column)}
             id={column}
             className="search-input"
-            value={updateValues[column] || ""}
+            value={updateValues[column] }
             onChange={(e) => {
-              setValue(column, e.target.value);
+              setValue(column, e.target.value, { shouldValidate: true });
+
               searchColumns.forEach((otherColumn) => {
                 if (otherColumn !== column) {
-                  setValue(otherColumn, "");
+                  setValue(otherColumn, '', { shouldValidate: true });
+                  clearErrors(otherColumn);
                 }
               });
-              dispatch(ordersActions.setUpdateOrderTriger());
+              const beforeValue = getValues(column);
+              setTimeout(() => {
+                const afterValue = getValues(column);
+                if ((Object.keys(errors).length < 1) && beforeValue !== afterValue) {
+                  dispatch(ordersActions.setUpdateOrderTriger());
+                }
+              }, 1500);
+            }}
+            onBlur={() => {
+              if (Object.keys(errors).length < 1) {
+                dispatch(ordersActions.setUpdateOrderTriger());
+              }
             }}
           />
         )}
+
       </>
     );
   };
@@ -182,6 +246,7 @@ const SearchForm: React.FC = () => {
     }
   };
 
+
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)} className="search-form">
@@ -198,6 +263,13 @@ const SearchForm: React.FC = () => {
           </label>
         </div>
       </form>
+
+      <div>
+        {Object.values(errors).map((error: any, index) => (
+          <div key={index} className="red">{error.message}</div>
+        ))}
+      </div>
+
       <div className="search-box">
         <button className="button clean-button" onClick={() => onClean()}>
           Clean
@@ -207,14 +279,4 @@ const SearchForm: React.FC = () => {
   );
 };
 
-const SearchFormWrapper: React.FC = () => {
-  const methods = useForm();
-
-  return (
-    <FormProvider {...methods}>
-      <SearchForm />
-    </FormProvider>
-  );
-};
-
-export { SearchFormWrapper as SearchForm };
+export { SearchForm };
