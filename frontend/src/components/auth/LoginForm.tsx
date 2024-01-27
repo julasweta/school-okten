@@ -9,6 +9,7 @@ import { RootState } from "../../redux/store";
 import { ToastContainer, toast } from 'react-toastify';
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { AppRoutes } from "../../routing/AppRoutes";
 
 const LoginForm: React.FC = () => {
 
@@ -41,13 +42,9 @@ const LoginForm: React.FC = () => {
 
   useEffect(() => {
     if (getRefreshToken) {
-      activePage
-        ? navigate(
-          `/orders?page=${activePage}${searchValue ? `&search=${searchValue}` : ""}`,
-        )
-        : navigate(
-          `/orders?page=1${searchValue ? `&search=${searchValue}` : ""}`,
-        );
+      navigate(`/orders?page=${activePage}`)
+    } else {
+      navigate(AppRoutes.LOGIN, { replace: true });
     }
   }, [getRefreshToken, navigate, nameSearchRow, activePage, searchValue]);
 
@@ -59,13 +56,9 @@ const LoginForm: React.FC = () => {
       const requestStatus = response.meta.requestStatus;
       if (requestStatus === "fulfilled") {
         reset();
-        activePage
-          ? navigate(
-            `/orders?page=${activePage}${searchValue && `&search=${searchValue}`}`,
-          )
-          : navigate(
-            `/orders?page=1${searchValue && `&search=${searchValue}`}${nameSearchRow && `&nameSearchRow=${nameSearchRow}`}`,
-          );
+        navigate(
+          `/orders?page=${activePage}`
+        )
       } else {
         toast.error("Incorrect username or password.")
       }
@@ -73,7 +66,7 @@ const LoginForm: React.FC = () => {
       console.error("Incorrect username or password.");
     }
   };
-  console.log(errors?.email?.message && errors?.email?.message);
+
 
   return (
     <div className="login-page">
@@ -81,7 +74,7 @@ const LoginForm: React.FC = () => {
       <form onSubmit={handleSubmit(login)} className="login-form">
         <input type="text" placeholder="Email" {...register('email')} />
         <span className="red">{errors?.email?.message && errors.email.message}</span>
-        <input type="password" placeholder="Password" {...register('password')} />
+        <input type="password" placeholder="Password" {...register('password')} autoComplete="on" />
         <span className="red">{errors?.password?.message && errors.password.message}</span>
         <button className="button login-btn" type="submit">
           Login

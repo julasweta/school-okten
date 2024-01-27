@@ -43,11 +43,11 @@ const authService = {
   },
 
   //тут лише отримання данних з авторизованого користувача, після оновлення сторінки і при наявності токена
-  me(): IRes<IUser> {
-    return apiService.get(urls.auth.me);
+  async me(): Promise<IRes<IUser>> {
+    return await apiService.get(urls.auth.me);
   },
 
-  setTokens(data: ITokens): void {
+  async setTokens(data: ITokens): Promise<void> {
     localStorage.setItem("accessToken", data.accessToken);
     localStorage.setItem("refreshToken", data.refreshToken);
   },

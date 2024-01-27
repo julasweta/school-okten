@@ -8,13 +8,14 @@ import { ordersActions } from "../../redux/slices/OrderSlices";
 
 const Pagin: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { itemsFound, activePage, searchValue, nameSearchRow } = useAppSelector(
+  const { itemsFound, activePage, searchValue, nameSearchRow, sort } = useAppSelector(
     (state: RootState) => state.orders,
   );
   const limit = 15;
   const pageCount = Math.ceil(itemsFound / limit);
   const buttonsToShow = 10; //  скільки кнопок  навколо поточної сторінки.
 
+  
   const generateButtons = () => {
     const buttons = [];
     const startPage = Math.max(1, activePage - Math.floor(buttonsToShow / 2));
@@ -38,9 +39,11 @@ const Pagin: React.FC = () => {
     }
 
     for (let i = startPage; i <= endPage; i++) {
+
       buttons.push(
         <Link
-          to={`${urls.orders.base}?page=${i}${searchValue ? `&search=${searchValue}` : ""}${nameSearchRow ? `&nameSearchRow=${nameSearchRow}` : ""}`}
+          to={`${urls.orders.base}?page=${i}&limit=15${searchValue === 'select' ? '' : '&nameSearchRow='
+            }${searchValue === 'select' ? '' : nameSearchRow}${searchValue === 'select' ? '' : '&search='}${searchValue === 'select' ? '' : searchValue}&order=${sort}`}
           key={i}
         >
           <button className={activePage === i ? "button active-btn" : "button"}>

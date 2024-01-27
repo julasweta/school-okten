@@ -73,7 +73,6 @@ export const UsersSlice = createSlice({
   name: "usersSlice",
   initialState,
   reducers: {
-    setActivePage: (state, action) => {},
     setUpdateUserTriger: (state) => {
       state.updateUserTriger = !state.updateUserTriger;
     },

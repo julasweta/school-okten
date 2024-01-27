@@ -10,6 +10,7 @@ import { RootState } from "../../redux/store";
 import { OrderForm, SearchForm } from "../forms";
 import { Pagin } from "../pagination/Pagin";
 import { UserName } from "../users/UserName";
+import { AppRoutes } from "../../routing/AppRoutes";
 
 const OrdersTable: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -27,26 +28,29 @@ const OrdersTable: React.FC = () => {
     sort,
   } = useAppSelector((state: RootState) => state.orders);
   const [nameSortRow, setNameRow] = useState("");
+
   const searchParams = new URLSearchParams(location.search);
   const searchParam = searchParams.get("search");
   const nameSearchRowParam = searchParams.get("nameSearchRow");
   const pageNumber = +searchParams.get("page") || 1;
 
+
   const onGetOrderActive = (orderId: string) => {
     dispatch(ordersActions.getOrderActive(orderId));
   };
+
   //write params
   useEffect(() => {
     dispatch(ordersActions.setActivePage(pageNumber));
     dispatch(ordersActions.getOrderActive(null));
-    dispatch(ordersActions.setSearchValue(searchParam));
-    dispatch(ordersActions.setSearchNameRow(nameSearchRowParam));
-  }, [searchParam, nameSearchRowParam, pageNumber, dispatch]);
+    dispatch(ordersActions.setSearchValue(searchParam && searchParam));
+    dispatch(ordersActions.setSearchNameRow(nameSearchRowParam && nameSearchRowParam));
+  }, [searchParam, nameSearchRowParam, pageNumber, sort, dispatch]);
 
   useEffect(() => {
     const isAccess = localStorage.getItem("accessToken");
     if (!isAccess) {
-      navigate(urls.auth.login);
+      navigate(AppRoutes.LOGIN);
     }
   }, [navigate]);
 
@@ -55,19 +59,19 @@ const OrdersTable: React.FC = () => {
   }, [addGroupTriger, dispatch]);
 
   useEffect(() => {
-
     try {
-      console.log('searchValue', searchValue);
       dispatch(
         ordersActions.getOrders({
           sort: sort,
           limit: 15,
           page: activePage,
-          search: searchValue === 'select'? '': searchValue,
+          search: searchValue === 'select' ? '' : searchValue,
           nameSortRow: nameSortRow,
-          nameSearchRow: searchValue === 'select' ? '': nameSearchRow,
+          nameSearchRow: searchValue === 'select' ? '' : nameSearchRow,
         }),
       );
+      navigate(`?${activePage && `page=${activePage}`}&limit=15${searchValue && searchValue !== 'select' ? `&nameSearchRow=${nameSearchRow}&search=${searchValue}` : ''}&order=${sort}`)
+
     } catch (error) {
       console.error("An error occurred while fetching orders:", error);
     }
@@ -80,6 +84,7 @@ const OrdersTable: React.FC = () => {
     nameSearchRow,
     orderActive,
     dispatch,
+    navigate
   ]);
 
 

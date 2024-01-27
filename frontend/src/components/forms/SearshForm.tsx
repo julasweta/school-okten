@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { UseFormReturn, useForm } from "react-hook-form";
 
-import { ISearchColumns, searchColumns } from "../../constants";
+import { searchColumns } from "../../constants";
 import useCleanrUtils from "../../constants/cleanUtils";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { Course, CourseFormat, CourseType, StatusWork } from "../../interfaces";
@@ -9,6 +9,7 @@ import { ordersActions } from "../../redux/slices/OrderSlices";
 import { RootState } from "../../redux/store";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useLocation } from "react-router-dom";
 
 
 const SearchForm: React.FC = () => {
@@ -17,6 +18,11 @@ const SearchForm: React.FC = () => {
     useAppSelector((state: RootState) => state.orders);
   const { me } = useAppSelector((state: RootState) => state.auth);
   const { onCleanUtils } = useCleanrUtils();
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const searchParam = searchParams.get("search");
+  const nameSearchRowParam = searchParams.get("nameSearchRow");
 
 
   const schema = yup.object().shape({
@@ -52,19 +58,15 @@ const SearchForm: React.FC = () => {
   let { isMe, ...updateValues }: any = getValues();
 
   useEffect(() => {
-    console.log('ja minaju searchValue');
     Object.entries(updateValues).forEach(([key, item]) => {
       if (item) {
-        console.log('item', item);
         dispatch(ordersActions.setIsChecked("off"));
-        dispatch(ordersActions.setSearchValue(item));
-        dispatch(ordersActions.setSearchNameRow(key));
-        dispatch(ordersActions.setActivePage(1));
+        dispatch(ordersActions.setSearchValue(item && item !== 'select' ? item : searchParam));
+        dispatch(ordersActions.setSearchNameRow(item && item !== 'select' ? key : nameSearchRowParam));
       }
     });
 
   }, [updateOrderTriger, searchValue, nameSearchRow, dispatch]);
-  console.log('updateValues', updateValues);
 
   //при натисканні на button до кожної пошукової кнопки
   const onSearchButton = async (column: string) => {
@@ -149,9 +151,13 @@ const SearchForm: React.FC = () => {
             {...register(column)}
             id={column}
             className="search-input"
-            value={watch(column)}
+            value={watch(column) || ""}
             onChange={(e) => {
               setValue(column, e.target.value);
+              const selectedValue = e.target.value;
+              if (selectedValue == 'select') {
+                onClean();
+              }
               dispatch(ordersActions.setUpdateOrderTriger());
               searchColumns.forEach((otherColumn) => {
                 if (otherColumn !== column) {
@@ -159,6 +165,7 @@ const SearchForm: React.FC = () => {
                   setValue(otherColumn, "");
                 }
               });
+
             }}
           >
             <option value="select">Select...</option>
@@ -174,11 +181,14 @@ const SearchForm: React.FC = () => {
             {...register(column)}
             id={column}
             className="search-input"
-            value={watch(column)}
+            value={watch(column) || ""}
             onChange={(e) => {
               setValue(column, e.target.value);
+              const selectedValue = e.target.value;
+              if (selectedValue == 'select') {
+                onClean();
+              }
               dispatch(ordersActions.setUpdateOrderTriger());
-              console.log('ja pidgladaju');
               searchColumns.forEach((otherColumn) => {
                 if (otherColumn !== column) {
                   clearErrors(otherColumn);
@@ -201,7 +211,7 @@ const SearchForm: React.FC = () => {
             {...register(column)}
             id={column}
             className="search-input"
-            value={updateValues[column] }
+              value={updateValues[column] || ""}
             onChange={(e) => {
               setValue(column, e.target.value, { shouldValidate: true });
 

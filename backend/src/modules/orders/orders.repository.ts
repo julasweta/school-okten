@@ -39,13 +39,15 @@ export class OrderRepository {
       const skip = query.limit * (query.page - 1);
       console.log('filter', filter);
 
-      let entitiesQuery = this.orderModel
+      const entitiesQuery = this.orderModel
         .find(filter)
         .limit(query.limit)
         .skip(skip);
 
       if (query.nameSortRow) {
-        entitiesQuery = entitiesQuery.sort(query.nameSortRow);
+        entitiesQuery.sort({
+          [query.nameSortRow.trim()]: query.order === 'ASC' ? 1 : -1,
+        });
       }
 
       const entities = await entitiesQuery.exec();

@@ -6,7 +6,7 @@ const useCleanrUtils = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const onCleanUtils = () => {
+  const onCleanUtils =async () => {
     navigate(`/orders?page=1`);
     dispatch(ordersActions.setSearchValue(""));
     dispatch(ordersActions.setSearchNameRow(""));
