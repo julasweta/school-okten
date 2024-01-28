@@ -37,16 +37,21 @@ const LoginForm: React.FC = () => {
   );
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const getRefreshToken = localStorage.getItem("refreshToken");
+  const getRefreshToken = localStorage.getItem("refreshToken")
 
 
-  useEffect(() => {
+
+/*   useEffect(() => {
     if (getRefreshToken) {
-      navigate(`/orders?page=${activePage}`)
-    } else {
-      navigate(AppRoutes.LOGIN, { replace: true });
+      activePage
+        ? navigate(
+          `/orders?page=${activePage}${searchValue ? `&search=${searchValue}` : ""}${nameSearchRow ? `&nameSearchRow=${nameSearchRow}` : ""}`
+        )
+        : navigate(
+          `/orders?page=1`,
+        );
     }
-  }, [getRefreshToken, navigate, nameSearchRow, activePage, searchValue]);
+  }, [getRefreshToken, navigate, nameSearchRow, activePage, searchValue]); */
 
 
 

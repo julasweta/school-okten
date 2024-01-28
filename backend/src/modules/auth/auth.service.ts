@@ -23,6 +23,13 @@ import {
 } from '../../common/interfaces/IListRes';
 import { ITokens } from './interfaces/tokens.type';
 
+class AuthenticationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'AuthenticationError';
+  }
+}
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -33,7 +40,6 @@ export class AuthService {
   ) {}
 
   async createUser(@Body() body: CreateUserReqDto): Promise<CreateUserResType> {
-    console.log('auth serv create user', body);
     const token = await this.verificationService.createToken(
       {
         email: body.email,
@@ -123,11 +129,14 @@ export class AuthService {
 
       return { accessToken, refreshToken };
     } catch (error) {
-      // Обробляйте помилку тут
-      console.error('An error occurred during login:', error);
-
-      // Прокидайте помилку, щоб вона могла бути оброблена далі
-      throw error;
+      if (error instanceof AuthenticationError) {
+        console.error('Authentication error:', error.message);
+        throw new Error(error.message);
+      } else {
+        // Інші типи помилок
+        console.error('An error occurred:', error.message);
+        throw new Error(error.message);
+      }
     }
   }
 

@@ -5,6 +5,7 @@ import { RootState } from "../../redux/store";
 import { Link } from "react-router-dom";
 import { urls } from "../../constants/urls";
 import { ordersActions } from "../../redux/slices/OrderSlices";
+import { AppRoutes } from "../../routing/AppRoutes";
 
 const Pagin: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -15,7 +16,7 @@ const Pagin: React.FC = () => {
   const pageCount = Math.ceil(itemsFound / limit);
   const buttonsToShow = 10; //  скільки кнопок  навколо поточної сторінки.
 
-  
+
   const generateButtons = () => {
     const buttons = [];
     const startPage = Math.max(1, activePage - Math.floor(buttonsToShow / 2));
@@ -38,12 +39,21 @@ const Pagin: React.FC = () => {
       );
     }
 
+  
+
+
     for (let i = startPage; i <= endPage; i++) {
+      const queryParams = new URLSearchParams({
+        page: i.toString(),
+        limit: '15',
+        nameSearchRow: searchValue && searchValue !== 'select' ? nameSearchRow : '',
+        search: searchValue && searchValue !== 'select' ? searchValue : '',
+        order: sort,
+      });
 
       buttons.push(
         <Link
-          to={`${urls.orders.base}?page=${i}&limit=15${searchValue === 'select' ? '' : '&nameSearchRow='
-            }${searchValue === 'select' ? '' : nameSearchRow}${searchValue === 'select' ? '' : '&search='}${searchValue === 'select' ? '' : searchValue}&order=${sort}`}
+          to={`${AppRoutes.ORDERS}?${queryParams.toString()}`}
           key={i}
         >
           <button className={activePage === i ? "button active-btn" : "button"}>

@@ -110,7 +110,7 @@ export class AuthController {
       throw new Error('error');
     }
     const user = await this.authService.verifyRefreshToken(token);
-    return user;
+    return UserResponseMapper.toResUserMapper(user);
   }
 
   @Post('logout')

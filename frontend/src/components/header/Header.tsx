@@ -12,9 +12,7 @@ const Header = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { onCleanUtils } = useCleanrUtils();
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const token = searchParams.get("token");
+
   const getRefreshToken = localStorage.getItem("refreshToken");
 
   useEffect(() => {
@@ -31,7 +29,12 @@ const Header = () => {
           }
         });
     }
+   
   }, [dispatch, navigate, getRefreshToken, me]);
+
+ 
+
+
 
   const onLogout = async () => {
     await authService.logout();
@@ -54,7 +57,7 @@ const Header = () => {
               Logout
             </Link>
             {me.role === "admin" && (
-              <Link to={AppRoutes.ADMIN}>
+              <Link to={`${AppRoutes.ADMIN}?page=1&limit=3`}>
                 <button className="admin-button">Admin Panel</button>
               </Link>
             )}

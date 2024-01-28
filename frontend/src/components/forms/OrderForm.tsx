@@ -21,6 +21,9 @@ const OrderForm: React.FC = () => {
   const { orderActive, messages, createMessagTriger } = useAppSelector(
     (state: RootState) => state.orders,
   );
+  const { me } = useAppSelector(
+    (state: RootState) => state.auth,
+  );
 
   const openEditModal = () => {
     setIsEditModalOpen(true);
@@ -38,8 +41,9 @@ const OrderForm: React.FC = () => {
     );
   }, [orderActive, dispatch, createMessagTriger]);
 
+
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    if (orderActive.userId) {
+    if (orderActive.userId.toString() === me._id.toString()) {
       const dataCreate = {
         text: data.message,
         orderId: orderActive._id && orderActive._id.toString(),
@@ -70,54 +74,58 @@ const OrderForm: React.FC = () => {
   };
 
   return (
-    <div className="order-form">
-      <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+     
+      <div className="order-form">
+        <ToastContainer
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
 
-      <div className="messages">
-        <ol>
-          {messages &&
-            messages.map((item, index) => (
-              <li key={index}>
-                <div className="comment-part">{item.text}</div>
-                <div className="comment-part">
-                  author: <UserName id={item.userId} />
-                </div>
-                <div className="comment-part"> {dateFormat(item.date)}</div>
-              </li>
-            ))}
-        </ol>
+        <div className="messages">
+          <ol>
+            {messages &&
+              messages.map((item, index) => (
+                <li key={index}>
+                  <div className="comment-part">{item.text}</div>
+                  <div className="comment-part">
+                    author: <UserName id={item.userId} />
+                  </div>
+                  <div className="comment-part"> {dateFormat(item.date)}</div>
+                </li>
+              ))}
+          </ol>
+        </div>
+      {((orderActive.userId && me._id) && orderActive.userId.toString() === me._id.toString() || !orderActive.userId) &&
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <label htmlFor="message">Message:</label>
+          <input {...register("message")} id="message" />
+
+          <button type="submit" className="button">
+            Send Message
+          </button>
+        </form>}
+
+        {/* Кнопка для відкриття модального вікна редагування */}
+      {((orderActive.userId && me._id) && orderActive.userId.toString() === me._id.toString() || !orderActive.userId) &&
+        <button onClick={openEditModal} className="button">
+          Open Edit Modal
+        </button>} 
+
+        {/* Модальне вікно для редагування замовлення */}
+        <EditOrderModal
+          isOpen={isEditModalOpen}
+          onRequestClose={closeEditModal}
+        />
       </div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <label htmlFor="message">Message:</label>
-        <input {...register("message")} id="message" />
-
-        <button type="submit" className="button">
-          Send Message
-        </button>
-      </form>
-
-      {/* Кнопка для відкриття модального вікна редагування */}
-      <button onClick={openEditModal} className="button">
-        Open Edit Modal
-      </button>
-
-      {/* Модальне вікно для редагування замовлення */}
-      <EditOrderModal
-        isOpen={isEditModalOpen}
-        onRequestClose={closeEditModal}
-      />
-    </div>
+   
   );
 };
 

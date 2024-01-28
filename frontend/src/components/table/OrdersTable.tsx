@@ -50,6 +50,7 @@ const OrdersTable: React.FC = () => {
   useEffect(() => {
     const isAccess = localStorage.getItem("accessToken");
     if (!isAccess) {
+      console.log('ja nemaju access v logiform');
       navigate(AppRoutes.LOGIN);
     }
   }, [navigate]);
@@ -70,8 +71,12 @@ const OrdersTable: React.FC = () => {
           nameSearchRow: searchValue === 'select' ? '' : nameSearchRow,
         }),
       );
-      navigate(`?${activePage && `page=${activePage}`}&limit=15${searchValue && searchValue !== 'select' ? `&nameSearchRow=${nameSearchRow}&search=${searchValue}` : ''}&order=${sort}`)
 
+      // Перевірка поточного шляху перед додаванням параметрів
+      const currentPath = window.location.pathname;
+      if (currentPath === '/orders') {
+        navigate(`?${activePage && `page=${activePage}`}&limit=15${searchValue && searchValue !== 'select' ? `&nameSearchRow=${nameSearchRow}&search=${searchValue}` : ''}&order=${sort}`);
+      }
     } catch (error) {
       console.error("An error occurred while fetching orders:", error);
     }
@@ -86,6 +91,7 @@ const OrdersTable: React.FC = () => {
     dispatch,
     navigate
   ]);
+
 
 
   const onSortRow = (column: string) => {

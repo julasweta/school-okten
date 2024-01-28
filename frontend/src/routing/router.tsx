@@ -4,6 +4,7 @@ import { Activate, LoginForm, RegisterForm } from "../components";
 import { MainLayout } from "../layouts/MainLayout";
 import { AppRoutes } from "./AppRoutes";
 import { Admin, OrdersPage } from "../pages";
+import Error404 from "../components/Error404";
 
 export const router = createBrowserRouter([
   {
@@ -13,6 +14,10 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <Navigate to={AppRoutes.LOGIN} />,
+      },
+      {
+        path: "*",
+        element: <Error404 />,
       },
       {
         path: AppRoutes.ORDERS,

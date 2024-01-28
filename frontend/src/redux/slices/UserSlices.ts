@@ -9,11 +9,15 @@ interface UserState {
   userById: IUser;
   createdUser: IUser;
   updateUserTriger: boolean;
+  usersFound: number;
+  activePageUsers: number;
 }
 
 const initialState: UserState = {
   users: [],
   userById: null,
+  usersFound: 0,
+  activePageUsers: 1,
   createdUser: {
     _id: "",
     email: "",
@@ -76,6 +80,9 @@ export const UsersSlice = createSlice({
     setUpdateUserTriger: (state) => {
       state.updateUserTriger = !state.updateUserTriger;
     },
+    setActivePageUsers: (state, action) => {
+      state.activePageUsers= action.payload;
+    },
   },
 
   extraReducers: (builder) =>
@@ -88,6 +95,7 @@ export const UsersSlice = createSlice({
       })
       .addCase(getAllUsers.fulfilled, (state, action) => {
         state.users = action.payload;
+        state.usersFound = action.payload.length;
       }),
 });
 
