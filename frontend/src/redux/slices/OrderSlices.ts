@@ -20,6 +20,7 @@ interface OrderState {
   addGroupTriger: boolean;
   isChecked: string;
   sort: string;
+  nameSortRow: string;
 }
 
 const initialState: OrderState = {
@@ -36,6 +37,7 @@ const initialState: OrderState = {
   addGroupTriger: true,
   isChecked: "off",
   sort: "DESC",
+  nameSortRow: ""
 };
 
 /*-----------------AsyncThunk -------------------------------  */
@@ -147,6 +149,10 @@ export const OrdersSlice = createSlice({
     },
     setSort: (state, action) => {
       state.sort = action.payload;
+    },
+    setNameRowSort: (state, action) => {
+      console.log(action.payload);
+      state.nameSortRow = action.payload;
     },
   },
 

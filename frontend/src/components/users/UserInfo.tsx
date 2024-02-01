@@ -128,7 +128,7 @@ const UserInfo: React.FC<UserProps> = ({ user }) => {
         )}
         {user.token && (
           <Link
-            to={`http://localhost:3001/auth/activate?token=${user.token}`}
+            to={`/auth/activate?token=${user.token}`}
             className="button"
           >
             Activate

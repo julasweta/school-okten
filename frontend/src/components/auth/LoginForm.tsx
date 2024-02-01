@@ -9,19 +9,12 @@ import { RootState } from "../../redux/store";
 import { ToastContainer, toast } from 'react-toastify';
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { AppRoutes } from "../../routing/AppRoutes";
 
 const LoginForm: React.FC = () => {
 
   const schema = yup.object().shape({
     email: yup.string().email('Invalid email').required('Email is required'),
-    password: yup
-      .string()
-      .required('Password is required')
-      .test('password', 'Invalid password format', value => {
-        // Перевірка, чи пароль відповідає патерну або має значення "admin"
-        return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/.test(value) || value === 'admin';
-      }),
+    password: yup.string().required(),
   });
 
 

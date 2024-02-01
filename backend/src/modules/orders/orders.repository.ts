@@ -45,6 +45,7 @@ export class OrderRepository {
         .skip(skip);
 
       if (query.nameSortRow) {
+        console.log('query.nameSortRow', query.nameSortRow);
         entitiesQuery.sort({
           [query.nameSortRow.trim()]: query.order === 'ASC' ? 1 : -1,
         });

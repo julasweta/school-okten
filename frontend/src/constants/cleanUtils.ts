@@ -6,13 +6,14 @@ const useCleanrUtils = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const onCleanUtils =async () => {
+  const onCleanUtils = async () => {
     navigate(`/orders?page=1`);
     dispatch(ordersActions.setSearchValue(""));
     dispatch(ordersActions.setSearchNameRow(""));
     dispatch(ordersActions.setActivePage(1));
     dispatch(ordersActions.setUpdateOrderTriger());
     dispatch(ordersActions.setSort("DESC"));
+    dispatch(ordersActions.setNameRowSort(""));
     dispatch(ordersActions.setIsChecked("off"));
 
     // searchColumns і setValue повинні також бути передані або доступні в контексті цієї функції

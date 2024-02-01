@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { columns } from "../../constants/list.table";
-import { urls } from "../../constants/urls";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { ordersActions } from "../../redux/slices/OrderSlices";
 import { RootState } from "../../redux/store";
@@ -26,13 +25,15 @@ const OrdersTable: React.FC = () => {
     nameSearchRow,
     addGroupTriger,
     sort,
+    nameSortRow
   } = useAppSelector((state: RootState) => state.orders);
-  const [nameSortRow, setNameRow] = useState("");
 
   const searchParams = new URLSearchParams(location.search);
   const searchParam = searchParams.get("search");
   const nameSearchRowParam = searchParams.get("nameSearchRow");
   const pageNumber = +searchParams.get("page") || 1;
+  const sortRowNameParam = searchParams.get('nameSortRow'); // який рядок
+  const sortParamValue = searchParams.get('order'); //desc or asc
 
 
   const onGetOrderActive = (orderId: string) => {
@@ -45,14 +46,17 @@ const OrdersTable: React.FC = () => {
     dispatch(ordersActions.getOrderActive(null));
     dispatch(ordersActions.setSearchValue(searchParam && searchParam));
     dispatch(ordersActions.setSearchNameRow(nameSearchRowParam && nameSearchRowParam));
-  }, [searchParam, nameSearchRowParam, pageNumber, sort, dispatch]);
+
+    console.log('sortParamValue', sortParamValue);
+    dispatch(ordersActions.setNameRowSort(sortRowNameParam && sortRowNameParam));
+    if (sortParamValue !== null && sortParamValue !== 'false') { dispatch(ordersActions.setSort(sortParamValue)); }
+
+
+  }, [searchParam, nameSearchRowParam, pageNumber, sortRowNameParam, sortParamValue, dispatch]);
 
   useEffect(() => {
     const isAccess = localStorage.getItem("accessToken");
-    if (!isAccess) {
-      console.log('ja nemaju access v logiform');
-      navigate(AppRoutes.LOGIN);
-    }
+    if (!isAccess) { navigate(AppRoutes.LOGIN) }
   }, [navigate]);
 
   useEffect(() => {
@@ -75,7 +79,8 @@ const OrdersTable: React.FC = () => {
       // Перевірка поточного шляху перед додаванням параметрів
       const currentPath = window.location.pathname;
       if (currentPath === '/orders') {
-        navigate(`?${activePage && `page=${activePage}`}&limit=15${searchValue && searchValue !== 'select' ? `&nameSearchRow=${nameSearchRow}&search=${searchValue}` : ''}&order=${sort}`);
+        console.log('sort', sort);
+        navigate(`?${activePage && `page=${activePage}`}&limit=15${searchValue && searchValue !== 'select' ? `&nameSearchRow=${nameSearchRow}&search=${searchValue}` : ''}&order=${sort && sort}${nameSortRow ? `&nameSortRow=${nameSortRow}` : ''}`);
       }
     } catch (error) {
       console.error("An error occurred while fetching orders:", error);
@@ -96,7 +101,7 @@ const OrdersTable: React.FC = () => {
 
   const onSortRow = (column: string) => {
     dispatch(ordersActions.setSort(sort === "DESC" ? "ASC" : "DESC"));
-    setNameRow(column);
+    dispatch(ordersActions.setNameRowSort(column))
   };
 
   const renderTableHeader = () => {

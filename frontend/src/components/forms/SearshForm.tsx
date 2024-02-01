@@ -71,6 +71,7 @@ const SearchForm: React.FC = () => {
   //при натисканні на button до кожної пошукової кнопки
   const onSearchButton = async (column: string) => {
     dispatch(ordersActions.setSearchValue(updateValues[column]));
+    console.log('ja v onSearchButton');
     dispatch(ordersActions.setSearchNameRow(column));
   };
 
@@ -97,6 +98,7 @@ const SearchForm: React.FC = () => {
       }
     } else {
       dispatch(ordersActions.setSearchValue(""));
+      console.log('ja v me ');
       dispatch(ordersActions.setSearchNameRow(""));
     }
   };
