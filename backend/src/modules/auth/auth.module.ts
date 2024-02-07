@@ -25,7 +25,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
       property: 'user',
     }),
     RedisModule.forRoot({
-      url: 'redis://localhost:6379',
+      url: 'redis://redis:6379',
     }),
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
     JwtModule.registerAsync({
@@ -41,7 +41,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
         transport: {
           host: 'smtp.gmail.com',
           port: 587,
-          secure: false, // upgrade later with STARTTLS
+          secure: false,
           auth: {
             user: 'stugarka@gmail.com',
             pass: 'oueq hezr ohjk rsin',

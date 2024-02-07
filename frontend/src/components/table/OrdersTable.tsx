@@ -1,5 +1,5 @@
 // OrderTable.tsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { columns } from "../../constants/list.table";
@@ -29,20 +29,9 @@ const OrdersTable: React.FC = () => {
   } = useAppSelector((state: RootState) => state.orders);
 
   const searchParams = new URLSearchParams(location.search);
-  const nameParam = searchParams.get("name");
-  const ageParam = searchParams.get("age");
-  const emailParam = searchParams.get("email");
   const pageNumber = +searchParams.get("page") || 1;
   const sortRowNameParam = searchParams.get("nameSortRow");
   const sortParamValue = searchParams.get("order");
-  const surnameParam = searchParams.get("surname");
-  const phoneParam = searchParams.get("phone");
-  const courseParam = searchParams.get("course");
-  const course_typeParam = searchParams.get("course_type");
-  const course_formatParam = searchParams.get("course_format");
-  const groupNameParam = searchParams.get("groupName");
-  const statusParam = searchParams.get("status");
-  const userIdParam = searchParams.get("userid");
 
 
   const onGetOrderActive = (orderId: string) => {
@@ -52,14 +41,13 @@ const OrdersTable: React.FC = () => {
 
   //write params
   useEffect(() => {
-
     dispatch(ordersActions.setActivePage(pageNumber));
     dispatch(ordersActions.getOrderActive(null));
     dispatch(ordersActions.setNameRowSort(sortRowNameParam && sortRowNameParam));
     if (sortParamValue !== null && sortParamValue !== "false") {
       dispatch(ordersActions.setSort(sortParamValue));
     }
-  }, [pageNumber,sortParamValue, sortRowNameParam,  dispatch]);
+  }, [pageNumber, sortParamValue, sortRowNameParam, dispatch]);
 
 
   useEffect(() => {
@@ -85,10 +73,8 @@ const OrdersTable: React.FC = () => {
           limit: limit,
           page: activePage,
           surname: searchQuery.surname === null || searchQuery.surname === undefined || searchQuery.surname === '' ? "" : searchQuery.surname,
-
           email: searchQuery.email !== undefined && searchQuery.email !== '' ? searchQuery.email : '',
           age: searchQuery.age !== undefined && searchQuery.age !== '' ? searchQuery.age : '',
-
           name: searchQuery.name !== undefined && searchQuery.name !== '' ? searchQuery.name : '',
           phone: searchQuery.phone !== undefined && searchQuery.phone !== '' ? searchQuery.phone : '',
           course: searchQuery.course !== undefined && searchQuery.course !== '' ? searchQuery.course : '',
@@ -105,10 +91,7 @@ const OrdersTable: React.FC = () => {
         navigate(
           `?${activePage && `page=${activePage}`}&limit=${limit}&order=${sort && sort}${nameSortRow ? `&nameSortRow=${nameSortRow}` : ""}${searchQuery.email ? `&email=${searchQuery.email}` : ''}${searchQuery.age ? `&age=${searchQuery.age}` : ''}${searchQuery.name ? `&name=${searchQuery.name}` : ''}${searchQuery.phone ? `&phone=${searchQuery.phone}` : ''}${searchQuery.course ? `&course=${searchQuery.course}` : ''}${searchQuery.course_type ? `&course_type=${searchQuery.course_type}` : ''}${searchQuery.course_format ? `&course_format=${searchQuery.course_format}` : ''}${searchQuery.status ? `&status=${searchQuery.status}` : ''}${searchQuery.groupName ? `&groupName=${searchQuery.groupName}` : ''}${searchQuery.userId ? `&userId=${searchQuery.userId}` : ''}`,
         );
-
-
       }
-
     } catch (error) {
       console.error("An error occurred while fetching orders:", error);
     }
