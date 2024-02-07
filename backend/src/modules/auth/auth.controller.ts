@@ -7,6 +7,7 @@ import {
   Get,
   UseGuards,
   Query,
+  UseFilters,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -27,6 +28,7 @@ import {
 import { MailerService } from '@nestjs-modules/mailer';
 import { ParamsToken } from '../orders/dto/orders-params.dto';
 import { ITokens } from './interfaces/tokens.type';
+import { HttpExceptionFilter } from '../../common/utils/http-exception.filter';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -38,6 +40,7 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Login' })
   @Post('login')
+  @UseFilters(new HttpExceptionFilter())
   async login(@Body() body: LoginRequestDto): Promise<ITokens> {
     return await this.authService.login(body);
   }

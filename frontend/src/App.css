@@ -150,9 +150,9 @@ tbody td {
   transition:
     background 0.5s,
     color 0.5s;
-    margin: 5px;
+  margin: 5px;
 }
-.light-button{
+.light-button {
   background: linear-gradient(90deg, #1e1f1f, #3a2ebe);
 }
 

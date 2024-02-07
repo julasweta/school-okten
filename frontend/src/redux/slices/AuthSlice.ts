@@ -11,15 +11,13 @@ import { authService } from "../../services/authService";
 
 interface AuthState {
   deleteTriger: boolean;
- errors: {
-   response?: { data: { password: string; username: string;  detail:string}};
-  };
+  error: string;
   me: IUser | null;
 }
 
 const initialState: AuthState = {
   deleteTriger: true,
-  errors: null,
+  error: null,
   me: null,
 };
 
@@ -48,7 +46,6 @@ const login = createAsyncThunk<IUser, { user: IAuth }>(
     }
   },
 );
-
 
 const me = createAsyncThunk<IUser>(
   "authSlice/me",
@@ -83,11 +80,21 @@ export const AuthSlice = createSlice({
       .addCase(me.fulfilled, (state, action) => {
         state.me = action.payload;
       })
-      .addMatcher(isRejected, (state, action) => {
-        state.errors = action.payload;
-      })
+      .addMatcher(
+        (action): action is ReturnType<typeof login.rejected> =>
+          action.type === login.rejected.type,
+        (state, action) => {
+          if (action.payload instanceof Error && "response" in action.payload) {
+            state.error = action.payload.message;
+            console.log(action.payload.response); // Доступ до властивостей відповіді Axios
+          } else {
+            console.error(action.payload);
+            state.error = "An unexpected error occurred.";
+          }
+        },
+      )
       .addMatcher(isFulfilled, (state, action) => {
-        state.errors = null;
+        state.error = null;
       }),
 });
 

@@ -22,11 +22,12 @@ import {
   RecoveryPassword,
 } from '../../common/interfaces/IListRes';
 import { ITokens } from './interfaces/tokens.type';
-
-class AuthenticationError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'AuthenticationError';
+export class ApiError extends HttpException {
+  constructor(
+    message: string,
+    status: number = HttpStatus.INTERNAL_SERVER_ERROR,
+  ) {
+    super(message, status);
   }
 }
 
@@ -92,52 +93,44 @@ export class AuthService {
   }
 
   async login(body: LoginRequestDto): Promise<ITokens> {
-    try {
-      const user = await this.userService.userFindOneEmail(body.email);
+    const user = await this.userService.userFindOneEmail(body.email);
 
-      if (!user) {
-        throw new Error('Password or email is wrong');
-      }
-
-      const hashPassw = await bcrypt.compare(
-        body.password.toLowerCase().trim(),
-        user.password,
-      );
-
-      if (!hashPassw) {
-        throw new Error('Password or email is wrong');
-      }
-
-      const accessToken = await this.verificationService.createToken(
-        {
-          email: body.email,
-          type: 'access',
-        },
-        '30m',
-      );
-
-      const refreshToken = await this.verificationService.createToken(
-        {
-          email: user.email,
-          type: 'refresh',
-        },
-        '60m',
-      );
-
-      await this.redisClient.setEx(accessToken, 10000, accessToken);
-      await this.redisClient.setEx(refreshToken, 50000, refreshToken);
-
-      return { accessToken, refreshToken };
-    } catch (error) {
-      if (error instanceof AuthenticationError) {
-        console.error('Authentication error:', error.message);
-        throw new Error(error.message);
-      } else {
-        // Інші типи помилок
-        console.error('An error occurred:', error.message);
-        throw new Error(error.message);
-      }
+    if (!user) {
+      throw new Error();
     }
+
+    const hashPassw = await bcrypt.compare(
+      body.password.toLowerCase().trim(),
+      user.password,
+    );
+
+    if (!hashPassw) {
+      throw new ApiError(
+        'Unauthorized: Password or email is wrong',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    const accessToken = await this.verificationService.createToken(
+      {
+        email: body.email,
+        type: 'access',
+      },
+      '30m',
+    );
+
+    const refreshToken = await this.verificationService.createToken(
+      {
+        email: user.email,
+        type: 'refresh',
+      },
+      '60m',
+    );
+
+    await this.redisClient.setEx(accessToken, 10000, accessToken);
+    await this.redisClient.setEx(refreshToken, 50000, refreshToken);
+
+    return { accessToken, refreshToken };
   }
 
   async validateUser(data: ITokenPayload): Promise<UserBaseDto> {

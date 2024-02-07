@@ -21,14 +21,18 @@ const Activate: React.FC = () => {
   const tokenFromURL = urlParams.get("token") || "";
 
   const isPasswordSecure = (password: string): boolean => {
-    return password.length >= 8 && /\d/.test(password) && /[a-zA-Z]/.test(password);
+    return (
+      password.length >= 8 && /\d/.test(password) && /[a-zA-Z]/.test(password)
+    );
   };
 
   const onSubmit = async (data: FormData) => {
     try {
       // Перевірка на надійність паролю перед відправленням на сервер
       if (!isPasswordSecure(data.password)) {
-        toast.error("Password should be at least 8 characters long and include both letters and numbers.");
+        toast.error(
+          "Password should be at least 8 characters long and include both letters and numbers.",
+        );
         return;
       }
 
@@ -60,4 +64,3 @@ const Activate: React.FC = () => {
 };
 
 export { Activate };
-

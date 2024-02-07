@@ -1,31 +1,31 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
-import { StatusUser } from "../interfaces/users.types";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
+import { StatusUser } from '../interfaces/users.types';
 
 export type UserDocument = HydratedDocument<User>;
 
 @Schema()
 export class User {
-	@Prop()
-	name: string;
+  @Prop()
+  name: string;
 
-	@Prop()
-	surName: string;
+  @Prop()
+  surName: string;
 
-	@Prop()
-	email: string;
+  @Prop()
+  email: string;
 
-	@Prop()
-	password: string | null = null;
+  @Prop()
+  password: string | null = null;
 
-	@Prop({ default: "manager" })
-	role: string;
+  @Prop({ default: 'manager' })
+  role: string;
 
-	@Prop()
-	token?: string;
+  @Prop()
+  token?: string;
 
-	@Prop({ enum: StatusUser, default: StatusUser.INACTIVE })
-	status: StatusUser;
+  @Prop({ enum: StatusUser, default: StatusUser.INACTIVE })
+  status: StatusUser;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

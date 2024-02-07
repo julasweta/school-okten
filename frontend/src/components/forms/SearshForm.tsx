@@ -11,18 +11,26 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useLocation } from "react-router-dom";
 
-
 const SearchForm: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { groups, isChecked, updateOrderTriger, searchValue, nameSearchRow } =
+  const { groups, isChecked, updateOrderTriger, searchQuery } =
     useAppSelector((state: RootState) => state.orders);
   const { me } = useAppSelector((state: RootState) => state.auth);
   const { onCleanUtils } = useCleanrUtils();
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const searchParam = searchParams.get("search");
-  const nameSearchRowParam = searchParams.get("nameSearchRow");
+  const emailParam = searchParams.get("email");
+  const ageParam = searchParams.get("age");
+  const surnameParam = searchParams.get("surname");
+  const nameParam = searchParams.get("name");
+  const phoneParam = searchParams.get("phone");
+  const courseParam = searchParams.get("course");
+  const course_typeParam = searchParams.get("course_type");
+  const course_formatParam = searchParams.get("course_format");
+  const groupNameParam = searchParams.get("groupName");
+  const statusParam = searchParams.get("status");
+  const userIdParam = searchParams.get("userId");
 
 
   const schema = yup.object().shape({
@@ -30,8 +38,7 @@ const SearchForm: React.FC = () => {
     surname: yup.string(),
     email: yup.string(),
     phone: yup.string(),
-    age: yup.string(),
-
+    age: yup.number(),
     course: yup.string(),
     course_format: yup.string(),
     course_type: yup.string(),
@@ -40,7 +47,6 @@ const SearchForm: React.FC = () => {
     isMe: yup.string(),
   });
 
-
   const {
     register,
     handleSubmit,
@@ -48,60 +54,70 @@ const SearchForm: React.FC = () => {
     setValue,
     watch,
     clearErrors,
-    formState: { errors }
+    formState: { errors },
   }: UseFormReturn<any> = useForm({
     resolver: yupResolver(schema),
     shouldUnregister: true,
     criteriaMode: "all",
   });
 
+
   let { isMe, ...updateValues }: any = getValues();
 
   useEffect(() => {
+    console.log('userIdParam',userIdParam);
+    setValue('email', emailParam);
+    setValue('age', ageParam);
+    setValue('name', nameParam);
+    setValue('surname', surnameParam);
+    setValue('phone', phoneParam);
+    setValue('course', courseParam);
+    setValue('course-type', course_typeParam);
+    setValue('course-format', course_formatParam);
+    setValue('status', statusParam);
+    setValue('groupName', groupNameParam);
+    setValue('userId', userIdParam);
+    if (userIdParam) {
+      dispatch(ordersActions.setIsChecked("on"));
+    }
+  }, []);
+
+  let res = {}
+  useEffect(() => {
+    console.log('updatevalues', updateValues);
     Object.entries(updateValues).forEach(([key, item]) => {
-      if (item) {
-        dispatch(ordersActions.setIsChecked("off"));
-        dispatch(ordersActions.setSearchValue(item && item !== 'select' ? item : searchParam));
-        dispatch(ordersActions.setSearchNameRow(item && item !== 'select' ? key : nameSearchRowParam));
+      if (item !== 'select' && item !== null && item !== "") {
+        res = { ...res, [key]: item }
+        //dispatch(ordersActions.setSearchQuery({ ...searchQuery, [key]: item }));
       }
     });
+    dispatch(ordersActions.setSearchQuery({ ...res }))
+  }, [updateOrderTriger, emailParam, ageParam,  nameParam, surnameParam, phoneParam, courseParam, course_typeParam, course_formatParam, groupNameParam,   dispatch]);
 
-  }, [updateOrderTriger, searchValue, nameSearchRow, dispatch]);
 
   //при натисканні на button до кожної пошукової кнопки
   const onSearchButton = async (column: string) => {
-    dispatch(ordersActions.setSearchValue(updateValues[column]));
-    console.log('ja v onSearchButton');
-    dispatch(ordersActions.setSearchNameRow(column));
   };
 
-  const onSubmit = (data: any) => { console.log(data); };
+  const onSubmit = (data: any) => {
+    console.log(data);
+  };
 
   const onMeCheckboxChange = () => {
-    dispatch(ordersActions.setUpdateOrderTriger());
-    dispatch(ordersActions.setIsChecked(isChecked === "on" ? "off" : "on"));
-    searchColumns.forEach((column) => {
-      if (column !== "isMe") {
-        setValue("isMe", "");
-      }
-    });
-    if (isChecked === "off") {
-      if (me && me._id) {
-        searchColumns.forEach((column) => {
-          if (column !== "isMe") {
-            clearErrors()
-            setValue(column, "");
-          }
-        });
-        dispatch(ordersActions.setSearchValue(me._id));
-        dispatch(ordersActions.setSearchNameRow("userId"));
-      }
+    const newIsChecked = isChecked === "on" ? "off" : "on";
+    dispatch(ordersActions.setIsChecked(newIsChecked));
+    if (newIsChecked === "off") {
+      setValue('userId', "");  
+      dispatch(ordersActions.setUpdateOrderTriger());
     } else {
-      dispatch(ordersActions.setSearchValue(""));
-      console.log('ja v me ');
-      dispatch(ordersActions.setSearchNameRow(""));
+      if (me && me._id) {
+        setValue('userId', me._id); 
+        dispatch(ordersActions.setUpdateOrderTriger());
+      }
     }
+   
   };
+
 
   const onClean = () => {
     onCleanUtils();
@@ -153,21 +169,19 @@ const SearchForm: React.FC = () => {
             {...register(column)}
             id={column}
             className="search-input"
-            value={watch(column) || ""}
+            value={updateValues[column] || ""}
             onChange={(e) => {
               setValue(column, e.target.value);
               const selectedValue = e.target.value;
-              if (selectedValue == 'select') {
+              if (selectedValue == "select") {
                 onClean();
               }
               dispatch(ordersActions.setUpdateOrderTriger());
               searchColumns.forEach((otherColumn) => {
                 if (otherColumn !== column) {
                   clearErrors(otherColumn);
-                  setValue(otherColumn, "");
                 }
               });
-
             }}
           >
             <option value="select">Select...</option>
@@ -177,7 +191,6 @@ const SearchForm: React.FC = () => {
               </option>
             ))}
           </select>
-
         ) : isGroup ? (
           <select
             {...register(column)}
@@ -187,14 +200,13 @@ const SearchForm: React.FC = () => {
             onChange={(e) => {
               setValue(column, e.target.value);
               const selectedValue = e.target.value;
-              if (selectedValue == 'select') {
+              if (selectedValue == "select") {
                 onClean();
               }
               dispatch(ordersActions.setUpdateOrderTriger());
               searchColumns.forEach((otherColumn) => {
                 if (otherColumn !== column) {
                   clearErrors(otherColumn);
-                  setValue(otherColumn, "");
                 }
               });
             }}
@@ -206,39 +218,41 @@ const SearchForm: React.FC = () => {
               </option>
             ))}
           </select>
-        ) : (column !== 'isMe' &&
-          <input
-            type="text"
-            placeholder={column}
-            {...register(column)}
-            id={column}
-            className="search-input"
-              value={updateValues[column] || ""}
-            onChange={(e) => {
-              setValue(column, e.target.value, { shouldValidate: true });
-
-              searchColumns.forEach((otherColumn) => {
-                if (otherColumn !== column) {
-                  setValue(otherColumn, '', { shouldValidate: true });
-                  clearErrors(otherColumn);
-                }
-              });
-              const beforeValue = getValues(column);
-              setTimeout(() => {
-                const afterValue = getValues(column);
-                if ((Object.keys(errors).length < 1) && beforeValue !== afterValue) {
+        ) : (
+          column !== "isMe" && (
+            <input
+              type="text"
+              placeholder={column}
+              {...register(column)}
+              id={column}
+              className="search-input"
+              value={updateValues.column}
+              onChange={(e) => {
+                setValue(column, e.target.value, { shouldValidate: true });
+                searchColumns.forEach((otherColumn) => {
+                  if (otherColumn !== column) {
+                    clearErrors(otherColumn);
+                  }
+                });
+                const beforeValue = getValues(column);
+                setTimeout(() => {
+                  const afterValue = getValues(column);
+                  if (
+                    Object.keys(errors).length < 1 &&
+                    beforeValue !== afterValue
+                  ) {
+                    dispatch(ordersActions.setUpdateOrderTriger());
+                  }
+                }, 1500);
+              }}
+              onBlur={() => {
+                if (Object.keys(errors).length < 1) {
                   dispatch(ordersActions.setUpdateOrderTriger());
                 }
-              }, 1500);
-            }}
-            onBlur={() => {
-              if (Object.keys(errors).length < 1) {
-                dispatch(ordersActions.setUpdateOrderTriger());
-              }
-            }}
-          />
+              }}
+            />
+          )
         )}
-
       </>
     );
   };
@@ -257,7 +271,6 @@ const SearchForm: React.FC = () => {
         return {};
     }
   };
-
 
   return (
     <div>
@@ -278,7 +291,9 @@ const SearchForm: React.FC = () => {
 
       <div>
         {Object.values(errors).map((error: any, index) => (
-          <div key={index} className="red">{error.message}</div>
+          <div key={index} className="red">
+            {error.message}
+          </div>
         ))}
       </div>
 

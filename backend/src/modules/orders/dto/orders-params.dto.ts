@@ -41,7 +41,37 @@ export class OrderListQuerytDto extends ParamsQueryDto {
   @Transform(({ value }) => value.toLowerCase())
   @IsString()
   @IsOptional()
-  search?: string;
+  name?: string;
+
+  @IsOptional()
+  surname?: string;
+
+  @IsOptional()
+  email?: string;
+
+  @IsOptional()
+  age?: string;
+
+  @IsOptional()
+  phone?: string;
+
+  @IsOptional()
+  course?: string;
+
+  @IsOptional()
+  course_type?: string;
+
+  @IsOptional()
+  course_format?: string;
+
+  @IsOptional()
+  status?: string;
+
+  @IsOptional()
+  groupName?: string;
+
+  @IsOptional()
+  userId?: string;
 
   @IsOptional()
   created_at?: Date;
@@ -53,7 +83,6 @@ export class OrderListQuerytDto extends ParamsQueryDto {
   endDate?: string;
 
   nameSortRow?: string;
-  nameSearchRow?: string;
 }
 
 export class ParamsToken {

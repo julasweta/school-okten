@@ -1,5 +1,5 @@
 import { FC, useEffect } from "react";
-import { Outlet,  useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { Header } from "../components/header/Header";
 import "./../App.css";
 import { useAppSelector } from "../hooks/hooks";
@@ -10,15 +10,11 @@ const MainLayout: FC = () => {
   const getRefreshToken = localStorage.getItem("refreshToken");
   const navigate = useNavigate();
 
-
   useEffect(() => {
     if (me && (!me || !getRefreshToken)) {
-      navigate(AppRoutes.LOGIN)
+      navigate(AppRoutes.LOGIN);
     }
-   
   }, [me, getRefreshToken, navigate]);
-
-
 
   return (
     <div>
@@ -26,7 +22,6 @@ const MainLayout: FC = () => {
       <Outlet />
     </div>
   );
-
 };
 
 export { MainLayout };

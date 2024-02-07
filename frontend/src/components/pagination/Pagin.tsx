@@ -9,13 +9,11 @@ import { AppRoutes } from "../../routing/AppRoutes";
 
 const Pagin: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { itemsFound, activePage, searchValue, nameSearchRow, sort } = useAppSelector(
-    (state: RootState) => state.orders,
-  );
-  const limit = 15;
+  const { itemsFound, activePage, searchValue, nameSearchRow, sort, nameSortRow, limit } =
+    useAppSelector((state: RootState) => state.orders);
+  
   const pageCount = Math.ceil(itemsFound / limit);
   const buttonsToShow = 10; //  скільки кнопок  навколо поточної сторінки.
-
 
   const generateButtons = () => {
     const buttons = [];
@@ -39,23 +37,20 @@ const Pagin: React.FC = () => {
       );
     }
 
-  
-
-
     for (let i = startPage; i <= endPage; i++) {
       const queryParams = new URLSearchParams({
         page: i.toString(),
-        limit: '15',
-        nameSearchRow: searchValue && searchValue !== 'select' ? nameSearchRow : '',
-        search: searchValue && searchValue !== 'select' ? searchValue : '',
+        limit: "15",
+        nameSearchRow:
+          searchValue && searchValue !== "select" ? nameSearchRow : "",
+        search: searchValue && searchValue !== "select" ? searchValue : "",
         order: sort,
+        nameSortRow: nameSortRow
+
       });
 
       buttons.push(
-        <Link
-          to={`${AppRoutes.ORDERS}?${queryParams.toString()}`}
-          key={i}
-        >
+        <Link to={`${AppRoutes.ORDERS}?${queryParams.toString()}`} key={i}>
           <button className={activePage === i ? "button active-btn" : "button"}>
             {i}
           </button>

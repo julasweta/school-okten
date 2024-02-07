@@ -37,8 +37,7 @@ const UserInfo: React.FC<UserProps> = ({ user }) => {
   }, []);
 
   const inWork = (status: StatusWork) => {
-    const res =
-      myOrders && myOrders.filter((item) => item.status === status);
+    const res = myOrders && myOrders.filter((item) => item.status === status);
     return res;
   };
 
@@ -67,38 +66,38 @@ const UserInfo: React.FC<UserProps> = ({ user }) => {
     >
       {isOpen
         ? Object.entries(user).map(
-          ([key, value]) =>
-            key === "name" && (
-              <div className="user" key={key}>
-                <label className="capitOne">{key}: </label>
-                <span className="capitOne">{value}</span>
-              </div>
-            ),
-        )
+            ([key, value]) =>
+              key === "name" && (
+                <div className="user" key={key}>
+                  <label className="capitOne">{key}: </label>
+                  <span className="capitOne">{value}</span>
+                </div>
+              ),
+          )
         : Object.entries(user).map(([key, value]) => (
-          <div className="user" key={key}>
-            <div>
-              <label
-                className={key === "status" ? "capitOne green" : "capitOne"}
-              >
-                {key}:{" "}
-              </label>
-              <span
-                className={
-                  value === "activate"
-                    ? "capitOne green"
-                    : value === "ban"
-                      ? "capitOne red"
-                      : value === "inactive"
-                        ? "capitOne blue"
-                        : "capitOne"
-                }
-              >
-                {value}
-              </span>
+            <div className="user" key={key}>
+              <div>
+                <label
+                  className={key === "status" ? "capitOne green" : "capitOne"}
+                >
+                  {key}:{" "}
+                </label>
+                <span
+                  className={
+                    value === "activate"
+                      ? "capitOne green"
+                      : value === "ban"
+                        ? "capitOne red"
+                        : value === "inactive"
+                          ? "capitOne blue"
+                          : "capitOne"
+                  }
+                >
+                  {value}
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       <hr></hr>
       <div>
         {" "}
@@ -108,18 +107,36 @@ const UserInfo: React.FC<UserProps> = ({ user }) => {
         {" "}
         <b>Orders InWork: </b> {inWork(StatusWork.InWork).length}
       </div>
-      {inWork(StatusWork.Aggre).length ? <div>
-        <b>Orders {StatusWork.Aggre} </b> {inWork(StatusWork.Aggre).length}
-      </div> : ''}
-      {inWork(StatusWork.Disaggre).length ? <div>
-        <b>Orders {StatusWork.Disaggre} </b> {inWork(StatusWork.Disaggre).length}
-      </div> : ''}
-      {inWork(StatusWork.Dubbing).length ? <div>
-        <b>Orders {StatusWork.Dubbing} </b> {inWork(StatusWork.Dubbing).length}
-      </div> : ''}
-      {inWork(StatusWork.New).length ? <div>
-        <b>Orders {StatusWork.New} </b> {inWork(StatusWork.New).length}
-      </div> : ''}
+      {inWork(StatusWork.Aggre).length ? (
+        <div>
+          <b>Orders {StatusWork.Aggre} </b> {inWork(StatusWork.Aggre).length}
+        </div>
+      ) : (
+        ""
+      )}
+      {inWork(StatusWork.Disaggre).length ? (
+        <div>
+          <b>Orders {StatusWork.Disaggre} </b>{" "}
+          {inWork(StatusWork.Disaggre).length}
+        </div>
+      ) : (
+        ""
+      )}
+      {inWork(StatusWork.Dubbing).length ? (
+        <div>
+          <b>Orders {StatusWork.Dubbing} </b>{" "}
+          {inWork(StatusWork.Dubbing).length}
+        </div>
+      ) : (
+        ""
+      )}
+      {inWork(StatusWork.New).length ? (
+        <div>
+          <b>Orders {StatusWork.New} </b> {inWork(StatusWork.New).length}
+        </div>
+      ) : (
+        ""
+      )}
       <div className="user-buttons">
         {!isOpen && (
           <button className="button" onClick={() => setIsOpen(!isOpen)}>
@@ -127,10 +144,7 @@ const UserInfo: React.FC<UserProps> = ({ user }) => {
           </button>
         )}
         {user.token && (
-          <Link
-            to={`/auth/activate?token=${user.token}`}
-            className="button"
-          >
+          <Link to={`/auth/activate?token=${user.token}`} className="button">
             Activate
           </Link>
         )}

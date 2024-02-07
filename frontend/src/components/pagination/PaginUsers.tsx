@@ -15,11 +15,12 @@ const PaginUsers: React.FC = () => {
   const pageCount = Math.ceil(usersFound / limit);
   const buttonsToShow = 4; //  скільки кнопок  навколо поточної сторінки.
 
-
-
   const generateButtons = () => {
     const buttons = [];
-    const startPage = Math.max(1, +activePageUsers - Math.floor(buttonsToShow / 2));
+    const startPage = Math.max(
+      1,
+      +activePageUsers - Math.floor(buttonsToShow / 2),
+    );
     const endPage = Math.min(pageCount, startPage + buttonsToShow - 1);
 
     if (startPage > 1) {
@@ -40,14 +41,19 @@ const PaginUsers: React.FC = () => {
     }
 
     for (let i = startPage; i <= endPage; i++) {
-
       buttons.push(
         <Link
           to={`${AppRoutes.ADMIN}?page=${i}&limit=${limit}`}
           key={i}
-          onClick={()=>dispatch (usersActions.setActivePageUsers(i))}
+          onClick={() => dispatch(usersActions.setActivePageUsers(i))}
         >
-          <button className={(activePageUsers && +activePageUsers === i) ? "button active-btn" : "button"}>
+          <button
+            className={
+              activePageUsers && +activePageUsers === i
+                ? "button active-btn"
+                : "button"
+            }
+          >
             {i}
           </button>
         </Link>,
@@ -91,7 +97,10 @@ const PaginUsers: React.FC = () => {
       <Link
         to={`${AppRoutes.ADMIN}?page=${+activePageUsers > 1 ? +activePageUsers - 1 : 1}&limit=${limit}`}
       >
-        <button onClick={onHead} className="button"> Forward </button>
+        <button onClick={onHead} className="button">
+          {" "}
+          Forward{" "}
+        </button>
       </Link>
 
       {generateButtons()}

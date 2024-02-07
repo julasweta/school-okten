@@ -8,7 +8,6 @@ import { RootState } from "../../redux/store";
 
 const RegisterForm = () => {
   const { register, handleSubmit } = useForm<IReg>();
-  const { errors } = useAppSelector((state) => state.auth);
   const { activePage } = useAppSelector((state: RootState) => state.orders);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -34,17 +33,6 @@ const RegisterForm = () => {
         <input type="text" placeholder={"role"} {...register("role")} />
         <button>register</button>
         <p></p>
-        {errors?.response.data.username ===
-        "user model with this username already exists." ? (
-          <p> Імя вже зареєстровано</p>
-        ) : (
-          ""
-        )}
-        {errors?.response.data.password ? (
-          <p>{errors.response.data.password}</p>
-        ) : (
-          ""
-        )}
       </form>
     </div>
   );

@@ -21,42 +21,52 @@ const OrdersTable: React.FC = () => {
     updateOrderTriger,
     orderActive,
     activePage,
-    searchValue,
-    nameSearchRow,
     addGroupTriger,
     sort,
-    nameSortRow
+    nameSortRow,
+    limit,
+    searchQuery
   } = useAppSelector((state: RootState) => state.orders);
 
   const searchParams = new URLSearchParams(location.search);
-  const searchParam = searchParams.get("search");
-  const nameSearchRowParam = searchParams.get("nameSearchRow");
+  const nameParam = searchParams.get("name");
+  const ageParam = searchParams.get("age");
+  const emailParam = searchParams.get("email");
   const pageNumber = +searchParams.get("page") || 1;
-  const sortRowNameParam = searchParams.get('nameSortRow'); // який рядок
-  const sortParamValue = searchParams.get('order'); //desc or asc
+  const sortRowNameParam = searchParams.get("nameSortRow");
+  const sortParamValue = searchParams.get("order");
+  const surnameParam = searchParams.get("surname");
+  const phoneParam = searchParams.get("phone");
+  const courseParam = searchParams.get("course");
+  const course_typeParam = searchParams.get("course_type");
+  const course_formatParam = searchParams.get("course_format");
+  const groupNameParam = searchParams.get("groupName");
+  const statusParam = searchParams.get("status");
+  const userIdParam = searchParams.get("userid");
 
 
   const onGetOrderActive = (orderId: string) => {
     dispatch(ordersActions.getOrderActive(orderId));
   };
 
+
   //write params
   useEffect(() => {
+
     dispatch(ordersActions.setActivePage(pageNumber));
     dispatch(ordersActions.getOrderActive(null));
-    dispatch(ordersActions.setSearchValue(searchParam && searchParam));
-    dispatch(ordersActions.setSearchNameRow(nameSearchRowParam && nameSearchRowParam));
-
-    console.log('sortParamValue', sortParamValue);
     dispatch(ordersActions.setNameRowSort(sortRowNameParam && sortRowNameParam));
-    if (sortParamValue !== null && sortParamValue !== 'false') { dispatch(ordersActions.setSort(sortParamValue)); }
+    if (sortParamValue !== null && sortParamValue !== "false") {
+      dispatch(ordersActions.setSort(sortParamValue));
+    }
+  }, [pageNumber,sortParamValue, sortRowNameParam,  dispatch]);
 
-
-  }, [searchParam, nameSearchRowParam, pageNumber, sortRowNameParam, sortParamValue, dispatch]);
 
   useEffect(() => {
     const isAccess = localStorage.getItem("accessToken");
-    if (!isAccess) { navigate(AppRoutes.LOGIN) }
+    if (!isAccess) {
+      navigate(AppRoutes.LOGIN);
+    }
   }, [navigate]);
 
   useEffect(() => {
@@ -64,44 +74,61 @@ const OrdersTable: React.FC = () => {
   }, [addGroupTriger, dispatch]);
 
   useEffect(() => {
+    console.log('searchQuery', searchQuery ? searchQuery : ' searchQuery nemai');
     try {
+
+
       dispatch(
         ordersActions.getOrders({
           sort: sort,
-          limit: 15,
+          nameSortRow: nameSortRow ? nameSortRow : '',
+          limit: limit,
           page: activePage,
-          search: searchValue === 'select' ? '' : searchValue,
-          nameSortRow: nameSortRow,
-          nameSearchRow: searchValue === 'select' ? '' : nameSearchRow,
+          surname: searchQuery.surname === null || searchQuery.surname === undefined || searchQuery.surname === '' ? "" : searchQuery.surname,
+
+          email: searchQuery.email !== undefined && searchQuery.email !== '' ? searchQuery.email : '',
+          age: searchQuery.age !== undefined && searchQuery.age !== '' ? searchQuery.age : '',
+
+          name: searchQuery.name !== undefined && searchQuery.name !== '' ? searchQuery.name : '',
+          phone: searchQuery.phone !== undefined && searchQuery.phone !== '' ? searchQuery.phone : '',
+          course: searchQuery.course !== undefined && searchQuery.course !== '' ? searchQuery.course : '',
+          course_format: searchQuery.course_format !== undefined && searchQuery.course_format !== '' ? searchQuery.course_format : '',
+          course_type: searchQuery.course_type !== undefined && searchQuery.course_type !== '' ? searchQuery.course_type : '',
+          status: searchQuery.status !== undefined && searchQuery.status !== '' ? searchQuery.status : '',
+          groupName: searchQuery.groupName !== undefined && searchQuery.groupName !== '' ? searchQuery.groupName : '',
+          userId: searchQuery.userId !== undefined && searchQuery.userId !== '' ? searchQuery.userId : '',
         }),
       );
 
-      // Перевірка поточного шляху перед додаванням параметрів
       const currentPath = window.location.pathname;
-      if (currentPath === '/orders') {
-        console.log('sort', sort);
-        navigate(`?${activePage && `page=${activePage}`}&limit=15${searchValue && searchValue !== 'select' ? `&nameSearchRow=${nameSearchRow}&search=${searchValue}` : ''}&order=${sort && sort}${nameSortRow ? `&nameSortRow=${nameSortRow}` : ''}`);
+      if (currentPath === "/orders") {
+        navigate(
+          `?${activePage && `page=${activePage}`}&limit=${limit}&order=${sort && sort}${nameSortRow ? `&nameSortRow=${nameSortRow}` : ""}${searchQuery.email ? `&email=${searchQuery.email}` : ''}${searchQuery.age ? `&age=${searchQuery.age}` : ''}${searchQuery.name ? `&name=${searchQuery.name}` : ''}${searchQuery.phone ? `&phone=${searchQuery.phone}` : ''}${searchQuery.course ? `&course=${searchQuery.course}` : ''}${searchQuery.course_type ? `&course_type=${searchQuery.course_type}` : ''}${searchQuery.course_format ? `&course_format=${searchQuery.course_format}` : ''}${searchQuery.status ? `&status=${searchQuery.status}` : ''}${searchQuery.groupName ? `&groupName=${searchQuery.groupName}` : ''}${searchQuery.userId ? `&userId=${searchQuery.userId}` : ''}`,
+        );
+
+
       }
+
     } catch (error) {
       console.error("An error occurred while fetching orders:", error);
     }
   }, [
     activePage,
     updateOrderTriger,
-    searchValue,
     nameSortRow,
     sort,
-    nameSearchRow,
     orderActive,
+    searchQuery,
     dispatch,
-    navigate
+    navigate,
+    limit
   ]);
 
 
 
   const onSortRow = (column: string) => {
     dispatch(ordersActions.setSort(sort === "DESC" ? "ASC" : "DESC"));
-    dispatch(ordersActions.setNameRowSort(column))
+    dispatch(ordersActions.setNameRowSort(column));
   };
 
   const renderTableHeader = () => {

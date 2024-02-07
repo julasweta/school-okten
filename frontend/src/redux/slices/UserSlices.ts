@@ -81,7 +81,7 @@ export const UsersSlice = createSlice({
       state.updateUserTriger = !state.updateUserTriger;
     },
     setActivePageUsers: (state, action) => {
-      state.activePageUsers= action.payload;
+      state.activePageUsers = action.payload;
     },
   },
 

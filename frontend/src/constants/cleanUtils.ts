@@ -8,8 +8,21 @@ const useCleanrUtils = () => {
 
   const onCleanUtils = async () => {
     navigate(`/orders?page=1`);
-    dispatch(ordersActions.setSearchValue(""));
-    dispatch(ordersActions.setSearchNameRow(""));
+    dispatch(
+      ordersActions.setSearchQuery({
+        name: "",
+        surname: "",
+        email: "",
+        age: "",
+        phone: "",
+        course: "",
+        course_format: "",
+        course_type: "",
+        status: "",
+        groupName: "",
+        userId: "",
+      })
+    );
     dispatch(ordersActions.setActivePage(1));
     dispatch(ordersActions.setUpdateOrderTriger());
     dispatch(ordersActions.setSort("DESC"));

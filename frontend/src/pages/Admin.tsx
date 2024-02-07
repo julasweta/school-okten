@@ -22,9 +22,19 @@ const Admin = () => {
         sort: "DESC",
         limit: 0,
         page: 1,
-        search: "",
         nameSortRow: "_id",
-        nameSearchRow: "",
+        name: "",
+        surname: "",
+        email: "",
+        age: "",
+        phone: "",
+        course: "",
+        course_format: "",
+        course_type: "",
+        status: "",
+        groupName: "",
+        userId: "",
+
       }),
     );
   }, [updateOrderTriger, dispatch]);
@@ -41,7 +51,7 @@ const Admin = () => {
     return <User user={createdUser}></User>;
   };
 
-  useEffect(() => {}, [createdUser]);
+  useEffect(() => { }, [createdUser]);
 
   const filterOrders = (key: keyof Order, value: string | null) => {
     return orders && orders.filter((item) => item[key] === value);

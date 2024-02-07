@@ -1,4 +1,4 @@
-import * as yup from 'yup';
+import * as yup from "yup";
 export interface EditOrderModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
@@ -36,7 +36,6 @@ export enum Course {
   PCX = "PCX",
 }
 
-
 export enum CourseType {
   PRO = "pro",
   MINIMAL = "minimal",
@@ -44,7 +43,6 @@ export enum CourseType {
   INCUBATOR = "incubator",
   VIP = "vip",
 }
-
 
 export enum CourseFormat {
   STATIC = "static",

@@ -13,6 +13,7 @@ interface OrderState {
   updateOrderTriger: boolean;
   createMessagTriger: boolean;
   itemsFound: number;
+  search: string;
   activePage: number;
   searchValue: string;
   nameSearchRow: string;
@@ -21,6 +22,20 @@ interface OrderState {
   isChecked: string;
   sort: string;
   nameSortRow: string;
+  limit: number;
+  searchQuery: {
+    name: string;
+    surname: string;
+    email: string;
+    age: string;
+    phone: string;
+    course: string;
+    course_format: string;
+    course_type: string;
+    status: string;
+    groupName: string;
+    userId: string;
+  };
 }
 
 const initialState: OrderState = {
@@ -32,12 +47,27 @@ const initialState: OrderState = {
   itemsFound: 0,
   activePage: 1,
   searchValue: "",
+  search: "",
   nameSearchRow: "",
   groups: [],
   addGroupTriger: true,
   isChecked: "off",
   sort: "DESC",
-  nameSortRow: ""
+  nameSortRow: "",
+  limit: 15,
+  searchQuery: {
+    name: "",
+    surname: "",
+    email: "",
+    age: "",
+    phone: "",
+    course: "",
+    course_format: "",
+    course_type: "",
+    status: "",
+    groupName: "",
+    userId: "",
+  },
 };
 
 /*-----------------AsyncThunk -------------------------------  */
@@ -46,26 +76,60 @@ const getOrders = createAsyncThunk<
   {
     sort: string;
     limit: number;
-    page?: number | null; // Змінив тип на необов'язковий
-    search: string;
+    page?: number | null;
     nameSortRow: string;
-    nameSearchRow: string;
+    name: string;
+    surname: string;
+    email: string;
+    age: string;
+    phone: string;
+    course: string;
+    course_format: string;
+    course_type: string;
+    status: string;
+    groupName: string;
+    userId: string;
   },
   { rejectValue: AxiosError }
 >(
   "ordersSlice/getOrders",
   async (
-    { sort, limit, page, search, nameSortRow, nameSearchRow },
-    { rejectWithValue },
+    {
+      sort,
+      limit,
+      page,
+      nameSortRow,
+      name,
+      surname,
+      email,
+      age,
+      phone,
+      course,
+      course_format,
+      course_type,
+      status,
+      groupName,
+      userId,
+    },
+    { rejectWithValue }
   ) => {
     try {
       const { data } = await orderService.getOrders(
         sort,
         limit,
         page,
-        search ? search.trim() : "",
         nameSortRow,
-        nameSearchRow ? nameSearchRow : "",
+        name,
+        surname,
+        email,
+        age,
+        phone,
+        course,
+        course_format,
+        course_type,
+        status,
+        groupName,
+        userId
       );
 
       return data;
@@ -73,7 +137,7 @@ const getOrders = createAsyncThunk<
       const err = e as AxiosError;
       return rejectWithValue(err);
     }
-  },
+  }
 );
 
 const getOrderActive = createAsyncThunk<
@@ -104,7 +168,7 @@ const getMessagesAll = createAsyncThunk(
       const err = e as AxiosError;
       return rejectWithValue(err);
     }
-  },
+  }
 );
 
 export const getGroups = createAsyncThunk<IGroup[], void>(
@@ -117,7 +181,7 @@ export const getGroups = createAsyncThunk<IGroup[], void>(
       const err = e as AxiosError;
       return rejectWithValue(err);
     }
-  },
+  }
 );
 
 /*--------------------- SLICE--------------------  */
@@ -153,6 +217,9 @@ export const OrdersSlice = createSlice({
     setNameRowSort: (state, action) => {
       console.log(action.payload);
       state.nameSortRow = action.payload;
+    },
+    setSearchQuery: (state, action) => {
+      state.searchQuery = action.payload;
     },
   },
 

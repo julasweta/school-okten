@@ -9,25 +9,22 @@ const orderService = {
     sort: string,
     limit: number,
     page: number,
-    search: string,
     nameSortRow: string,
-    nameSearchRow: string,
+    name: string,
+    surname: string,
+    email: string,
+    age: string,
+    phone: string,
+    course: string,
+    course_format: string,
+    course_type: string,
+    status: string,
+    groupName: string,
+    userId: string
   ): IRes<IPageInterface<Order>> =>
     apiService.get(
-      `orders/getAllQuery?order=${sort}&limit=${limit}&page=${page}${
-        search !== undefined && search !== "" ? `&search=${search}` : ""
-      }${
-        nameSortRow !== undefined && nameSortRow !== ""
-          ? `&nameSortRow=${nameSortRow}`
-          : ""
-      }
-      ${
-        nameSearchRow !== undefined && nameSearchRow !== ""
-          ? `&nameSearchRow=${nameSearchRow}`
-          : ""
-      }`,
+      `orders/getAllQuery?order=${sort}&limit=${limit}&page=${page}&nameSortRow=${nameSortRow}&name=${name}&email=${email}&age=${age}&phone=${phone}&course=${course}&course_format=${course_format}&course_type=${course_type}&status=${status}&groupName=${groupName}&surname=${surname}&userId=${userId}`
     ),
-
   getAll: (): IRes<Order[]> => apiService.get(urls.orders.all),
   getOrder: (id: string): IRes<Order> => apiService.get(urls.orders.byId(id)),
   updateOrder: (id: string, data: Partial<EditOrderFormData>): IRes<Order> =>
