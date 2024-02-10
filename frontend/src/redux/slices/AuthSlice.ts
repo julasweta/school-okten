@@ -31,7 +31,7 @@ const register = createAsyncThunk<void, { user: IReg }>(
       const err = e as AxiosError;
       return rejectWithValue(err);
     }
-  },
+  }
 );
 
 const login = createAsyncThunk<IUser, { user: IAuth }>(
@@ -44,7 +44,7 @@ const login = createAsyncThunk<IUser, { user: IAuth }>(
       const err = e as AxiosError;
       return rejectWithValue(err);
     }
-  },
+  }
 );
 
 const me = createAsyncThunk<IUser>(
@@ -57,7 +57,7 @@ const me = createAsyncThunk<IUser>(
       const err = e as AxiosError;
       return rejectWithValue(err);
     }
-  },
+  }
 );
 
 export const AuthSlice = createSlice({
@@ -80,19 +80,9 @@ export const AuthSlice = createSlice({
       .addCase(me.fulfilled, (state, action) => {
         state.me = action.payload;
       })
-      .addMatcher(
-        (action): action is ReturnType<typeof login.rejected> =>
-          action.type === login.rejected.type,
-        (state, action) => {
-          if (action.payload instanceof Error && "response" in action.payload) {
-            state.error = action.payload.message;
-            console.log(action.payload.response); // Доступ до властивостей відповіді Axios
-          } else {
-            console.error(action.payload);
-            state.error = "An unexpected error occurred.";
-          }
-        },
-      )
+      .addMatcher(isRejected(), (state, action) => {
+        state.error = action.payload.toString();
+      })
       .addMatcher(isFulfilled, (state, action) => {
         state.error = null;
       }),

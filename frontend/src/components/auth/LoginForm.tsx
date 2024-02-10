@@ -43,6 +43,7 @@ const LoginForm: React.FC = () => {
 
   const login: SubmitHandler<IAuth> = async (user) => {
     try {
+      console.log(user);
       const response = await dispatch(authActions.login({ user }));
       const requestStatus = response.meta.requestStatus;
       if (requestStatus === "fulfilled") {
@@ -57,7 +58,6 @@ const LoginForm: React.FC = () => {
     }
   };
 
-  console.log(error && error);
 
   return (
     <div className="login-page">

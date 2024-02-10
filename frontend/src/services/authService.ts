@@ -39,6 +39,8 @@ const authService = {
         refresh,
       });
       this.setTokens(data);
+    } else {
+      throw new Error("No refresh token available.");
     }
   },
 

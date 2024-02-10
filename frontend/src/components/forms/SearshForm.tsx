@@ -38,7 +38,7 @@ const SearchForm: React.FC = () => {
     surname: yup.string(),
     email: yup.string(),
     phone: yup.string(),
-    age: yup.number(),
+    age: yup.mixed().nullable().notRequired(),
     course: yup.string(),
     course_format: yup.string(),
     course_type: yup.string(),
@@ -65,15 +65,14 @@ const SearchForm: React.FC = () => {
   let { isMe, ...updateValues }: any = getValues();
 
   useEffect(() => {
-    console.log('userIdParam',userIdParam);
     setValue('email', emailParam);
     setValue('age', ageParam);
     setValue('name', nameParam);
     setValue('surname', surnameParam);
     setValue('phone', phoneParam);
     setValue('course', courseParam);
-    setValue('course-type', course_typeParam);
-    setValue('course-format', course_formatParam);
+    setValue('course_type', course_typeParam);
+    setValue('course_format', course_formatParam);
     setValue('status', statusParam);
     setValue('groupName', groupNameParam);
     setValue('userId', userIdParam);
@@ -82,9 +81,16 @@ const SearchForm: React.FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (userIdParam || searchQuery.userId) {
+      dispatch(ordersActions.setIsChecked('on'));
+    }
+  }, []);
+
+
   let res = {}
   useEffect(() => {
-    console.log('updatevalues', updateValues);
+  
     Object.entries(updateValues).forEach(([key, item]) => {
       if (item !== 'select' && item !== null && item !== "") {
         res = { ...res, [key]: item }
@@ -92,7 +98,7 @@ const SearchForm: React.FC = () => {
       }
     });
     dispatch(ordersActions.setSearchQuery({ ...res }))
-  }, [updateOrderTriger, emailParam, ageParam,  nameParam, surnameParam, phoneParam, courseParam, course_typeParam, course_formatParam, groupNameParam,   dispatch]);
+  }, [updateOrderTriger, emailParam, ageParam, nameParam, surnameParam, phoneParam, courseParam, course_typeParam, course_formatParam, groupNameParam,userIdParam, dispatch]);
 
 
   //при натисканні на button до кожної пошукової кнопки
@@ -107,15 +113,15 @@ const SearchForm: React.FC = () => {
     const newIsChecked = isChecked === "on" ? "off" : "on";
     dispatch(ordersActions.setIsChecked(newIsChecked));
     if (newIsChecked === "off") {
-      setValue('userId', "");  
+      setValue('userId', "");
       dispatch(ordersActions.setUpdateOrderTriger());
     } else {
       if (me && me._id) {
-        setValue('userId', me._id); 
+        setValue('userId', me._id);
         dispatch(ordersActions.setUpdateOrderTriger());
       }
     }
-   
+
   };
 
 

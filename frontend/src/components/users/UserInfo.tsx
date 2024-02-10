@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { IUser, Order, StatusWork } from "../../interfaces";
 import { usersActions } from "../../redux/slices/UserSlices";
 import { RootState } from "../../redux/store";
-import { authService, orderService, userService } from "../../services";
+import { authService,  userService } from "../../services";
 
 interface UserProps {
   user: IUser;
@@ -14,8 +14,11 @@ interface UserProps {
 const UserInfo: React.FC<UserProps> = ({ user }) => {
   const [isOpen, setIsOpen] = useState(true);
   const dispatch = useAppDispatch();
-  const { updateUserTriger } = useAppSelector(
+  const { updateUserTriger, activePageUsers } = useAppSelector(
     (state: RootState) => state.users,
+  );
+  const { orders } = useAppSelector(
+    (state: RootState) => state.orders,
   );
   const [myOrders, setMyOrders] = useState<Order[]>([]);
 
@@ -23,20 +26,19 @@ const UserInfo: React.FC<UserProps> = ({ user }) => {
     dispatch(usersActions.getAllUsers());
   }, [updateUserTriger, dispatch]);
 
-  const getOrdersAsync = async () => {
-    const res = await orderService.getAll().then((res) => res.data);
+  const getMyOrders = async () => {
     const resFilter =
-      res &&
-      user._id &&
-      res.filter((item) => item.userId && item.userId.toString() === user._id);
+      (orders &&
+        user._id) &&
+      orders.filter((item) => item.userId && item.userId.toString() === user._id);
     setMyOrders(resFilter || []);
   };
 
   useEffect(() => {
-    getOrdersAsync();
-  }, []);
+    getMyOrders();
+  }, [user._id, orders, activePageUsers]);
 
-  const inWork = (status: StatusWork) => {
+  const StatusCount = (status: StatusWork) => {
     const res = myOrders && myOrders.filter((item) => item.status === status);
     return res;
   };
@@ -66,38 +68,38 @@ const UserInfo: React.FC<UserProps> = ({ user }) => {
     >
       {isOpen
         ? Object.entries(user).map(
-            ([key, value]) =>
-              key === "name" && (
-                <div className="user" key={key}>
-                  <label className="capitOne">{key}: </label>
-                  <span className="capitOne">{value}</span>
-                </div>
-              ),
-          )
-        : Object.entries(user).map(([key, value]) => (
-            <div className="user" key={key}>
-              <div>
-                <label
-                  className={key === "status" ? "capitOne green" : "capitOne"}
-                >
-                  {key}:{" "}
-                </label>
-                <span
-                  className={
-                    value === "activate"
-                      ? "capitOne green"
-                      : value === "ban"
-                        ? "capitOne red"
-                        : value === "inactive"
-                          ? "capitOne blue"
-                          : "capitOne"
-                  }
-                >
-                  {value}
-                </span>
+          ([key, value]) =>
+            key === "name" && (
+              <div className="user" key={key}>
+                <label className="capitOne">{key}: </label>
+                <span className="capitOne">{value}</span>
               </div>
+            ),
+        )
+        : Object.entries(user).map(([key, value]) => (
+          <div className="user" key={key}>
+            <div>
+              <label
+                className={key === "status" ? "capitOne green" : "capitOne"}
+              >
+                {key}:{" "}
+              </label>
+              <span
+                className={
+                  value === "activate"
+                    ? "capitOne green"
+                    : value === "ban"
+                      ? "capitOne red"
+                      : value === "inactive"
+                        ? "capitOne blue"
+                        : "capitOne"
+                }
+              >
+                {value}
+              </span>
             </div>
-          ))}
+          </div>
+        ))}
       <hr></hr>
       <div>
         {" "}
@@ -105,34 +107,34 @@ const UserInfo: React.FC<UserProps> = ({ user }) => {
       </div>
       <div>
         {" "}
-        <b>Orders InWork: </b> {inWork(StatusWork.InWork).length}
+        <b>Orders InWork: </b> {StatusCount(StatusWork.InWork).length}
       </div>
-      {inWork(StatusWork.Aggre).length ? (
+      {StatusCount(StatusWork.Aggre).length ? (
         <div>
-          <b>Orders {StatusWork.Aggre} </b> {inWork(StatusWork.Aggre).length}
+          <b>Orders {StatusWork.Aggre} </b> {StatusCount(StatusWork.Aggre).length}
         </div>
       ) : (
         ""
       )}
-      {inWork(StatusWork.Disaggre).length ? (
+      {StatusCount(StatusWork.Disaggre).length ? (
         <div>
           <b>Orders {StatusWork.Disaggre} </b>{" "}
-          {inWork(StatusWork.Disaggre).length}
+          {StatusCount(StatusWork.Disaggre).length}
         </div>
       ) : (
         ""
       )}
-      {inWork(StatusWork.Dubbing).length ? (
+      {StatusCount(StatusWork.Dubbing).length ? (
         <div>
           <b>Orders {StatusWork.Dubbing} </b>{" "}
-          {inWork(StatusWork.Dubbing).length}
+          {StatusCount(StatusWork.Dubbing).length}
         </div>
       ) : (
         ""
       )}
-      {inWork(StatusWork.New).length ? (
+      {StatusCount(StatusWork.New).length ? (
         <div>
-          <b>Orders {StatusWork.New} </b> {inWork(StatusWork.New).length}
+          <b>Orders {StatusWork.New} </b> {StatusCount(StatusWork.New).length}
         </div>
       ) : (
         ""

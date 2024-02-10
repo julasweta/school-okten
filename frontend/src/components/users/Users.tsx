@@ -20,17 +20,19 @@ const Users: React.FC = () => {
   const [usersOnPage, setUsersOnPage] = useState([]);
 
   useEffect(() => {
+    dispatch(usersActions.setActivePageUsers(searchPage));
+  }, [searchPage, dispatch]);
+
+  useEffect(() => {
     const start = +searchLimit * (+searchPage > 0 ? +searchPage - 1 : 0);
     const end =
       +searchLimit * (+searchPage < pageCount ? +searchPage : pageCount) - 1;
     const res =
       users && users.filter((item, index) => index >= start && index <= end);
     setUsersOnPage(res);
-  }, [searchLimit, searchPage, pageCount, users, usersFound]);
+  }, [searchLimit, searchPage, pageCount, activePageUsers, users, usersFound]);
 
-  useEffect(() => {
-    dispatch(usersActions.setActivePageUsers(searchPage));
-  }, [searchPage, dispatch]);
+
 
   return (
     <div className="user-box">

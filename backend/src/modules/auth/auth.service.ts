@@ -96,7 +96,10 @@ export class AuthService {
     const user = await this.userService.userFindOneEmail(body.email);
 
     if (!user) {
-      throw new Error();
+      throw new ApiError(
+        'Unauthorized: Password or email is wrong',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     const hashPassw = await bcrypt.compare(

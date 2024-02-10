@@ -25,7 +25,8 @@ const OrdersTable: React.FC = () => {
     sort,
     nameSortRow,
     limit,
-    searchQuery
+    searchQuery,
+    itemsFound
   } = useAppSelector((state: RootState) => state.orders);
 
   const searchParams = new URLSearchParams(location.search);
@@ -41,13 +42,17 @@ const OrdersTable: React.FC = () => {
 
   //write params
   useEffect(() => {
-    dispatch(ordersActions.setActivePage(pageNumber));
+    if (Math.ceil(itemsFound / limit) < pageNumber) {
+      dispatch(ordersActions.setActivePage(Math.ceil(itemsFound / limit)));
+    } else {
+      dispatch(ordersActions.setActivePage(pageNumber));
+    }
     dispatch(ordersActions.getOrderActive(null));
     dispatch(ordersActions.setNameRowSort(sortRowNameParam && sortRowNameParam));
     if (sortParamValue !== null && sortParamValue !== "false") {
       dispatch(ordersActions.setSort(sortParamValue));
     }
-  }, [pageNumber, sortParamValue, sortRowNameParam, dispatch]);
+  }, [pageNumber, itemsFound, sortParamValue, sortRowNameParam, dispatch]);
 
 
   useEffect(() => {
@@ -62,10 +67,7 @@ const OrdersTable: React.FC = () => {
   }, [addGroupTriger, dispatch]);
 
   useEffect(() => {
-    console.log('searchQuery', searchQuery ? searchQuery : ' searchQuery nemai');
     try {
-
-
       dispatch(
         ordersActions.getOrders({
           sort: sort,

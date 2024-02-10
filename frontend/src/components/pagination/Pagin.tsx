@@ -9,9 +9,9 @@ import { AppRoutes } from "../../routing/AppRoutes";
 
 const Pagin: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { itemsFound, activePage, searchValue, nameSearchRow, sort, nameSortRow, limit } =
+  const { itemsFound, activePage, searchQuery, sort, nameSortRow, limit, } =
     useAppSelector((state: RootState) => state.orders);
-  
+
   const pageCount = Math.ceil(itemsFound / limit);
   const buttonsToShow = 10; //  скільки кнопок  навколо поточної сторінки.
 
@@ -41,11 +41,19 @@ const Pagin: React.FC = () => {
       const queryParams = new URLSearchParams({
         page: i.toString(),
         limit: "15",
-        nameSearchRow:
-          searchValue && searchValue !== "select" ? nameSearchRow : "",
-        search: searchValue && searchValue !== "select" ? searchValue : "",
         order: sort,
-        nameSortRow: nameSortRow
+        nameSortRow: nameSortRow === null || nameSortRow === undefined || nameSortRow === '' ? "" : nameSortRow,
+        surname: searchQuery.surname === null || searchQuery.surname === undefined || searchQuery.surname === '' ? "" : searchQuery.surname,
+        email: searchQuery.email !== undefined && searchQuery.email !== '' ? searchQuery.email : '',
+        age: searchQuery.age !== undefined && searchQuery.age !== '' ? searchQuery.age : '',
+        name: searchQuery.name !== undefined && searchQuery.name !== '' ? searchQuery.name : '',
+        phone: searchQuery.phone !== undefined && searchQuery.phone !== '' ? searchQuery.phone : '',
+        course: searchQuery.course !== undefined && searchQuery.course !== '' ? searchQuery.course : '',
+        course_format: searchQuery.course_format !== undefined && searchQuery.course_format !== '' ? searchQuery.course_format : '',
+        course_type: searchQuery.course_type !== undefined && searchQuery.course_type !== '' ? searchQuery.course_type : '',
+        status: searchQuery.status !== undefined && searchQuery.status !== '' ? searchQuery.status : '',
+        groupName: searchQuery.groupName !== undefined && searchQuery.groupName !== '' ? searchQuery.groupName : '',
+        userId: searchQuery.userId !== undefined && searchQuery.userId !== '' ? searchQuery.userId : '',
 
       });
 
@@ -93,7 +101,7 @@ const Pagin: React.FC = () => {
   return (
     <div>
       <Link
-        to={`${urls.orders.base}?page=${activePage > 1 ? activePage - 1 : 1}${searchValue ? `&search=${searchValue}` : ""}${nameSearchRow ? `&nameSearchRow=${nameSearchRow}` : ""}`}
+        to={`${urls.orders.base}?page=${activePage > 1 ? activePage - 1 : 1}`}
       >
         <button onClick={onHead} className="button">
           {" "}
@@ -104,7 +112,7 @@ const Pagin: React.FC = () => {
       {generateButtons()}
 
       <Link
-        to={`${urls.orders.base}?page=${activePage < pageCount ? activePage + 1 : pageCount}${searchValue ? `&search=${searchValue}` : ""}${nameSearchRow ? `&nameSearchRow=${nameSearchRow}` : ""}`}
+        to={`${urls.orders.base}?page=${activePage < pageCount ? activePage + 1 : pageCount}`}
       >
         <button onClick={onBack} className="button">
           {" "}

@@ -215,7 +215,6 @@ export const OrdersSlice = createSlice({
       state.sort = action.payload;
     },
     setNameRowSort: (state, action) => {
-      console.log(action.payload);
       state.nameSortRow = action.payload;
     },
     setSearchQuery: (state, action) => {
