@@ -8,7 +8,6 @@ import { ordersActions } from "../../redux/slices/OrderSlices";
 import { RootState } from "../../redux/store";
 import { OrderForm, SearchForm } from "../forms";
 import { Pagin } from "../pagination/Pagin";
-import { UserName } from "../users/UserName";
 import { AppRoutes } from "../../routing/AppRoutes";
 
 const OrdersTable: React.FC = () => {
@@ -26,11 +25,10 @@ const OrdersTable: React.FC = () => {
     nameSortRow,
     limit,
     searchQuery,
-    itemsFound
   } = useAppSelector((state: RootState) => state.orders);
 
   const searchParams = new URLSearchParams(location.search);
-  const pageNumber = +searchParams.get("page") || 1;
+  const pageNumber = searchParams.get("page");
   const sortRowNameParam = searchParams.get("nameSortRow");
   const sortParamValue = searchParams.get("order");
 
@@ -42,32 +40,28 @@ const OrdersTable: React.FC = () => {
 
   //write params
   useEffect(() => {
-    if (Math.ceil(itemsFound / limit) < pageNumber) {
-      dispatch(ordersActions.setActivePage(Math.ceil(itemsFound / limit)));
-    } else {
-      dispatch(ordersActions.setActivePage(pageNumber));
-    }
-    dispatch(ordersActions.getOrderActive(null));
+    dispatch(ordersActions.setActivePage(+pageNumber));
     dispatch(ordersActions.setNameRowSort(sortRowNameParam && sortRowNameParam));
     if (sortParamValue !== null && sortParamValue !== "false") {
       dispatch(ordersActions.setSort(sortParamValue));
     }
-  }, [pageNumber, itemsFound, sortParamValue, sortRowNameParam, dispatch]);
-
+  }, [sortRowNameParam, sortParamValue, pageNumber, dispatch]);
 
   useEffect(() => {
     const isAccess = localStorage.getItem("accessToken");
     if (!isAccess) {
       navigate(AppRoutes.LOGIN);
     }
-  }, [navigate]);
+  }, []);
 
   useEffect(() => {
     dispatch(ordersActions.getGroups());
   }, [addGroupTriger, dispatch]);
 
+
   useEffect(() => {
     try {
+      console.log(sort);
       dispatch(
         ordersActions.getOrders({
           sort: sort,
@@ -104,16 +98,15 @@ const OrdersTable: React.FC = () => {
     sort,
     orderActive,
     searchQuery,
+    limit,
     dispatch,
     navigate,
-    limit
   ]);
-
-
 
   const onSortRow = (column: string) => {
     dispatch(ordersActions.setSort(sort === "DESC" ? "ASC" : "DESC"));
     dispatch(ordersActions.setNameRowSort(column));
+    dispatch(ordersActions.setActivePage(1))
   };
 
   const renderTableHeader = () => {
@@ -127,7 +120,6 @@ const OrdersTable: React.FC = () => {
       </th>
     ));
   };
-
   return (
     <div>
       <SearchForm />
@@ -136,7 +128,7 @@ const OrdersTable: React.FC = () => {
           <tr>{renderTableHeader()}</tr>
         </thead>
         <tbody>
-          {orders.map((order) => (
+          {orders && orders.map((order) => (
             <React.Fragment key={order._id}>
               <tr
                 onClick={() => onGetOrderActive(order._id)}
@@ -157,7 +149,8 @@ const OrdersTable: React.FC = () => {
                 <td>{order.created_at}</td>
                 <td>{order.groupName}</td>
                 <td>
-                  <UserName id={order.userId?.toString()} />
+                  {/*  < id={order.user._id?.toString()} /> */}
+                  {order.user ? order.user._id.toString() : ""}
                 </td>
                 {/* Додати інші стовпці за потребою */}
               </tr>

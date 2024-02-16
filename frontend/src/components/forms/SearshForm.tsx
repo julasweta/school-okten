@@ -13,7 +13,7 @@ import { useLocation } from "react-router-dom";
 
 const SearchForm: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { groups, isChecked, updateOrderTriger, searchQuery } =
+  const { groups, isChecked, updateOrderTriger } =
     useAppSelector((state: RootState) => state.orders);
   const { me } = useAppSelector((state: RootState) => state.auth);
   const { onCleanUtils } = useCleanrUtils();
@@ -62,6 +62,7 @@ const SearchForm: React.FC = () => {
   });
 
 
+
   let { isMe, ...updateValues }: any = getValues();
 
   useEffect(() => {
@@ -81,16 +82,9 @@ const SearchForm: React.FC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (userIdParam || searchQuery.userId) {
-      dispatch(ordersActions.setIsChecked('on'));
-    }
-  }, []);
-
 
   let res = {}
   useEffect(() => {
-  
     Object.entries(updateValues).forEach(([key, item]) => {
       if (item !== 'select' && item !== null && item !== "") {
         res = { ...res, [key]: item }
@@ -98,7 +92,9 @@ const SearchForm: React.FC = () => {
       }
     });
     dispatch(ordersActions.setSearchQuery({ ...res }))
-  }, [updateOrderTriger, emailParam, ageParam, nameParam, surnameParam, phoneParam, courseParam, course_typeParam, course_formatParam, groupNameParam,userIdParam, dispatch]);
+  }, [updateOrderTriger, emailParam, ageParam, nameParam, surnameParam, phoneParam, courseParam, course_typeParam, course_formatParam, statusParam, groupNameParam, userIdParam, dispatch]);
+
+
 
 
   //при натисканні на button до кожної пошукової кнопки
@@ -126,14 +122,12 @@ const SearchForm: React.FC = () => {
 
 
   const onClean = () => {
-    onCleanUtils();
-    clearErrors();
-    if (isChecked === "on") {
-      dispatch(ordersActions.setIsChecked("off"));
-    }
     searchColumns.map((column: string) => {
       setValue(column, "");
     });
+    setValue('userId', "");
+    onCleanUtils();
+    clearErrors();
   };
 
   const renderSearchButton = () => {
@@ -178,9 +172,10 @@ const SearchForm: React.FC = () => {
             value={updateValues[column] || ""}
             onChange={(e) => {
               setValue(column, e.target.value);
+              dispatch(ordersActions.setActivePage(1))
               const selectedValue = e.target.value;
               if (selectedValue == "select") {
-                onClean();
+                setValue(column, "");
               }
               dispatch(ordersActions.setUpdateOrderTriger());
               searchColumns.forEach((otherColumn) => {
@@ -205,9 +200,10 @@ const SearchForm: React.FC = () => {
             value={watch(column) || ""}
             onChange={(e) => {
               setValue(column, e.target.value);
+              dispatch(ordersActions.setActivePage(1))
               const selectedValue = e.target.value;
               if (selectedValue == "select") {
-                onClean();
+                setValue(column, "");
               }
               dispatch(ordersActions.setUpdateOrderTriger());
               searchColumns.forEach((otherColumn) => {
@@ -232,9 +228,10 @@ const SearchForm: React.FC = () => {
               {...register(column)}
               id={column}
               className="search-input"
-              value={updateValues.column}
+              value={updateValues[column] || ''} // Використовуйте updateValues[column]
               onChange={(e) => {
                 setValue(column, e.target.value, { shouldValidate: true });
+                dispatch(ordersActions.setActivePage(1));
                 searchColumns.forEach((otherColumn) => {
                   if (otherColumn !== column) {
                     clearErrors(otherColumn);
@@ -257,6 +254,7 @@ const SearchForm: React.FC = () => {
                 }
               }}
             />
+
           )
         )}
       </>

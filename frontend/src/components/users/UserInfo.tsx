@@ -30,7 +30,7 @@ const UserInfo: React.FC<UserProps> = ({ user }) => {
     const resFilter =
       (orders &&
         user._id) &&
-      orders.filter((item) => item.userId && item.userId.toString() === user._id);
+      orders.filter((item) => item.user._id && item.user._id.toString() === user._id);
     setMyOrders(resFilter || []);
   };
 

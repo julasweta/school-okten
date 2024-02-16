@@ -13,7 +13,7 @@ import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderListQuerytDto } from './dto/orders-params.dto';
 import { IPaginationResponse } from '../../common/interfaces/IListRes';
-import { Order } from './schema/order.chema.';
+import { Order } from './schema/order.schema.';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Orders')

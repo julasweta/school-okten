@@ -1,3 +1,5 @@
+import { IUser } from "./IUser";
+
 export interface Order {
   _id: string;
   name: string;
@@ -12,6 +14,6 @@ export interface Order {
   sum: number;
   alreadyPaid: boolean;
   created_at: string;
-  userId: object;
+  user: IUser;
   groupName: string;
 }

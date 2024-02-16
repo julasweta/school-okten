@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Document } from 'mongoose';
 import {
   Course,
   CourseFormat,
@@ -7,6 +7,7 @@ import {
   StatusWork,
 } from '../interfaces/orders.types';
 import { IsPhoneNumber } from 'class-validator';
+import { UserBaseDto } from '../../users/dto/user.base.dto';
 
 @Schema()
 export class Order extends Document {
@@ -53,8 +54,8 @@ export class Order extends Document {
   @Prop({ type: Date, default: Date.now })
   created_at: Date;
 
-  @Prop({ type: Types.ObjectId, ref: 'User', default: null })
-  userId: Types.ObjectId;
+  @Prop()
+  user: UserBaseDto;
 
   @Prop({ default: null })
   groupName: string | null;

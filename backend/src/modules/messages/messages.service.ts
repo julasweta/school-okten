@@ -22,13 +22,13 @@ export class MessagesService {
       body.orderId.toString(),
     );
     const { _id } = await this.userService.userFindOneEmail(email);
-    if (!orderId.userId) {
+    if (!orderId.user._id) {
       throw new HttpException('Order Not Found ', HttpStatus.BAD_REQUEST);
     }
     if (!_id) {
       throw new HttpException('User Not Found ', HttpStatus.BAD_REQUEST);
     }
-    if (_id.toString() !== orderId.userId.toString()) {
+    if (_id.toString() !== orderId.user._id.toString()) {
       throw new HttpException(
         'коментарі до цієї заявки може додавати лише закріплений менеджер ',
         HttpStatus.BAD_REQUEST,

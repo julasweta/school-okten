@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Order } from './schema/order.chema.';
+import { Order } from './schema/order.schema.';
 import { Model } from 'mongoose';
 import { OrderListQuerytDto } from './dto/orders-params.dto';
 import { OrderRepository } from './orders.repository';
@@ -22,8 +22,8 @@ export class OrdersService {
   ) {}
 
   async create(body: CreateOrderDto) {
-    const userId = null;
-    const createOrder = await this.orderModel.create({ ...body, userId });
+    const user = null;
+    const createOrder = await this.orderModel.create({ ...body, user });
     return createOrder;
   }
 
@@ -38,7 +38,7 @@ export class OrdersService {
     return await this.orderRepository.getAll(query);
   }
 
-  public async getOneOrder(id: string) {
+  public async getOneOrder(id: string): Promise<Partial<CreateOrderDto>> {
     if (id.match(/^[0-9a-fA-F]{24}$/)) {
       const order = await this.orderModel.findOne({ _id: id });
       return order;
@@ -50,11 +50,13 @@ export class OrdersService {
     id: string,
     accessToken: string,
   ): Promise<string | HttpException> {
-    console.log('orders servise update token', accessToken);
     const { email } = await this.verificationService.decodeToken(accessToken);
     const order = await this.orderModel.findOne({ _id: id });
-    const { _id } = await this.userService.userFindOneEmail(email); //user
-    if (order.userId == null || order.userId.toString() === _id.toString()) {
+    const user = await this.userService.userFindOneEmail(email); //user
+    if (
+      order.user == null ||
+      order.user._id.toString() === user._id.toString()
+    ) {
       const groupName = await this.groupService.findNameGroup(body.groupName);
       if (!groupName) {
         throw new HttpException('This group not found', HttpStatus.BAD_REQUEST);
@@ -71,7 +73,7 @@ export class OrdersService {
         {
           $set: {
             ...body,
-            userId: _id,
+            user: user,
             status: updateStatus(),
             groupName: body.groupName,
           },

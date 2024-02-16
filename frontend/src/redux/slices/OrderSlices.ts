@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
-import { Message, Order } from "../../interfaces";
+import {  Message, Order } from "../../interfaces";
 import { IGroup } from "../../interfaces/IGroup";
 import { IPageInterface } from "../../interfaces/IPaginationOrder";
 import { orderService } from "../../services/OrdersServices";
@@ -52,7 +52,7 @@ const initialState: OrderState = {
   groups: [],
   addGroupTriger: true,
   isChecked: "off",
-  sort: "DESC",
+  sort: "ASC",
   nameSortRow: "",
   limit: 15,
   searchQuery: {

@@ -11,6 +11,7 @@ import {
   CourseType,
   EditOrderFormData,
   EditOrderModalProps,
+  IUser,
   StatusWork,
 } from "../../interfaces";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -64,16 +65,18 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({
   });
 
   const onSubmit: SubmitHandler<any> = async (data) => {
+
     if (
-      orderActive.userId === null ||
-      orderActive.userId.toString() === me._id
+      !orderActive || // Перевіряємо, чи існує orderActive
+      (orderActive.user === null || orderActive.user === undefined) || // Перевіряємо, чи user є null або undefined
+      (orderActive.user && orderActive.user._id && orderActive.user._id.toString() === me._id) // Перевіряємо, чи _id користувача дорівнює me._id
     ) {
       const dataFormat = {
         ...data,
         age: +data.age,
         already_paid: data.alreadyPaid,
+        user: me
       };
-      console.log(dataFormat);
       await orderService.updateOrder(orderActive._id, dataFormat);
       dispatch(ordersActions.getOrderActive(orderActive._id));
       dispatch(ordersActions.setUpdateOrderTriger());
@@ -85,8 +88,12 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({
 
   useEffect(() => {
     if (orderActive) {
-      Object.entries(orderActive).forEach(([key, value]) => {
-        setValue(key as keyof EditOrderFormData, value);
+      Object.entries(orderActive).forEach(([key, value]: [string, any | IUser]) => {
+        if (key === "user" && value !== null && typeof value === "object" && "id" in value) {
+          setValue(key as keyof EditOrderFormData, 'value._id');
+        } else {
+          setValue(key as keyof EditOrderFormData, value);
+        }
       });
     }
   }, [orderActive, setValue]);
@@ -122,7 +129,6 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({
     if (!orderActive) {
       return null;
     }
-
     return (
       <>
         {Object.keys(orderActive)
@@ -133,16 +139,17 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({
                 key === "msg" ||
                 key === "_id" ||
                 key === "created_at" ||
-                key === "utm"
+                key === "utm" ||
+                key === "user"
               ),
           )
           .map((key) => (
             <div key={key} className="modal-item">
               <label htmlFor={key}>{key}:</label>
               {key === "course" ||
-              key === "course_format" ||
-              key === "course_type" ||
-              key === "status" ? (
+                key === "course_format" ||
+                key === "course_type" ||
+                key === "status" ? (
                 <div className="select-wrapper">
                   <select {...register(key as keyof EditOrderFormData)}>
                     {Object.values(

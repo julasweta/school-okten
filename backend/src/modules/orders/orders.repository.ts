@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { OrderListQuerytDto } from './dto/orders-params.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
-import { Order } from './schema/order.chema.';
+import { Order } from './schema/order.schema.';
 
 export interface IPaginationResponse<T> {
   page: number;
@@ -58,16 +58,17 @@ export class OrderRepository {
       }
       if (query.userId) {
         const userId = new mongoose.Types.ObjectId(query.userId);
-        filter['userId'] = userId;
+        filter['user._id'] = userId;
       }
 
-      const skip = Math.max(1, query.limit * (query.page - 1));
+      const skip = Math.max(0, (query.page - 1) * query.limit);
 
       console.log('filter', filter);
       const entitiesQuery = this.orderModel.find(filter);
       const itemsFound = await this.orderModel.countDocuments(filter).exec();
-
+      console.log('itemsFound', itemsFound);
       entitiesQuery.limit(query.limit).skip(skip);
+      console.log('skip', skip);
 
       if (query.nameSortRow) {
         entitiesQuery.collation({ locale: userLocale, strength: 2 });
@@ -78,10 +79,10 @@ export class OrderRepository {
 
       // Отримання потрібних даних
       const entities = await entitiesQuery.exec();
-
+      console.log('entities2', entities.length);
       const page = query.page;
       const limit = query.limit;
-      console.log(itemsFound);
+      console.log('entities3', entities.length);
       //console.log(entities);
 
       return { page, limit, itemsFound, data: entities };

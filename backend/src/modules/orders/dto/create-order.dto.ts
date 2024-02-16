@@ -7,7 +7,7 @@ import {
   IsPhoneNumber,
 } from 'class-validator';
 import { Course, CourseFormat, CourseType } from '../interfaces/orders.types';
-import { Types } from 'mongoose';
+import { UserBaseDto } from '../../users/dto/user.base.dto';
 
 export class CreateOrderDto {
   @IsString()
@@ -60,9 +60,8 @@ export class CreateOrderDto {
   @IsString()
   status?: string;
 
-  @IsString()
   @IsOptional()
-  userId?: string | null | Types.ObjectId;
+  user?: UserBaseDto | null;
 
   @IsString()
   @IsOptional()
