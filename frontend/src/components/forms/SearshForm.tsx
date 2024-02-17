@@ -52,7 +52,6 @@ const SearchForm: React.FC = () => {
     handleSubmit,
     getValues,
     setValue,
-    watch,
     clearErrors,
     formState: { errors },
   }: UseFormReturn<any> = useForm({
@@ -83,8 +82,9 @@ const SearchForm: React.FC = () => {
   }, []);
 
 
-  let res = {}
+  
   useEffect(() => {
+    let res = {}
     Object.entries(updateValues).forEach(([key, item]) => {
       if (item !== 'select' && item !== null && item !== "") {
         res = { ...res, [key]: item }
@@ -197,7 +197,7 @@ const SearchForm: React.FC = () => {
             {...register(column)}
             id={column}
             className="search-input"
-            value={watch(column) || ""}
+            value={updateValues[column] || ""}
             onChange={(e) => {
               setValue(column, e.target.value);
               dispatch(ordersActions.setActivePage(1))

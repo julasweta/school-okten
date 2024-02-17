@@ -32,8 +32,6 @@ const Users: React.FC = () => {
     setUsersOnPage(res);
   }, [searchLimit, searchPage, pageCount, activePageUsers, users, usersFound]);
 
-
-
   return (
     <div className="user-box">
       <h2>Users</h2>

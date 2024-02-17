@@ -25,6 +25,7 @@ const OrdersTable: React.FC = () => {
     nameSortRow,
     limit,
     searchQuery,
+    isChecked
   } = useAppSelector((state: RootState) => state.orders);
 
   const searchParams = new URLSearchParams(location.search);
@@ -96,8 +97,10 @@ const OrdersTable: React.FC = () => {
     updateOrderTriger,
     nameSortRow,
     sort,
+    isChecked,
     orderActive,
     searchQuery,
+    
     limit,
     dispatch,
     navigate,
@@ -150,7 +153,7 @@ const OrdersTable: React.FC = () => {
                 <td>{order.groupName}</td>
                 <td>
                   {/*  < id={order.user._id?.toString()} /> */}
-                  {order.user ? order.user._id.toString() : ""}
+                  {order.user._id ? order.user._id.toString() : ""}
                 </td>
                 {/* Додати інші стовпці за потребою */}
               </tr>

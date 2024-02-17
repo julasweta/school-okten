@@ -31,7 +31,7 @@ const register = createAsyncThunk<void, { user: IReg }>(
       const err = e as AxiosError;
       return rejectWithValue(err);
     }
-  }
+  },
 );
 
 const login = createAsyncThunk<IUser, { user: IAuth }>(
@@ -44,7 +44,7 @@ const login = createAsyncThunk<IUser, { user: IAuth }>(
       const err = e as AxiosError;
       return rejectWithValue(err);
     }
-  }
+  },
 );
 
 const me = createAsyncThunk<IUser>(
@@ -57,7 +57,7 @@ const me = createAsyncThunk<IUser>(
       const err = e as AxiosError;
       return rejectWithValue(err);
     }
-  }
+  },
 );
 
 export const AuthSlice = createSlice({

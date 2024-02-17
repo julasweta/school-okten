@@ -5,12 +5,18 @@ import {
   IsNumber,
   IsEnum,
   IsPhoneNumber,
+  IsDate,
 } from 'class-validator';
 import { Course, CourseFormat, CourseType } from '../interfaces/orders.types';
 import { UserBaseDto } from '../../users/dto/user.base.dto';
+import { Types } from 'mongoose';
 
 export class CreateOrderDto {
+  @IsOptional()
+  _id?: string | number | Types.ObjectId;
+
   @IsString()
+  @IsOptional()
   name: string;
 
   @IsString()
@@ -66,4 +72,8 @@ export class CreateOrderDto {
   @IsString()
   @IsOptional()
   groupName?: string | null;
+
+  @IsOptional()
+  @IsDate()
+  created_at?: Date;
 }

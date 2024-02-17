@@ -13,15 +13,13 @@ interface FormData {
   message: string;
 }
 
-
-
 const OrderForm: React.FC = () => {
   const { register, handleSubmit, reset } = useForm<FormData>();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const dispatch = useAppDispatch();
 
   const { orderActive, messages, createMessagTriger } = useAppSelector(
-    (state: RootState) => state.orders
+    (state: RootState) => state.orders,
   );
   const { me } = useAppSelector((state: RootState) => state.auth);
 
@@ -46,21 +44,21 @@ const OrderForm: React.FC = () => {
         reset();
       } else {
         toast.error(
-          'Only the manager of this order can add a message. To take this order to work, click the "Open Edit Modal" button.'
+          'Only the manager of this order can add a message. To take this order to work, click the "Open Edit Modal" button.',
         );
       }
     } catch (error) {
-      console.error('Error while submitting message:', error);
-      toast.error('An error occurred while submitting the message.');
+      console.error("Error while submitting message:", error);
+      toast.error("An error occurred while submitting the message.");
     }
   };
 
   const dateFormat = (date: string) => {
     const newDate = new Date(date);
-    return newDate.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
+    return newDate.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
     });
   };
 
@@ -93,28 +91,30 @@ const OrderForm: React.FC = () => {
         </ol>
       </div>
 
-      {(orderActive?.user?._id === me?._id?.toString() ) && (
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <label htmlFor="message">Message:</label>
-            <input {...register('message')} id="message" />
+      {orderActive?.user?._id === me?._id?.toString() && (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <label htmlFor="message">Message:</label>
+          <input {...register("message")} id="message" />
 
-            <button type="submit" className="button">
-              Send Message
-            </button>
-          </form>
-        )}
+          <button type="submit" className="button">
+            Send Message
+          </button>
+        </form>
+      )}
 
       {(orderActive?.user?._id?.toString() === me?._id?.toString() ||
         !orderActive?.user?._id) && (
-          <button onClick={openEditModal} className="button">
-            Open Edit Modal
-          </button>
-        )}
+        <button onClick={openEditModal} className="button">
+          Open Edit Modal
+        </button>
+      )}
 
-      <EditOrderModal isOpen={isEditModalOpen} onRequestClose={closeEditModal} />
+      <EditOrderModal
+        isOpen={isEditModalOpen}
+        onRequestClose={closeEditModal}
+      />
     </div>
   );
 };
 
-export { OrderForm};
-
+export { OrderForm };

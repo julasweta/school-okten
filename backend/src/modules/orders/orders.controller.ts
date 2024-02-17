@@ -13,8 +13,8 @@ import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderListQuerytDto } from './dto/orders-params.dto';
 import { IPaginationResponse } from '../../common/interfaces/IListRes';
-import { Order } from './schema/order.schema.';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { OrderResponseMapper } from './dto/order-resp-mapper';
 
 @ApiTags('Orders')
 @Controller('orders')
@@ -37,10 +37,16 @@ export class OrdersController {
   @Get('getAllQuery')
   async getdAll(
     @Query() query: OrderListQuerytDto,
-  ): Promise<IPaginationResponse<Order>> {
+  ): Promise<IPaginationResponse<Partial<CreateOrderDto>>> {
     console.log('query', query);
-    const result = await this.ordersService.getdAll(query);
-    return result;
+    const res = await this.ordersService.getdAll(query);
+    const transformedData = res.data.map((item) =>
+      OrderResponseMapper.toResOrderMapper(item),
+    );
+    return {
+      ...res,
+      data: transformedData,
+    };
   }
 
   //тільки залогінений manager і тільки якщо це заявка яка вже значиться за даним менеджером, або завка ще без менеджера, має записатись статус In Work якщо до того там був статус null або New

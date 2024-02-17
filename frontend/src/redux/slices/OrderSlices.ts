@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
-import {  Message, Order } from "../../interfaces";
+import { Message, Order } from "../../interfaces";
 import { IGroup } from "../../interfaces/IGroup";
 import { IPageInterface } from "../../interfaces/IPaginationOrder";
 import { orderService } from "../../services/OrdersServices";
@@ -111,7 +111,7 @@ const getOrders = createAsyncThunk<
       groupName,
       userId,
     },
-    { rejectWithValue }
+    { rejectWithValue },
   ) => {
     try {
       const { data } = await orderService.getOrders(
@@ -129,7 +129,7 @@ const getOrders = createAsyncThunk<
         course_type,
         status,
         groupName,
-        userId
+        userId,
       );
 
       return data;
@@ -137,7 +137,7 @@ const getOrders = createAsyncThunk<
       const err = e as AxiosError;
       return rejectWithValue(err);
     }
-  }
+  },
 );
 
 const getOrderActive = createAsyncThunk<
@@ -168,7 +168,7 @@ const getMessagesAll = createAsyncThunk(
       const err = e as AxiosError;
       return rejectWithValue(err);
     }
-  }
+  },
 );
 
 export const getGroups = createAsyncThunk<IGroup[], void>(
@@ -181,7 +181,7 @@ export const getGroups = createAsyncThunk<IGroup[], void>(
       const err = e as AxiosError;
       return rejectWithValue(err);
     }
-  }
+  },
 );
 
 /*--------------------- SLICE--------------------  */

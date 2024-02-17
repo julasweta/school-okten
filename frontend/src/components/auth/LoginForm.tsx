@@ -58,7 +58,6 @@ const LoginForm: React.FC = () => {
     }
   };
 
-
   return (
     <div className="login-page">
       <h2>LoginForm</h2>

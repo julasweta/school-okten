@@ -25,7 +25,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
       property: 'user',
     }),
     RedisModule.forRoot({
-      url: 'redis://localhost:6379',
+      url: 'redis://redis:6379',
     }),
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
     JwtModule.registerAsync({

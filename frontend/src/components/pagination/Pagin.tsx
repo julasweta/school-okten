@@ -9,16 +9,18 @@ import { AppRoutes } from "../../routing/AppRoutes";
 
 const Pagin: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { itemsFound, activePage, searchQuery, sort, nameSortRow, limit, } =
+  const { itemsFound, activePage, searchQuery, sort, nameSortRow, limit } =
     useAppSelector((state: RootState) => state.orders);
 
   const pageCount = Math.ceil(itemsFound / limit);
-  const buttonsToShow = 10; //  скільки кнопок  навколо поточної сторінки.
+  const buttonsToShow = 10; // скільки кнопок навколо поточної сторінки.
+
+
+  const buttons: any = [];
+  const startPage = Math.max(1, activePage - Math.floor(buttonsToShow / 2));
+  const endPage = Math.min(pageCount, startPage + buttonsToShow - 1);
 
   const generateButtons = () => {
-    const buttons = [];
-    const startPage = Math.max(1, activePage - Math.floor(buttonsToShow / 2));
-    const endPage = Math.min(pageCount, startPage + buttonsToShow - 1);
 
     if (startPage > 1) {
       const onEllipsisBefore = () => {
@@ -40,26 +42,26 @@ const Pagin: React.FC = () => {
     for (let i = startPage; i <= endPage; i++) {
       const queryParams = new URLSearchParams({
         page: i.toString(),
-        limit: "15",
+        limit: limit.toString(),
         order: sort,
-        nameSortRow: nameSortRow === null || nameSortRow === undefined || nameSortRow === '' ? "" : nameSortRow,
-        surname: searchQuery.surname === null || searchQuery.surname === undefined || searchQuery.surname === '' ? "" : searchQuery.surname,
-        email: searchQuery.email !== undefined && searchQuery.email !== '' ? searchQuery.email : '',
-        age: searchQuery.age !== undefined && searchQuery.age !== '' ? searchQuery.age : '',
-        name: searchQuery.name !== undefined && searchQuery.name !== '' ? searchQuery.name : '',
-        phone: searchQuery.phone !== undefined && searchQuery.phone !== '' ? searchQuery.phone : '',
-        course: searchQuery.course !== undefined && searchQuery.course !== '' ? searchQuery.course : '',
-        course_format: searchQuery.course_format !== undefined && searchQuery.course_format !== '' ? searchQuery.course_format : '',
-        course_type: searchQuery.course_type !== undefined && searchQuery.course_type !== '' ? searchQuery.course_type : '',
-        status: searchQuery.status !== undefined && searchQuery.status !== '' ? searchQuery.status : '',
-        groupName: searchQuery.groupName !== undefined && searchQuery.groupName !== '' ? searchQuery.groupName : '',
-        userId: searchQuery.userId !== undefined && searchQuery.userId !== '' ? searchQuery.userId : '',
-
+        ...(nameSortRow && { nameSortRow }),
+        ...(searchQuery.surname && { surname: searchQuery.surname }),
+        ...(searchQuery.email && { email: searchQuery.email }),
+        ...(searchQuery.age && { age: searchQuery.age }),
+        ...(searchQuery.name && { name: searchQuery.name }),
+        ...(searchQuery.phone && { phone: searchQuery.phone }),
+        ...(searchQuery.course && { course: searchQuery.course }),
+        ...(searchQuery.course_format && { course_format: searchQuery.course_format }),
+        ...(searchQuery.course_type && { course_type: searchQuery.course_type }),
+        ...(searchQuery.status && { status: searchQuery.status }),
+        ...(searchQuery.groupName && { groupName: searchQuery.groupName }),
+        ...(searchQuery.userId && { userId: searchQuery.userId }),
       });
 
       buttons.push(
-        <Link to={`${AppRoutes.ORDERS}?${queryParams.toString()}`} key={i}>
-          <button className={activePage === i ? "button active-btn" : "button"}>
+        <Link to={`${AppRoutes.ORDERS}?${queryParams}`} key={i}>
+          <button onClick={() => dispatch(ordersActions.setActivePage(i))}
+          className={activePage === i ? "button active-btn" : "button"}>
             {i}
           </button>
         </Link>,
@@ -104,8 +106,7 @@ const Pagin: React.FC = () => {
         to={`${urls.orders.base}?page=${activePage > 1 ? activePage - 1 : 1}`}
       >
         <button onClick={onHead} className="button">
-          {" "}
-          forward{" "}
+          forward
         </button>
       </Link>
 
@@ -115,8 +116,7 @@ const Pagin: React.FC = () => {
         to={`${urls.orders.base}?page=${activePage < pageCount ? activePage + 1 : pageCount}`}
       >
         <button onClick={onBack} className="button">
-          {" "}
-          back{" "}
+          back
         </button>
       </Link>
     </div>
@@ -124,3 +124,4 @@ const Pagin: React.FC = () => {
 };
 
 export { Pagin };
+

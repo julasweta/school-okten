@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { IUser, Order, StatusWork } from "../../interfaces";
 import { usersActions } from "../../redux/slices/UserSlices";
 import { RootState } from "../../redux/store";
-import { authService,  userService } from "../../services";
+import { authService, userService } from "../../services";
 
 interface UserProps {
   user: IUser;
@@ -17,9 +17,7 @@ const UserInfo: React.FC<UserProps> = ({ user }) => {
   const { updateUserTriger, activePageUsers } = useAppSelector(
     (state: RootState) => state.users,
   );
-  const { orders } = useAppSelector(
-    (state: RootState) => state.orders,
-  );
+  const { orders } = useAppSelector((state: RootState) => state.orders);
   const [myOrders, setMyOrders] = useState<Order[]>([]);
 
   useEffect(() => {
@@ -27,11 +25,15 @@ const UserInfo: React.FC<UserProps> = ({ user }) => {
   }, [updateUserTriger, dispatch]);
 
   const getMyOrders = async () => {
-    const resFilter =
-      (orders &&
-        user._id) &&
-      orders.filter((item) => item.user._id && item.user._id.toString() === user._id);
-    setMyOrders(resFilter || []);
+    if (orders && user && user._id) {
+      const resFilter = orders.filter(
+        (item) =>
+          item.user && item.user._id && item.user._id.toString() === user._id,
+      );
+      setMyOrders(resFilter || []);
+    } else {
+      setMyOrders([]);
+    }
   };
 
   useEffect(() => {
@@ -68,38 +70,38 @@ const UserInfo: React.FC<UserProps> = ({ user }) => {
     >
       {isOpen
         ? Object.entries(user).map(
-          ([key, value]) =>
-            key === "name" && (
-              <div className="user" key={key}>
-                <label className="capitOne">{key}: </label>
-                <span className="capitOne">{value}</span>
-              </div>
-            ),
-        )
+            ([key, value]) =>
+              key === "name" && (
+                <div className="user" key={key}>
+                  <label className="capitOne">{key}: </label>
+                  <span className="capitOne">{value}</span>
+                </div>
+              ),
+          )
         : Object.entries(user).map(([key, value]) => (
-          <div className="user" key={key}>
-            <div>
-              <label
-                className={key === "status" ? "capitOne green" : "capitOne"}
-              >
-                {key}:{" "}
-              </label>
-              <span
-                className={
-                  value === "activate"
-                    ? "capitOne green"
-                    : value === "ban"
-                      ? "capitOne red"
-                      : value === "inactive"
-                        ? "capitOne blue"
-                        : "capitOne"
-                }
-              >
-                {value}
-              </span>
+            <div className="user" key={key}>
+              <div>
+                <label
+                  className={key === "status" ? "capitOne green" : "capitOne"}
+                >
+                  {key}:{" "}
+                </label>
+                <span
+                  className={
+                    value === "activate"
+                      ? "capitOne green"
+                      : value === "ban"
+                        ? "capitOne red"
+                        : value === "inactive"
+                          ? "capitOne blue"
+                          : "capitOne"
+                  }
+                >
+                  {value}
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       <hr></hr>
       <div>
         {" "}
@@ -111,7 +113,8 @@ const UserInfo: React.FC<UserProps> = ({ user }) => {
       </div>
       {StatusCount(StatusWork.Aggre).length ? (
         <div>
-          <b>Orders {StatusWork.Aggre} </b> {StatusCount(StatusWork.Aggre).length}
+          <b>Orders {StatusWork.Aggre} </b>{" "}
+          {StatusCount(StatusWork.Aggre).length}
         </div>
       ) : (
         ""

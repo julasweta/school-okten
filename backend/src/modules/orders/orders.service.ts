@@ -34,7 +34,7 @@ export class OrdersService {
 
   public async getdAll(
     query: OrderListQuerytDto,
-  ): Promise<IPaginationResponse<Order>> {
+  ): Promise<IPaginationResponse<Partial<CreateOrderDto>>> {
     return await this.orderRepository.getAll(query);
   }
 

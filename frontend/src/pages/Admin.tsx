@@ -34,7 +34,6 @@ const Admin = () => {
         status: "",
         groupName: "",
         userId: "",
-
       }),
     );
   }, [updateOrderTriger, dispatch]);
@@ -51,7 +50,7 @@ const Admin = () => {
     return <User user={createdUser}></User>;
   };
 
-  useEffect(() => { }, [createdUser]);
+  useEffect(() => {}, [createdUser]);
 
   const filterOrders = (key: keyof Order, value: string | null) => {
     return orders && orders.filter((item) => item[key] === value);

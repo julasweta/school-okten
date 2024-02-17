@@ -1,6 +1,6 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
 
-import { Activate, LoginForm} from "../components";
+import { Activate, LoginForm } from "../components";
 import { MainLayout } from "../layouts/MainLayout";
 import { AppRoutes } from "./AppRoutes";
 import { Admin, OrdersPage } from "../pages";
@@ -13,7 +13,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to={AppRoutes.LOGIN} />,
+        element: <Navigate to={AppRoutes.ORDERS} />,
       },
       {
         path: "*",

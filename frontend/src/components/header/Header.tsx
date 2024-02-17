@@ -25,7 +25,7 @@ const Header = () => {
           authActions.deleteMe(); // Видалення даних про користувача
           onCleanUtils();
           localStorage.clear();
-          navigate(AppRoutes.LOGIN, { replace: true }); // Перенаправлення на сторінку логіну
+          navigate(AppRoutes.ORDERS, { replace: true }); // Перенаправлення на сторінку логіну
         }
       });
     }
