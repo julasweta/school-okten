@@ -62,7 +62,7 @@ const SearchForm: React.FC = () => {
 
 
 
-  let { isMe, ...updateValues }: any = getValues();
+  let updateValues: any = getValues();
 
   useEffect(() => {
     setValue('email', emailParam);
@@ -82,22 +82,19 @@ const SearchForm: React.FC = () => {
   }, []);
 
 
-  
+
   useEffect(() => {
+    let updateValues: any = getValues();
     let res = {}
-    Object.entries(updateValues).forEach(([key, item]) => {
+    Object.entries(updateValues).forEach(([key, item]: [string, any]) => {
       if (item !== 'select' && item !== null && item !== "") {
         res = { ...res, [key]: item }
-        //dispatch(ordersActions.setSearchQuery({ ...searchQuery, [key]: item }));
       }
     });
-    dispatch(ordersActions.setSearchQuery({ ...res }))
-  }, [updateOrderTriger, emailParam, ageParam, nameParam, surnameParam, phoneParam, courseParam, course_typeParam, course_formatParam, statusParam, groupNameParam, userIdParam, dispatch]);
+    dispatch(ordersActions.setSearchQuery({ ...res }));
+  }, [ updateOrderTriger, getValues, dispatch]);
 
 
-
-
-  //при натисканні на button до кожної пошукової кнопки
   const onSearchButton = async (column: string) => {
   };
 

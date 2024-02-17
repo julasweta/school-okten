@@ -10,14 +10,15 @@ import { OrderForm, SearchForm } from "../forms";
 import { Pagin } from "../pagination/Pagin";
 import { AppRoutes } from "../../routing/AppRoutes";
 
+import queryString from 'query-string';
+
 const OrdersTable: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
+
 
   const {
     orders,
-    updateOrderTriger,
     orderActive,
     activePage,
     addGroupTriger,
@@ -25,28 +26,29 @@ const OrdersTable: React.FC = () => {
     nameSortRow,
     limit,
     searchQuery,
-    isChecked
   } = useAppSelector((state: RootState) => state.orders);
 
-  const searchParams = new URLSearchParams(location.search);
-  const pageNumber = searchParams.get("page");
-  const sortRowNameParam = searchParams.get("nameSortRow");
-  const sortParamValue = searchParams.get("order");
-
-
-  const onGetOrderActive = (orderId: string) => {
-    dispatch(ordersActions.getOrderActive(orderId));
+  //додаємо в браузерний рядок дані
+  const filter = {
+    page: activePage || 1,
+    age: searchQuery.age,
+    userId: searchQuery.userId,
+    nameSortRow: nameSortRow,
+    sort: sort,
+    name: searchQuery.name,
+    surname: searchQuery.surname,
+    email: searchQuery.email,
+    phone: searchQuery.phone,
+    course: searchQuery.course,
+    course_format: searchQuery.course_format,
+    course_type: searchQuery.course_type,
+    status: searchQuery.status,
+    groupName: searchQuery.groupName,
+    limit:limit
   };
+  const stringified = queryString.stringify(filter);
+  window.history.pushState({}, '', `?${stringified}`);
 
-
-  //write params
-  useEffect(() => {
-    dispatch(ordersActions.setActivePage(+pageNumber));
-    dispatch(ordersActions.setNameRowSort(sortRowNameParam && sortRowNameParam));
-    if (sortParamValue !== null && sortParamValue !== "false") {
-      dispatch(ordersActions.setSort(sortParamValue));
-    }
-  }, [sortRowNameParam, sortParamValue, pageNumber, dispatch]);
 
   useEffect(() => {
     const isAccess = localStorage.getItem("accessToken");
@@ -62,54 +64,38 @@ const OrdersTable: React.FC = () => {
 
   useEffect(() => {
     try {
-      console.log(sort);
       dispatch(
         ordersActions.getOrders({
-          sort: sort,
-          nameSortRow: nameSortRow ? nameSortRow : '',
-          limit: limit,
-          page: activePage,
-          surname: searchQuery.surname === null || searchQuery.surname === undefined || searchQuery.surname === '' ? "" : searchQuery.surname,
-          email: searchQuery.email !== undefined && searchQuery.email !== '' ? searchQuery.email : '',
-          age: searchQuery.age !== undefined && searchQuery.age !== '' ? searchQuery.age : '',
-          name: searchQuery.name !== undefined && searchQuery.name !== '' ? searchQuery.name : '',
-          phone: searchQuery.phone !== undefined && searchQuery.phone !== '' ? searchQuery.phone : '',
-          course: searchQuery.course !== undefined && searchQuery.course !== '' ? searchQuery.course : '',
-          course_format: searchQuery.course_format !== undefined && searchQuery.course_format !== '' ? searchQuery.course_format : '',
-          course_type: searchQuery.course_type !== undefined && searchQuery.course_type !== '' ? searchQuery.course_type : '',
-          status: searchQuery.status !== undefined && searchQuery.status !== '' ? searchQuery.status : '',
-          groupName: searchQuery.groupName !== undefined && searchQuery.groupName !== '' ? searchQuery.groupName : '',
-          userId: searchQuery.userId !== undefined && searchQuery.userId !== '' ? searchQuery.userId : '',
+          sort: filter.sort,
+          nameSortRow: filter.nameSortRow ? filter.nameSortRow : '',
+          limit: filter.limit,
+          page: filter.page,
+          surname: filter.surname === null || filter.surname === undefined || filter.surname === '' ? "" : filter.surname,
+          email: filter.email !== undefined && filter.email !== '' ? filter.email : '',
+          age: filter.age !== undefined && filter.age !== '' ? filter.age : '',
+          name: filter.name !== undefined && filter.name !== '' ? filter.name : '',
+          phone: filter.phone !== undefined && filter.phone !== '' ? filter.phone : '',
+          course: filter.course !== undefined && filter.course !== '' ? filter.course : '',
+          course_format: filter.course_format !== undefined && filter.course_format !== '' ? filter.course_format : '',
+          course_type: filter.course_type !== undefined && filter.course_type !== '' ? filter.course_type : '',
+          status: filter.status !== undefined && filter.status !== '' ? filter.status : '',
+          groupName: filter.groupName !== undefined && filter.groupName !== '' ? filter.groupName : '',
+          userId: filter.userId !== undefined && filter.userId !== '' ? filter.userId : '',
         }),
       );
-
-      const currentPath = window.location.pathname;
-      if (currentPath === "/orders") {
-        navigate(
-          `?${activePage && `page=${activePage}`}&limit=${limit}&order=${sort && sort}${nameSortRow ? `&nameSortRow=${nameSortRow}` : ""}${searchQuery.email ? `&email=${searchQuery.email}` : ''}${searchQuery.age ? `&age=${searchQuery.age}` : ''}${searchQuery.name ? `&name=${searchQuery.name}` : ''}${searchQuery.phone ? `&phone=${searchQuery.phone}` : ''}${searchQuery.course ? `&course=${searchQuery.course}` : ''}${searchQuery.course_type ? `&course_type=${searchQuery.course_type}` : ''}${searchQuery.course_format ? `&course_format=${searchQuery.course_format}` : ''}${searchQuery.status ? `&status=${searchQuery.status}` : ''}${searchQuery.groupName ? `&groupName=${searchQuery.groupName}` : ''}${searchQuery.userId ? `&userId=${searchQuery.userId}` : ''}`,
-        );
-      }
     } catch (error) {
       console.error("An error occurred while fetching orders:", error);
     }
-  }, [
-    activePage,
-    updateOrderTriger,
-    nameSortRow,
-    sort,
-    isChecked,
-    orderActive,
-    searchQuery,
-    
-    limit,
-    dispatch,
-    navigate,
-  ]);
+  }, [sort, nameSortRow, limit, activePage, searchQuery]);
 
   const onSortRow = (column: string) => {
     dispatch(ordersActions.setSort(sort === "DESC" ? "ASC" : "DESC"));
     dispatch(ordersActions.setNameRowSort(column));
     dispatch(ordersActions.setActivePage(1))
+  };
+
+  const onGetOrderActive = (orderId: string) => {
+    dispatch(ordersActions.getOrderActive(orderId));
   };
 
   const renderTableHeader = () => {

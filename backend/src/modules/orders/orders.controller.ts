@@ -38,7 +38,6 @@ export class OrdersController {
   async getdAll(
     @Query() query: OrderListQuerytDto,
   ): Promise<IPaginationResponse<Partial<CreateOrderDto>>> {
-    console.log('query', query);
     const res = await this.ordersService.getdAll(query);
     const transformedData = res.data.map((item) =>
       OrderResponseMapper.toResOrderMapper(item),
