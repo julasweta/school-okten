@@ -1,6 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.331355ec.css",
+<<<<<<< HEAD
     "main.js": "/static/js/main.b66dcb8e.js",
     "index.html": "/index.html",
     "main.331355ec.css.map": "/static/css/main.331355ec.css.map",
@@ -9,5 +10,15 @@
   "entrypoints": [
     "static/css/main.331355ec.css",
     "static/js/main.b66dcb8e.js"
+=======
+    "main.js": "/static/js/main.a6279ddd.js",
+    "index.html": "/index.html",
+    "main.331355ec.css.map": "/static/css/main.331355ec.css.map",
+    "main.a6279ddd.js.map": "/static/js/main.a6279ddd.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.331355ec.css",
+    "static/js/main.a6279ddd.js"
+>>>>>>> fix-error2
   ]
 }

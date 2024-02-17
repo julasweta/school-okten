@@ -17,15 +17,11 @@ export class OrderRepository {
 
   public async getAll(
     query: OrderListQuerytDto,
-    userLocale: string = 'en',
   ): Promise<IPaginationResponse<Order>> {
     try {
       const filter: Record<string, any> = {};
-
-      if (query.age) {
-        if (!isNaN(+query.age.trim())) {
-          filter['age'] = +query.age;
-        }
+      if (query.age && !isNaN(+query.age.trim())) {
+        filter['age'] = +query.age;
       }
 
       if (query.email) {
@@ -62,28 +58,20 @@ export class OrderRepository {
       }
 
       const skip = Math.max(0, (query.page - 1) * query.limit);
-
-      console.log('filter', filter);
       const entitiesQuery = this.orderModel.find(filter);
-      const itemsFound = await this.orderModel.countDocuments(filter).exec();
-      console.log('itemsFound', itemsFound);
       entitiesQuery.limit(query.limit).skip(skip);
-      console.log('skip', skip);
+      const itemsFound = await this.orderModel.countDocuments(filter).exec();
 
       if (query.nameSortRow) {
-        entitiesQuery.collation({ locale: userLocale, strength: 2 });
+        //entitiesQuery.collation({ locale: 'en', strength: 2 });
         entitiesQuery.sort({
           [query.nameSortRow.trim()]: query.order === 'ASC' ? 1 : -1,
         });
       }
 
-      // Отримання потрібних даних
       const entities = await entitiesQuery.exec();
-      console.log('entities2', entities.length);
       const page = query.page;
       const limit = query.limit;
-      console.log('entities3', entities.length);
-      //console.log(entities);
 
       return { page, limit, itemsFound, data: entities };
     } catch (error) {
