@@ -45,7 +45,7 @@ const initialState: OrderState = {
   updateOrderTriger: true,
   createMessagTriger: true,
   itemsFound: 0,
-  activePage: 1,
+  activePage: 0,
   searchValue: "",
   search: "",
   nameSearchRow: "",
@@ -225,6 +225,7 @@ export const OrdersSlice = createSlice({
   extraReducers: (builder) =>
     builder
       .addCase(getOrders.fulfilled, (state, action) => {
+        console.log("action.payload.data", action.payload.data);
         state.orders = action.payload.data;
         state.itemsFound = action.payload.itemsFound;
       })

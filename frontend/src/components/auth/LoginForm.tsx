@@ -43,12 +43,11 @@ const LoginForm: React.FC = () => {
 
   const login: SubmitHandler<IAuth> = async (user) => {
     try {
-      console.log(user);
       const response = await dispatch(authActions.login({ user }));
       const requestStatus = response.meta.requestStatus;
       if (requestStatus === "fulfilled") {
         reset();
-        navigate(`/orders?page=${activePage}`);
+        navigate(`/orders`);
       }
       if (requestStatus === "rejected") {
         toast.error("Incorrect username or password.");

@@ -16,6 +16,9 @@ const Header = () => {
   const getRefreshToken = localStorage.getItem("refreshToken");
 
   useEffect(() => {
+    if (!authService.getAccessToken()) {
+      navigate(AppRoutes.LOGIN); 
+    }
     if (authService.getAccessToken() && !me) {
       dispatch(authActions.me()).catch((error) => {
         console.log(error);

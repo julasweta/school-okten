@@ -79,20 +79,19 @@ const SearchForm: React.FC = () => {
     if (userIdParam) {
       dispatch(ordersActions.setIsChecked("on"));
     }
-  }, []);
-
+  }, [emailParam, ageParam, nameParam, surnameParam, phoneParam, courseParam, course_typeParam, course_formatParam, statusParam, groupNameParam, userIdParam, setValue, dispatch]);
 
 
   useEffect(() => {
     let updateValues: any = getValues();
     let res = {}
     Object.entries(updateValues).forEach(([key, item]: [string, any]) => {
-      if (item !== 'select' && item !== null && item !== "") {
+      if (item !== null && item !== "") {
         res = { ...res, [key]: item }
       }
     });
     dispatch(ordersActions.setSearchQuery({ ...res }));
-  }, [ updateOrderTriger, getValues, dispatch]);
+  }, [updateOrderTriger, getValues, dispatch]);
 
 
   const onSearchButton = async (column: string) => {
@@ -106,7 +105,7 @@ const SearchForm: React.FC = () => {
     const newIsChecked = isChecked === "on" ? "off" : "on";
     dispatch(ordersActions.setIsChecked(newIsChecked));
     if (newIsChecked === "off") {
-      setValue('userId', "");
+      setValue('userId', "select");
       dispatch(ordersActions.setUpdateOrderTriger());
     } else {
       if (me && me._id) {
@@ -170,10 +169,6 @@ const SearchForm: React.FC = () => {
             onChange={(e) => {
               setValue(column, e.target.value);
               dispatch(ordersActions.setActivePage(1))
-              const selectedValue = e.target.value;
-              if (selectedValue == "select") {
-                setValue(column, "");
-              }
               dispatch(ordersActions.setUpdateOrderTriger());
               searchColumns.forEach((otherColumn) => {
                 if (otherColumn !== column) {
@@ -198,10 +193,6 @@ const SearchForm: React.FC = () => {
             onChange={(e) => {
               setValue(column, e.target.value);
               dispatch(ordersActions.setActivePage(1))
-              const selectedValue = e.target.value;
-              if (selectedValue == "select") {
-                setValue(column, "");
-              }
               dispatch(ordersActions.setUpdateOrderTriger());
               searchColumns.forEach((otherColumn) => {
                 if (otherColumn !== column) {
