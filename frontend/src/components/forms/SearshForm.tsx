@@ -13,8 +13,9 @@ import { useLocation } from "react-router-dom";
 
 const SearchForm: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { groups, isChecked, updateOrderTriger } =
-    useAppSelector((state: RootState) => state.orders);
+  const { groups, isChecked, updateOrderTriger } = useAppSelector(
+    (state: RootState) => state.orders,
+  );
   const { me } = useAppSelector((state: RootState) => state.auth);
   const { onCleanUtils } = useCleanrUtils();
 
@@ -31,7 +32,6 @@ const SearchForm: React.FC = () => {
   const groupNameParam = searchParams.get("groupName");
   const statusParam = searchParams.get("status");
   const userIdParam = searchParams.get("userId");
-
 
   const schema = yup.object().shape({
     name: yup.string(),
@@ -60,42 +60,51 @@ const SearchForm: React.FC = () => {
     criteriaMode: "all",
   });
 
-
-
   let updateValues: any = getValues();
 
   useEffect(() => {
-    setValue('email', emailParam);
-    setValue('age', ageParam);
-    setValue('name', nameParam);
-    setValue('surname', surnameParam);
-    setValue('phone', phoneParam);
-    setValue('course', courseParam);
-    setValue('course_type', course_typeParam);
-    setValue('course_format', course_formatParam);
-    setValue('status', statusParam);
-    setValue('groupName', groupNameParam);
-    setValue('userId', userIdParam);
+    setValue("email", emailParam);
+    setValue("age", ageParam);
+    setValue("name", nameParam);
+    setValue("surname", surnameParam);
+    setValue("phone", phoneParam);
+    setValue("course", courseParam);
+    setValue("course_type", course_typeParam);
+    setValue("course_format", course_formatParam);
+    setValue("status", statusParam);
+    setValue("groupName", groupNameParam);
+    setValue("userId", userIdParam);
     if (userIdParam) {
       dispatch(ordersActions.setIsChecked("on"));
     }
-  }, [emailParam, ageParam, nameParam, surnameParam, phoneParam, courseParam, course_typeParam, course_formatParam, statusParam, groupNameParam, userIdParam, setValue, dispatch]);
-
+  }, [
+    emailParam,
+    ageParam,
+    nameParam,
+    surnameParam,
+    phoneParam,
+    courseParam,
+    course_typeParam,
+    course_formatParam,
+    statusParam,
+    groupNameParam,
+    userIdParam,
+    setValue,
+    dispatch,
+  ]);
 
   useEffect(() => {
     let updateValues: any = getValues();
-    let res = {}
+    let res = {};
     Object.entries(updateValues).forEach(([key, item]: [string, any]) => {
       if (item !== null && item !== "") {
-        res = { ...res, [key]: item }
+        res = { ...res, [key]: item };
       }
     });
     dispatch(ordersActions.setSearchQuery({ ...res }));
   }, [updateOrderTriger, getValues, dispatch]);
 
-
-  const onSearchButton = async (column: string) => {
-  };
+  const onSearchButton = async (column: string) => {};
 
   const onSubmit = (data: any) => {
     console.log(data);
@@ -105,23 +114,21 @@ const SearchForm: React.FC = () => {
     const newIsChecked = isChecked === "on" ? "off" : "on";
     dispatch(ordersActions.setIsChecked(newIsChecked));
     if (newIsChecked === "off") {
-      setValue('userId', "select");
+      setValue("userId", "select");
       dispatch(ordersActions.setUpdateOrderTriger());
     } else {
       if (me && me._id) {
-        setValue('userId', me._id);
+        setValue("userId", me._id);
         dispatch(ordersActions.setUpdateOrderTriger());
       }
     }
-
   };
-
 
   const onClean = () => {
     searchColumns.map((column: string) => {
       setValue(column, "");
     });
-    setValue('userId', "");
+    setValue("userId", "");
     onCleanUtils();
     clearErrors();
   };
@@ -137,14 +144,14 @@ const SearchForm: React.FC = () => {
           "status",
           "groupName",
         ].includes(column) && (
-            <button
-              type="submit"
-              onClick={() => onSearchButton(column)}
-              className="button search-button"
-            >
-              {column}
-            </button>
-          )}
+          <button
+            type="submit"
+            onClick={() => onSearchButton(column)}
+            className="button search-button"
+          >
+            {column}
+          </button>
+        )}
       </div>
     ));
   };
@@ -168,7 +175,7 @@ const SearchForm: React.FC = () => {
             value={updateValues[column] || ""}
             onChange={(e) => {
               setValue(column, e.target.value);
-              dispatch(ordersActions.setActivePage(1))
+              dispatch(ordersActions.setActivePage(1));
               dispatch(ordersActions.setUpdateOrderTriger());
               searchColumns.forEach((otherColumn) => {
                 if (otherColumn !== column) {
@@ -192,7 +199,7 @@ const SearchForm: React.FC = () => {
             value={updateValues[column] || ""}
             onChange={(e) => {
               setValue(column, e.target.value);
-              dispatch(ordersActions.setActivePage(1))
+              dispatch(ordersActions.setActivePage(1));
               dispatch(ordersActions.setUpdateOrderTriger());
               searchColumns.forEach((otherColumn) => {
                 if (otherColumn !== column) {
@@ -216,7 +223,7 @@ const SearchForm: React.FC = () => {
               {...register(column)}
               id={column}
               className="search-input"
-              value={updateValues[column] || ''} // Використовуйте updateValues[column]
+              value={updateValues[column] || ""} // Використовуйте updateValues[column]
               onChange={(e) => {
                 setValue(column, e.target.value, { shouldValidate: true });
                 dispatch(ordersActions.setActivePage(1));
@@ -242,7 +249,6 @@ const SearchForm: React.FC = () => {
                 }
               }}
             />
-
           )
         )}
       </>

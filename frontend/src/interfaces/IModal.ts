@@ -16,7 +16,7 @@ export interface EditOrderFormData {
   status?: StatusWork;
   sum?: number;
   alreadyPaid?: boolean;
-  created_at?: string;
+  created_at?: Date;
 }
 
 export enum StatusWork {

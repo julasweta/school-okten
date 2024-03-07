@@ -17,7 +17,7 @@ const Header = () => {
 
   useEffect(() => {
     if (!authService.getAccessToken()) {
-      navigate(AppRoutes.LOGIN); 
+      navigate(AppRoutes.LOGIN);
     }
     if (authService.getAccessToken() && !me) {
       dispatch(authActions.me()).catch((error) => {
@@ -28,7 +28,7 @@ const Header = () => {
           authActions.deleteMe(); // Видалення даних про користувача
           onCleanUtils();
           localStorage.clear();
-          navigate(AppRoutes.LOGIN, { replace: true }); 
+          navigate(AppRoutes.LOGIN, { replace: true });
         }
       });
     }

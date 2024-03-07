@@ -16,6 +16,9 @@ export abstract class ParamsQueryDto {
   @Min(0)
   @IsOptional()
   readonly page?: number = 1;
+
+  @IsOptional()
+  email?: string;
 }
 
 export enum OrderEnum {

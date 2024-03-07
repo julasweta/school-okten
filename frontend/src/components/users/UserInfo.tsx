@@ -14,23 +14,23 @@ interface UserProps {
 const UserInfo: React.FC<UserProps> = ({ user }) => {
   const [isOpen, setIsOpen] = useState(true);
   const dispatch = useAppDispatch();
-  const { updateUserTriger, activePageUsers } = useAppSelector(
+
+  const {  activePageUsers } = useAppSelector(
     (state: RootState) => state.users,
   );
   const { orders } = useAppSelector((state: RootState) => state.orders);
+
   const [myOrders, setMyOrders] = useState<Order[]>([]);
 
-  useEffect(() => {
-    dispatch(usersActions.getAllUsers());
-  }, [updateUserTriger, dispatch]);
+
 
   const getMyOrders = async () => {
     if (orders && user && user._id) {
-      const resFilter = orders.filter(
+      const resFilter = await orders.filter(
         (item) =>
           item.user && item.user._id && item.user._id.toString() === user._id,
       );
-      setMyOrders(resFilter || []);
+    setMyOrders(resFilter || []);
     } else {
       setMyOrders([]);
     }

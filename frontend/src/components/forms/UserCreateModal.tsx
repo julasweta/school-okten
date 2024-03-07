@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Modal from "react-modal";
 import { ToastContainer, toast } from "react-toastify";
-
-import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { useAppDispatch } from "../../hooks/hooks";
 import { EditOrderModalProps, IUser } from "../../interfaces";
 import { usersActions } from "../../redux/slices/UserSlices";
-import { RootState } from "../../redux/store";
 
 const UserCreateModal: React.FC<EditOrderModalProps> = ({
   isOpen,
@@ -14,20 +12,17 @@ const UserCreateModal: React.FC<EditOrderModalProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   const { register, handleSubmit } = useForm<IUser>();
-  const { users } = useAppSelector((state: RootState) => state.users);
   const [usersTriger, setUsersTriger] = useState(true);
 
   useEffect(() => {
-    dispatch(usersActions.getAllUsers());
+  
   }, [usersTriger, dispatch]);
 
+
   const onSubmit: SubmitHandler<IUser> = async (data) => {
-    const isUser =
-      users &&
-      users.filter(
-        (user) => user.email.toLowerCase() === data.email.toLowerCase(),
-      );
-    if (isUser.length >= 1) {
+    const isUser = await dispatch(usersActions.getAllUsers({ email: data.email }));
+
+    if (isUser) {
       toast.error("this user is already registered", {
         className: "toast",
         bodyClassName: "grow-font-size",

@@ -4,6 +4,7 @@ import { UsersController } from './users.controller';
 import { User, UserSchema } from './schema/user.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
+import { UserRepository } from './users.repository';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { JwtModule } from '@nestjs/jwt';
     }),
   ],
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [UsersService, UserRepository],
   exports: [UsersService],
 })
 export class UsersModule {}

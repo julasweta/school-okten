@@ -12,6 +12,7 @@ import {
   EditOrderFormData,
   EditOrderModalProps,
   IUser,
+  Order,
   StatusWork,
 } from "../../interfaces";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -64,7 +65,7 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<any> = async (data) => {
+  const onSubmit: SubmitHandler<any> = async (data:any) => {
     if (
       !orderActive || // Перевіряємо, чи існує orderActive
       orderActive.user === null ||
@@ -73,10 +74,10 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({
         orderActive.user._id &&
         orderActive.user._id.toString() === me._id) // Перевіряємо, чи _id користувача дорівнює me._id
     ) {
-      const dataFormat = {
+      const dataFormat:Order = {
         ...data,
         age: +data.age,
-        already_paid: data.alreadyPaid,
+        already_paid: data.already_paid,
         user: me,
       };
       await orderService.updateOrder(orderActive._id, dataFormat);
@@ -263,7 +264,7 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({
       >
         <h2>Edit Order</h2>
         <form
-          onSubmit={handleSubmit(onSubmit, (errors) => console.log(errors))}
+          onSubmit={handleSubmit(onSubmit)}
           className="form-modal"
         >
           {renderFormFields()}

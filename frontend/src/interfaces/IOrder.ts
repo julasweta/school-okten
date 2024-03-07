@@ -1,3 +1,4 @@
+import { Course, CourseFormat, CourseType, StatusWork } from "./IModal";
 import { IUser } from "./IUser";
 
 export interface Order {
@@ -7,13 +8,13 @@ export interface Order {
   email: string;
   phone: string;
   age: number;
-  course: string;
-  course_format: string;
-  course_type: string;
-  status: string;
+  course: Course;
+  course_format: CourseFormat;
+  course_type: CourseType;
+  status: StatusWork;
   sum: number;
-  alreadyPaid: boolean;
-  created_at: string;
+  already_paid: boolean;
+  created_at: Date;
   user: IUser;
   groupName: string;
 }

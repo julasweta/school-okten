@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RoleDecorator } from '../../common/decorators/role.decorator';
 import { ActivateUserReqDto } from './dto/req/activate-user-dto';
@@ -7,6 +7,8 @@ import { UserResponseMapper } from './dto/res/user-resp-mapper';
 import { UserBaseDto } from './dto/user.base.dto';
 import { UserRole } from './interfaces/users.types';
 import { UsersService } from './users.service';
+import { ParamsQueryDto } from '../orders/dto/orders-params.dto';
+import { IPaginationResponse } from '../orders/orders.repository';
 
 @ApiTags('Users')
 @Controller('users')
@@ -22,9 +24,11 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Get all users' })
   @Get()
-  async getAllUsers(): Promise<CreateUserResType[]> {
-    const users = await this.usersService.getAllUsers();
-    return UserResponseMapper.toResUsersArrayMapper(users);
+  async getAllUsers(
+    @Query() query: ParamsQueryDto,
+  ): Promise<IPaginationResponse<Partial<UserBaseDto>>> {
+    const users = await this.usersService.getAllUsers(query);
+    return users;
   }
 
   //додати можливість тільки для адміна

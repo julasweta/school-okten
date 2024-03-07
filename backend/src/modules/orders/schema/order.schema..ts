@@ -52,7 +52,7 @@ export class Order extends Document {
   status: StatusWork;
 
   @Prop({ type: Date, default: Date.now })
-  created_at: Date;
+  created_at: Date | string;
 
   @Prop()
   user: UserBaseDto;

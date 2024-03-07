@@ -50,7 +50,7 @@ apiService.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 type IWaitList = () => void;
 

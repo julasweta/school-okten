@@ -15,13 +15,11 @@ const Pagin: React.FC = () => {
   const pageCount = Math.ceil(itemsFound / limit);
   const buttonsToShow = 10; // скільки кнопок навколо поточної сторінки.
 
-
   const buttons: any = [];
   const startPage = Math.max(1, activePage - Math.floor(buttonsToShow / 2));
   const endPage = Math.min(pageCount, startPage + buttonsToShow - 1);
 
   const generateButtons = () => {
-
     if (startPage > 1) {
       const onEllipsisBefore = () => {
         dispatch(ordersActions.setActivePage(activePage - 10));
@@ -51,8 +49,12 @@ const Pagin: React.FC = () => {
         ...(searchQuery.name && { name: searchQuery.name }),
         ...(searchQuery.phone && { phone: searchQuery.phone }),
         ...(searchQuery.course && { course: searchQuery.course }),
-        ...(searchQuery.course_format && { course_format: searchQuery.course_format }),
-        ...(searchQuery.course_type && { course_type: searchQuery.course_type }),
+        ...(searchQuery.course_format && {
+          course_format: searchQuery.course_format,
+        }),
+        ...(searchQuery.course_type && {
+          course_type: searchQuery.course_type,
+        }),
         ...(searchQuery.status && { status: searchQuery.status }),
         ...(searchQuery.groupName && { groupName: searchQuery.groupName }),
         ...(searchQuery.userId && { userId: searchQuery.userId }),
@@ -60,8 +62,10 @@ const Pagin: React.FC = () => {
 
       buttons.push(
         <Link to={`${AppRoutes.ORDERS}?${queryParams}`} key={i}>
-          <button onClick={() => dispatch(ordersActions.setActivePage(i))}
-          className={activePage === i ? "button active-btn" : "button"}>
+          <button
+            onClick={() => dispatch(ordersActions.setActivePage(i))}
+            className={activePage === i ? "button active-btn" : "button"}
+          >
             {i}
           </button>
         </Link>,
@@ -124,4 +128,3 @@ const Pagin: React.FC = () => {
 };
 
 export { Pagin };
-

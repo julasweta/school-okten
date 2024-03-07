@@ -57,6 +57,7 @@ export class OrdersController {
     @Param('id') id: string,
     @Headers('authorization') accessToken: string,
   ): Promise<string | HttpException> {
+    console.log(body);
     const res = await this.ordersService.updateOrder(body, id, accessToken);
     return res;
   }

@@ -8,7 +8,7 @@ import { usersActions } from "../../redux/slices";
 
 const Users: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { users, usersFound, activePageUsers } = useAppSelector(
+  const { users, usersFound, activePageUsers, updateUserTriger  } = useAppSelector(
     (state: RootState) => state.users,
   );
   const location = useLocation();
@@ -17,26 +17,20 @@ const Users: React.FC = () => {
   const searchLimit = searchParams.get("limit");
   const pageCount = Math.ceil(usersFound / +searchLimit);
 
-  const [usersOnPage, setUsersOnPage] = useState([]);
+  useEffect(() => {
+    dispatch(usersActions.getAllUsers({page: activePageUsers, limit:3}))
+  }, [activePageUsers, dispatch, updateUserTriger]);
 
   useEffect(() => {
     dispatch(usersActions.setActivePageUsers(searchPage));
   }, [searchPage, dispatch]);
 
-  useEffect(() => {
-    const start = +searchLimit * (+searchPage > 0 ? +searchPage - 1 : 0);
-    const end =
-      +searchLimit * (+searchPage < pageCount ? +searchPage : pageCount) - 1;
-    const res =
-      users && users.filter((item, index) => index >= start && index <= end);
-    setUsersOnPage(res);
-  }, [searchLimit, searchPage, pageCount, activePageUsers, users, usersFound]);
 
   return (
     <div className="user-box">
       <h2>Users</h2>
-      {usersOnPage &&
-        usersOnPage.map((item, index) => <UserInfo user={item} key={index} />)}
+      {users &&
+        users.map((item, index) => <UserInfo user={item} key={index} />)}
       <PaginUsers />
     </div>
   );

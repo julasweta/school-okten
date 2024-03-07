@@ -21,7 +21,7 @@ const useCleanrUtils = () => {
         status: "",
         groupName: "",
         userId: "",
-      })
+      }),
     );
     dispatch(ordersActions.setActivePage(1));
     dispatch(ordersActions.setSort("ASC"));
